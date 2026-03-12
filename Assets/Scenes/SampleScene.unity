@@ -547,6 +547,11 @@ MonoBehaviour:
   missileLockTime: 2
   currentLockProgress: 0
   requireLineOfSight: 0
+--- !u!1 &308026259 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1710341255426436076, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+  m_PrefabInstance: {fileID: 8595691520536088403}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,6 +2186,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: TGTkill
+      value: 
+      objectReference: {fileID: 308026259}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: statText
       value: 
       objectReference: {fileID: 1899124028}
@@ -2224,29 +2233,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1710341255426436076, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4038541146551616757, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_Name
       value: result image
-      objectReference: {fileID: 0}
-    - target: {fileID: 5988466888586098667, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7819918401245782514, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: currentHealth
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 8125923402946391066, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_Name
       value: Player Craft
-      objectReference: {fileID: 0}
-    - target: {fileID: 8581125817833922538, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
-      propertyPath: m_Name
-      value: trail
       objectReference: {fileID: 0}
     - target: {fileID: 9112476151360918429, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_LocalPosition.x

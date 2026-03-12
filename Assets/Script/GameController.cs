@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     [Tooltip("Name of the main menu scene")]
     public string mainMenuSceneName = "MainMenu";
 
-    [Header("UI References (assign your existing objects here)")]
+    [Header("UI References")]
     [Tooltip("Root GameObject of the result UI (should contain Canvas)")]
     public GameObject resultCanvasObject;
 
@@ -55,6 +55,9 @@ public class GameController : MonoBehaviour
 
     [Tooltip("Main menu button GameObject")]
     public Button mainMenuButton;
+
+    [Tooltip("target kill bar")]
+    public GameObject TGTkill;
 
     [Header("UI Colors")]
     [Tooltip("Alpha target for the black background (0..1)")]
@@ -153,6 +156,7 @@ public class GameController : MonoBehaviour
         else if (entityTag == "Enemy")
         {
             defeatedEnemies++;
+            PopUpKillConfirm();
             Debug.Log($"[GameController] Enemy defeated! ({defeatedEnemies}/{totalEnemies})");
 
             if (defeatedEnemies >= totalEnemies)
@@ -161,6 +165,18 @@ public class GameController : MonoBehaviour
                 HandleGameVictory();
             }
         }
+    }
+
+    public void PopUpKillConfirm()
+    {
+        StartCoroutine(ShowKillConfirm());
+    }
+
+    IEnumerator ShowKillConfirm()
+    {
+        TGTkill.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        TGTkill.SetActive(false);
     }
 
     /// <summary>

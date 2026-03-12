@@ -67,6 +67,11 @@ public class ImprovedPlaneController : MonoBehaviour
     public TextMeshProUGUI gForceText;
     public TextMeshProUGUI speedText;
 
+    [Header("misc")]
+    [Tooltip("high g trail render")]
+    public TrailRenderer trail;
+    public TrailRenderer trail2;
+
     // Public variables
     public float thrust;
     public float currentGForce;
@@ -136,6 +141,7 @@ public class ImprovedPlaneController : MonoBehaviour
     {
         HandleInputs();
         UpdateUI();
+        highGtrail();
     }
 
     private void FixedUpdate()
@@ -367,6 +373,23 @@ public class ImprovedPlaneController : MonoBehaviour
             // Display PERCEIVED speed (multiplied)
             float perceivedSpeed = rb.linearVelocity.magnitude * perceivedSpeedMultiplier;
             speedText.text = $"Speed: {perceivedSpeed:F0} m/s";
+        }
+    }
+
+    private void highGtrail()
+    {
+        if (trail == null && trail2 == null) return;
+
+        if (isHighGMode == true)
+        {
+            trail.emitting = true;
+            trail2.emitting = true;
+        }
+
+        if (isHighGMode == false)
+        {
+            trail.emitting = false;
+            trail2.emitting = false;
         }
     }
 }

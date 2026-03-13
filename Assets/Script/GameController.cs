@@ -214,6 +214,13 @@ public class GameController : MonoBehaviour
     /// </summary>
     private IEnumerator ShowResultSequence(bool isVictory)
     {
+        ImprovedPlaneController pc = playerEntity.gameObject.GetComponent<ImprovedPlaneController>();
+
+        if (pc != null)
+        {
+            pc.allowMouseControl = false;
+        }
+
         yield return new WaitForSeconds(resultScreenDelay);
 
         // Prepare texts

@@ -245,9 +245,17 @@ MonoBehaviour:
   highGModeControlMultiplier: 2.5
   highGModeSpeedLoss: 35
   highGModeLimitBoost: 6
+  allowMouseControl: 0
+  mouseSensitivity: 1.5
+  mouseDeadzone: 0.1
+  mouseSmoothing: 0.7
+  maxMouseInputMagnitude: 1.5
+  invertMouseY: 0
   thrustText: {fileID: 0}
   gForceText: {fileID: 0}
   speedText: {fileID: 0}
+  trail: {fileID: 0}
+  trail2: {fileID: 0}
   thrust: 50
   currentGForce: 0
 --- !u!114 &7530720505267865308
@@ -357,7 +365,7 @@ MonoBehaviour:
   pullUpStrength: 2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!114 &5395833819781210270
 MonoBehaviour:
   m_ObjectHideFlags: 0

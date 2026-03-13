@@ -62,6 +62,23 @@ public class ImprovedPlaneController : MonoBehaviour
     [Tooltip("G-force limit increase in high-G mode")]
     public float highGModeLimitBoost = 3f;
 
+    [Header("Mouse Control")]
+    [Tooltip("Enable mouse aiming")]
+    public bool allowMouseControl = false;
+    [Tooltip("Mouse sensitivity for aiming (higher = more responsive)")]
+    public float mouseSensitivity = 1.5f;
+    [Tooltip("Mouse deadzone to prevent drift (0-1, where 1 is screen center)")]
+    [Range(0f, 0.5f)]
+    public float mouseDeadzone = 0.1f;
+    [Tooltip("Smoothing factor for mouse input (0-1, higher = smoother but delayed)")]
+    [Range(0f, 0.95f)]
+    public float mouseSmoothing = 0.7f;
+    [Tooltip("Maximum pitch/yaw input magnitude from mouse (0-1)")]
+    [Range(0.1f, 2f)]
+    public float maxMouseInputMagnitude = 1.5f;
+    [Tooltip("Invert mouse Y axis (up = pitch down)")]
+    public bool invertMouseY = false;
+
     [Header("UI")]
     public TextMeshProUGUI thrustText;
     public TextMeshProUGUI gForceText;
@@ -83,6 +100,11 @@ public class ImprovedPlaneController : MonoBehaviour
     private Vector3 lastVelocity;
     private bool isHighGMode;
 
+    // Mouse control variables
+    private Vector2 mouseAimPosition;
+    private Vector2 smoothedMouseAimPosition;
+    private Vector2 screenCenter;
+
     private Rigidbody rb;
 
     // Responsive modifiers for each axis
@@ -94,6 +116,25 @@ public class ImprovedPlaneController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         lastVelocity = rb.linearVelocity;
+        screenCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+    }
+
+    private void OnEnable()
+    {
+        // Unlock cursor when script is enabled
+        UnlockMouse();
+    }
+
+    private void OnDisable()
+    {
+        // Ensure cursor is unlocked when script is disabled
+        UnlockMouse();
+    }
+
+    private void UnlockMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private void HandleInputs()
@@ -119,10 +160,51 @@ public class ImprovedPlaneController : MonoBehaviour
         }
         else
         {
-            // Player controlled (original code)
-            roll = Input.GetAxis("Roll");
-            pitch = Input.GetAxis("Pitch");
-            yaw = Input.GetAxis("Yaw");
+            // Player controlled (keyboard + optional mouse)
+
+            // === KEYBOARD INPUT (always active) ===
+            float keyboardRoll = Input.GetAxis("Roll");
+            float keyboardPitch = Input.GetAxis("Pitch");
+            float keyboardYaw = Input.GetAxis("Yaw");
+
+            // === MOUSE INPUT (Ace Combat style aiming) ===
+            if (allowMouseControl)
+            {
+                HandleMouseAiming();
+
+                // Convert mouse aim to pitch/yaw with proper blending
+                Vector2 mouseInput = GetMouseInputWithDeadzoneAndSmoothing();
+                float mousePitch = mouseInput.y;
+                float mouseYaw = mouseInput.x;
+
+                // Apply invert if needed
+                if (invertMouseY)
+                    mousePitch = -mousePitch;
+
+                // Blend keyboard and mouse inputs (mouse has priority)
+                float mouseMagnitude = mouseInput.magnitude;
+                float keyboardInfluence = 1f - Mathf.Clamp01(mouseMagnitude * 0.5f);
+
+                pitch = Mathf.Lerp(mousePitch, keyboardPitch * keyboardInfluence, keyboardInfluence);
+                yaw = Mathf.Lerp(mouseYaw, keyboardYaw * keyboardInfluence, keyboardInfluence);
+                roll = keyboardRoll; // Roll is best left to keyboard/gamepad
+
+                // Clamp combined inputs to prevent over-correction
+                float inputMagnitude = new Vector2(pitch, yaw).magnitude;
+                if (inputMagnitude > maxMouseInputMagnitude)
+                {
+                    float scale = maxMouseInputMagnitude / inputMagnitude;
+                    pitch *= scale;
+                    yaw *= scale;
+                }
+            }
+            else
+            {
+                // Standard keyboard-only controls
+                roll = keyboardRoll;
+                pitch = keyboardPitch;
+                yaw = keyboardYaw;
+            }
 
             // High-G maneuver mode (Hold 2 key)
             isHighGMode = Input.GetKey(KeyCode.Alpha2);
@@ -135,6 +217,51 @@ public class ImprovedPlaneController : MonoBehaviour
         }
 
         thrust = Mathf.Clamp(thrust, 0f, 100f);
+    }
+
+    private void HandleMouseAiming()
+    {
+        // Get current mouse position
+        Vector2 currentMousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+        // Calculate offset from screen center
+        Vector2 offsetFromCenter = currentMousePos - screenCenter;
+
+        // Normalize to screen size (considering aspect ratio)
+        float maxDistance = Mathf.Min(Screen.width, Screen.height) * 0.4f;
+        Vector2 normalizedOffset = offsetFromCenter / maxDistance;
+
+        // Store raw aim position
+        mouseAimPosition = normalizedOffset;
+    }
+
+    private Vector2 GetMouseInputWithDeadzoneAndSmoothing()
+    {
+        // Apply deadzone
+        Vector2 input = mouseAimPosition;
+        float magnitude = input.magnitude;
+
+        if (magnitude < mouseDeadzone)
+        {
+            input = Vector2.zero;
+        }
+        else
+        {
+            // Scale input to compensate for deadzone
+            input = input.normalized * ((magnitude - mouseDeadzone) / (1f - mouseDeadzone));
+        }
+
+        // Apply smoothing (exponential moving average)
+        smoothedMouseAimPosition = Vector2.Lerp(smoothedMouseAimPosition, input, 1f - mouseSmoothing);
+
+        // Apply sensitivity
+        Vector2 sensitiveInput = smoothedMouseAimPosition * mouseSensitivity;
+
+        // Clamp to -1 to 1 range
+        sensitiveInput.x = Mathf.Clamp(sensitiveInput.x, -1f, 1f);
+        sensitiveInput.y = Mathf.Clamp(sensitiveInput.y, -1f, 1f);
+
+        return sensitiveInput;
     }
 
     private void Update()

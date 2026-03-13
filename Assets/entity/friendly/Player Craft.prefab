@@ -4168,6 +4168,12 @@ MonoBehaviour:
   highGModeControlMultiplier: 2.5
   highGModeSpeedLoss: 35
   highGModeLimitBoost: 6
+  allowMouseControl: 1
+  mouseSensitivity: 50
+  mouseDeadzone: 0.5
+  mouseSmoothing: 0.7
+  maxMouseInputMagnitude: 1.5
+  invertMouseY: 1
   thrustText: {fileID: 3369335761354965008}
   gForceText: {fileID: 3260015376644725019}
   speedText: {fileID: 8565402093986809622}

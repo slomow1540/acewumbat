@@ -543,6 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  point: 100
   currentHealth: 0
   isInvulnerable: 0
   isPlayer: 0
@@ -582,11 +583,11 @@ MonoBehaviour:
   useGuns: 1
   useMissiles: 1
   projectilePrefab: {fileID: 4643293625211329145, guid: bafd52d8ddc88b8439f4cdee8b3b77fc, type: 3}
-  missilePrefab: {fileID: 2137459680999894693, guid: 03668713a08d9f44b93a5d59f3914b76, type: 3}
+  missilePrefab: {fileID: 2137459680999894693, guid: 31975448351e2a5448cf1bd500041422, type: 3}
   firePoints:
   - {fileID: 5384299685620936467}
-  gunDamage: 10
-  missileDamage: 15
+  gunDamage: 8
+  missileDamage: 25
   gunFireRate: 20
   missileFireRate: 0.5
   maxGunRange: 800

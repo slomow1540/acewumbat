@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
     private int totalEnemies = 0;
     private int defeatedEnemies = 0;
     private bool gameEnded = false;
+    private int PointObtained = 0;
 
     // CanvasGroups for fading text & stat
     private CanvasGroup resultTextCanvasGroup;
@@ -144,7 +145,7 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Called when an entity dies
     /// </summary>
-    public void NotifyEntityDeath(Health healthSystem, string entityTag, bool isPlayer)
+    public void NotifyEntityDeath(Health healthSystem, string entityTag, bool isPlayer , GameObject attacker = null)
     {
         if (gameEnded) return;
 
@@ -155,8 +156,12 @@ public class GameController : MonoBehaviour
         }
         else if (entityTag == "Enemy")
         {
+            if(attacker.GetComponent<Health>().isPlayer == true)
+            {
+                PopUpKillConfirm();
+                PointObtained += healthSystem.point;
+            }
             defeatedEnemies++;
-            PopUpKillConfirm();
             Debug.Log($"[GameController] Enemy defeated! ({defeatedEnemies}/{totalEnemies})");
 
             if (defeatedEnemies >= totalEnemies)
@@ -227,7 +232,7 @@ public class GameController : MonoBehaviour
         if (resultText != null)
             resultText.text = isVictory ? "VICTORY!" : "DEFEATED!";
         if (statText != null)
-            statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}";
+            statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)} /n {PointObtained} points";
 
         // Ensure buttons hidden before fade
         if (restartButton != null)
@@ -278,10 +283,10 @@ public class GameController : MonoBehaviour
 
     #region Helpers & UI Setup
 
-    /// <summary>
-    /// Prepare references: if inspector references exist, use them; otherwise create the minimal UI.
-    /// Also ensures CanvasGroups for fading text.
-    /// </summary>
+            /// <summary>
+            /// Prepare references: if inspector references exist, use them; otherwise create the minimal UI.
+            /// Also ensures CanvasGroups for fading text.
+            /// </summary>
     private void PrepareResultUI()
     {
         // If a resultCanvasObject is assigned, use it. Otherwise create one.

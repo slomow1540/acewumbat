@@ -56,6 +56,9 @@ public class Health : MonoBehaviour
     [Tooltip("Maximum health")]
     public float maxHealth = 100f;
 
+    [Tooltip("point reward of killing")]
+    public int point = 100;
+
     [Tooltip("Current health")]
     [SerializeField]
     public float currentHealth;
@@ -156,7 +159,7 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Die();
+            Die(attacker);
         }
     }
 
@@ -206,7 +209,7 @@ public class Health : MonoBehaviour
     /// <summary>
     /// Kill this object
     /// </summary>
-    public void Die()
+    public void Die(GameObject attacker = null)
     {
         if (isDead) return;
         isDead = true;
@@ -232,7 +235,7 @@ public class Health : MonoBehaviour
         // Notify GameController
         if (gameController != null)
         {
-            gameController.NotifyEntityDeath(this, gameObject.tag, isPlayer);
+            gameController.NotifyEntityDeath(this, gameObject.tag, isPlayer, attacker);
         }
     }
 

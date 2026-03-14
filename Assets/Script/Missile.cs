@@ -68,6 +68,7 @@ public class Missile : MonoBehaviour
     private float currentSpeed;
     private bool hasHit = false;
     private float timeSinceLastSeen = 0f;
+    private string ownertag;
 
     private void Awake()
     {
@@ -282,8 +283,15 @@ public class Missile : MonoBehaviour
     {
         if (hasHit) return;
 
-        // Don't hit the owner
+        Debug.Log($"Missile collide with target: {other.gameObject.tag} and {owner.tag}");
+
+        // Don't hit the owner or ally
         if (other.gameObject == owner)
+        {
+            return;
+        }
+
+        if (other.gameObject.tag == ownertag)
         {
             return;
         }
@@ -313,6 +321,8 @@ public class Missile : MonoBehaviour
         {
             // Don't damage owner
             if (hitCollider.gameObject == owner)
+                continue;
+            if (hitCollider.gameObject.tag == ownertag)
                 continue;
 
             Health targetHealth = hitCollider.GetComponent<Health>();
@@ -356,6 +366,7 @@ public class Missile : MonoBehaviour
     {
         owner = shooter;
         target = lockedTarget;
+        ownertag = owner.tag;
 
         if (target != null)
         {

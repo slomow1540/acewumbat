@@ -26,6 +26,7 @@ public class Projectile : MonoBehaviour
     
     private Rigidbody rb;
     private bool hasHit = false;
+    private string ownertag;
     
     private void Awake()
     {
@@ -69,14 +70,21 @@ public class Projectile : MonoBehaviour
         if (hasHit) return;
         hasHit = true;
         
-        // Don't hit the owner
+        // Don't hit the owner or ally
         if (collision.gameObject == owner)
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             hasHit = false;
             return;
         }
-        
+
+        if (collision.gameObject.tag == ownertag)
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            hasHit = false;
+            return;
+        }
+
         // Try to damage the hit object
         Health targetHealth = collision.gameObject.GetComponent<Health>();
         if (targetHealth != null)
@@ -102,7 +110,9 @@ public class Projectile : MonoBehaviour
     public void Initialize(GameObject shooter, float customDamage = -1, float customSpeed = -1)
     {
         owner = shooter;
-        
+        ownertag = owner.tag;
+
+
         if (customDamage > 0)
             damage = customDamage;
         

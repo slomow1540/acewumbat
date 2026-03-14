@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Advanced Health System for all aircraft and entities
 /// Combines plane control with HP management
-/// Handles death sequences, damage effects, and game completion
+/// Handles death sequences, damage effects, game completion, and multipart objects
 /// </summary>
 public class Health : MonoBehaviour
 {
@@ -56,7 +56,7 @@ public class Health : MonoBehaviour
     [Tooltip("Maximum health")]
     public float maxHealth = 100f;
 
-    [Tooltip("point reward of killing")]
+    [Tooltip("Point reward for killing this object")]
     public int point = 100;
 
     [Tooltip("Current health")]
@@ -72,6 +72,23 @@ public class Health : MonoBehaviour
 
     [Tooltip("Is this entity stationary (doesn't need control override)?")]
     public bool isStationary = false;
+
+    [Header("Multipart System")]
+    [Tooltip("Is this object a multipart object with destructible parts?")]
+    public bool isMultipartObject = false;
+
+    [Tooltip("Child parts with Health scripts (parent only)")]
+    public List<GameObject> childParts = new List<GameObject>();
+
+    [Tooltip("Damage multiplier increase when a child part dies")]
+    [Range(0f, 2f)]
+    public float damageMultiplierPerPartLost = 0.5f;
+
+    [Tooltip("Is this a child part of a multipart object?")]
+    public bool isChildPart = false;
+
+    [Tooltip("Parent object (if this is a child part)")]
+    public GameObject parentObject;
 
     [Header("Damage Settings")]
     [Tooltip("Damage multiplier for different damage types")]
@@ -108,6 +125,7 @@ public class Health : MonoBehaviour
     private ImprovedPlaneController planeController;
     private bool isDead = false;
     private List<float> activatedThresholds = new List<float>();
+    private int partsDead = 0;
 
     private void Awake()
     {
@@ -127,6 +145,12 @@ public class Health : MonoBehaviour
         {
             healthEffects.Sort((a, b) => b.hpPercentageThreshold.CompareTo(a.hpPercentageThreshold));
         }
+
+        // Setup multipart system
+        if (isMultipartObject)
+        {
+            SetupChildParts();
+        }
     }
 
     private void Start()
@@ -142,6 +166,32 @@ public class Health : MonoBehaviour
     {
         // Check health effects each frame
         CheckHealthEffects();
+    }
+
+    /// <summary>
+    /// Setup child parts for multipart objects
+    /// </summary>
+    private void SetupChildParts()
+    {
+        if (childParts == null || childParts.Count == 0) return;
+
+        // Iterate through child parts and setup references
+        for (int i = 0; i < childParts.Count; i++)
+        {
+            if (childParts[i] == null) continue;
+
+            Health childHealth = childParts[i].GetComponent<Health>();
+            if (childHealth != null)
+            {
+                // Mark as child part
+                childHealth.isChildPart = true;
+                childHealth.parentObject = gameObject;
+            }
+            else
+            {
+                Debug.LogWarning($"Child part {childParts[i].name} doesn't have Health component!");
+            }
+        }
     }
 
     /// <summary>
@@ -163,9 +213,6 @@ public class Health : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Heal this object
-    /// </summary>
     public void Heal(float amount)
     {
         if (currentHealth <= 0) return;
@@ -176,9 +223,6 @@ public class Health : MonoBehaviour
         onHeal?.Invoke(actualHeal);
     }
 
-    /// <summary>
-    /// Check and activate health effects based on current HP
-    /// </summary>
     private void CheckHealthEffects()
     {
         if (healthEffects == null || healthEffects.Count == 0) return;
@@ -207,12 +251,51 @@ public class Health : MonoBehaviour
     }
 
     /// <summary>
-    /// Kill this object
+    /// Called when a child part dies (for multipart objects)
+    /// </summary>
+    public void NotifyChildPartDead(float damageMultIncrease)
+    {
+        if (!isMultipartObject) return;
+
+        partsDead++;
+        damageMultiplier += damageMultIncrease;
+
+        Debug.Log($"{gameObject.name} lost a part! Total parts lost: {partsDead}, New damage multiplier: {damageMultiplier}");
+    }
+
+    /// <summary>
+    /// Notify parent that this child part died
+    /// </summary>
+    private void NotifyParentOfDeath()
+    {
+        if (!isChildPart || parentObject == null) return;
+
+        Health parentHealth = parentObject.GetComponent<Health>();
+        if (parentHealth != null)
+        {
+            parentHealth.NotifyChildPartDead(damageMultiplierPerPartLost);
+        }
+    }
+
+    /// <summary>
+    /// Main death function
     /// </summary>
     public void Die(GameObject attacker = null)
     {
         if (isDead) return;
         isDead = true;
+
+        // If this is a child part, notify parent
+        if (isChildPart)
+        {
+            NotifyParentOfDeath();
+        }
+
+        // If this is a multipart parent, kill all children with same attacker
+        if (isMultipartObject)
+        {
+            KillAllChildParts(attacker);
+        }
 
         // Force controls to act as if crashing (if not stationary)
         if (!isStationary && planeController != null)
@@ -236,6 +319,26 @@ public class Health : MonoBehaviour
         if (gameController != null)
         {
             gameController.NotifyEntityDeath(this, gameObject.tag, isPlayer, attacker);
+        }
+    }
+
+    /// <summary>
+    /// Kill all child parts when parent dies (propagates attacker for scoring)
+    /// </summary>
+    private void KillAllChildParts(GameObject attacker)
+    {
+        if (childParts == null || childParts.Count == 0) return;
+
+        foreach (GameObject part in childParts)
+        {
+            if (part == null) continue;
+
+            Health partHealth = part.GetComponent<Health>();
+            if (partHealth != null && partHealth.IsAlive())
+            {
+                // Kill part with same attacker (for scoring)
+                partHealth.Die(attacker);
+            }
         }
     }
 
@@ -266,9 +369,11 @@ public class Health : MonoBehaviour
         }
         else
         {
-            // Disable but don't destroy player for graceful handling
-            gameObject.GetComponent<ImprovedPlaneController>().maxThrust = 0f;
-            gameObject.GetComponent<ImprovedPlaneController>().thrust = 0f;
+            if (planeController != null)
+            {
+                planeController.maxThrust = 0f;
+                planeController.thrust = 0f;
+            }
         }
     }
 
@@ -323,6 +428,23 @@ public class Health : MonoBehaviour
     public float GetMaxHealth()
     {
         return maxHealth;
+    }
+
+    /// <summary>
+    /// Get number of parts destroyed (for multipart objects)
+    /// </summary>
+    public int GetPartsDestroyed()
+    {
+        return partsDead;
+    }
+
+    /// <summary>
+    /// Get total number of parts (for multipart objects)
+    /// </summary>
+    public int GetTotalParts()
+    {
+        if (childParts == null) return 0;
+        return childParts.Count;
     }
 
     private void OnDestroy()

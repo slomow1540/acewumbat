@@ -160,7 +160,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   useGravity: 0
   gravityScale: 1
-  impactEffectPrefab: {fileID: 0}
+  impactEffectPrefab: {fileID: 7633560358295558729, guid: a2a61607a60be334b9d74080b4949a14, type: 3}
   trailRenderer: {fileID: 0}
 --- !u!96 &-7545548818600406234
 TrailRenderer:

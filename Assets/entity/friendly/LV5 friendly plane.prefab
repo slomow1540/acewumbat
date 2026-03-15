@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImprovedPlaneController
   thrustAcceleration: 2
-  maxThrust: 20000
+  maxThrust: 35000
   rollResponsiveness: 15
   pitchResponsiveness: 12
   yawResponsiveness: 8
@@ -548,6 +548,11 @@ MonoBehaviour:
   isInvulnerable: 0
   isPlayer: 0
   isStationary: 0
+  isMultipartObject: 0
+  childParts: []
+  damageMultiplierPerPartLost: 0.5
+  isChildPart: 0
+  parentObject: {fileID: 0}
   damageMultiplier: 1
   explodeOnDeath: 1
   explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}

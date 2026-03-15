@@ -291,24 +291,68 @@ public class EnemyPlaneAI : MonoBehaviour
             targetPosition += targetRb.linearVelocity * timeToIntercept * 0.5f;
         }
 
-        // Point directly at target (or lead position)
-        desiredDirection = (targetPosition - transform.position).normalized;
+        // Calculate direction to target
+        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
 
-        // Adjust speed based on distance
-        if (distance < aggressiveRange * 0.5f)
+        // ANTI-STALL: Limit vertical angle to prevent pointing straight up/down
+        float maxPitchAngle = 45f; // Don't pitch more than 45 degrees up/down
+
+        // Get horizontal direction (on XZ plane)
+        Vector3 horizontalDirection = new Vector3(directionToTarget.x, 0f, directionToTarget.z).normalized;
+
+        // Calculate current pitch to target
+        float pitchAngle = Mathf.Asin(directionToTarget.y) * Mathf.Rad2Deg;
+
+        // Clamp pitch angle
+        float clampedPitch = Mathf.Clamp(pitchAngle, -maxPitchAngle, maxPitchAngle);
+        float clampedPitchRad = clampedPitch * Mathf.Deg2Rad;
+
+        // Reconstruct direction with limited pitch
+        Vector3 limitedDirection = horizontalDirection;
+        if (horizontalDirection.magnitude > 0.01f)
         {
-            // Too close - back off a bit
-            SetThrust(combatSpeed * 0.7f);
-        }
-        else if (distance > aggressiveRange)
-        {
-            // Too far - close in fast
-            SetThrust(combatSpeed);
+            // Apply limited pitch to horizontal direction
+            limitedDirection = (horizontalDirection * Mathf.Cos(clampedPitchRad) +
+                               Vector3.up * Mathf.Sin(clampedPitchRad)).normalized;
         }
         else
         {
-            // Good range - maintain speed
-            SetThrust(combatSpeed * 0.85f);
+            // Target directly above/below - spiral climb/dive instead
+            limitedDirection = (transform.forward + Vector3.up * Mathf.Sign(directionToTarget.y) * 0.5f).normalized;
+        }
+
+        // Blend current direction with desired direction for smooth turns
+        // This prevents sudden snapping that causes stalls
+        float blendFactor = 0.7f; // How quickly to turn toward target
+        desiredDirection = Vector3.Slerp(transform.forward, limitedDirection, blendFactor).normalized;
+
+        // Check if we need high-G mode (tight turns)
+        float angleToTarget = Vector3.Angle(transform.forward, limitedDirection);
+        if (angleToTarget > 30f)
+        {
+            UseHighGMode(true);
+        }
+        else
+        {
+            UseHighGMode(false);
+        }
+
+        // CRITICAL: Maintain high speed to prevent stalls
+        // Always use full combat speed or higher in aggressive mode
+        if (distance < aggressiveRange * 0.5f)
+        {
+            // Close range - maintain speed for maneuverability
+            SetThrust(combatSpeed * 0.9f);
+        }
+        else if (distance > aggressiveRange)
+        {
+            // Too far - full speed to close in
+            SetThrust(evasionSpeed);
+        }
+        else
+        {
+            // Good range - combat speed
+            SetThrust(combatSpeed);
         }
     }
 

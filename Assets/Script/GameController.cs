@@ -6,10 +6,12 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Manages game state, entity tracking, and win/lose conditions
+/// Manages game state, entity tracking, win/lose conditions, mission time, triggers, and music
 /// </summary>
 public class GameController : MonoBehaviour
 {
+    #region Nested Classes
+
     [System.Serializable]
     public class EntityRecord
     {
@@ -19,12 +21,129 @@ public class GameController : MonoBehaviour
         public bool isPlayer;
     }
 
+    [System.Serializable]
+    public class MissionTrigger
+    {
+        [Header("Trigger Info")]
+        public string triggerName = "New Trigger";
+        public bool isActive = true;
+        public bool hasTriggered = false;
+
+        [Header("Trigger Condition")]
+        public TriggerCondition condition = TriggerCondition.TimeElapsed;
+
+        [Tooltip("For TimeElapsed: seconds to wait")]
+        public float timeThreshold = 60f;
+
+        [Tooltip("For EnemiesKilled: number of enemies")]
+        public int enemyCountThreshold = 5;
+
+        [Tooltip("For CheckpointReached: checkpoint ID")]
+        public string checkpointID = "Checkpoint1";
+
+        [Header("Trigger Actions")]
+        public List<TriggerAction> actions = new List<TriggerAction>();
+
+        [Header("Debug")]
+        public bool showDebugMessages = true;
+    }
+
+    public enum TriggerCondition
+    {
+        TimeElapsed,        // After X seconds
+        EnemiesKilled,      // After X enemies killed
+        CheckpointReached,  // When checkpoint called
+        PlayerHealthBelow,  // When player HP < X%
+        AllEnemiesDead      // When all enemies defeated
+    }
+
+    [System.Serializable]
+    public class TriggerAction
+    {
+        public ActionType actionType = ActionType.SpawnEnemies;
+
+        [Header("Spawn Settings")]
+        [Tooltip("For SpawnEnemies: prefab to spawn")]
+        public GameObject enemyPrefab;
+        [Tooltip("Spawn position")]
+        public Vector3 spawnPosition;
+        [Tooltip("Spawn rotation")]
+        public Vector3 spawnRotation;
+        [Tooltip("Number to spawn")]
+        public int spawnCount = 1;
+        [Tooltip("Spread radius for multiple spawns")]
+        public float spawnSpread = 10f;
+
+        [Header("Point Settings")]
+        [Tooltip("For GivePoints: amount")]
+        public int pointAmount = 100;
+
+        [Header("Message Settings")]
+        [Tooltip("For ShowMessage: message text")]
+        public string messageText = "Objective Complete!";
+        [Tooltip("Message duration (seconds)")]
+        public float messageDuration = 3f;
+
+        [Header("Audio Settings")]
+        [Tooltip("For PlaySound: audio clip")]
+        public AudioClip audioClip;
+    }
+
+    public enum ActionType
+    {
+        SpawnEnemies,
+        GivePoints,
+        ShowMessage,
+        PlaySound,
+        ChangeMusic
+    }
+
+    #endregion
+
     [Header("Audio")]
     [Tooltip("Sound played when player wins")]
     public AudioClip victorySound;
 
     [Tooltip("Sound played when player loses")]
     public AudioClip defeatSound;
+
+    [Header("Background Music")]
+    [Tooltip("List of background music tracks")]
+    public List<AudioClip> musicTracks = new List<AudioClip>();
+
+    [Tooltip("Current music track index")]
+    public int currentMusicIndex = 0;
+
+    [Tooltip("Music volume (0-1)")]
+    [Range(0f, 1f)]
+    public float musicVolume = 0.5f;
+
+    [Tooltip("Loop music tracks")]
+    public bool loopMusic = true;
+
+    [Tooltip("Fade in duration (seconds)")]
+    public float musicFadeInDuration = 2f;
+
+    [Tooltip("Fade out duration (seconds)")]
+    public float musicFadeOutDuration = 1.5f;
+
+    private AudioSource musicSource;
+    private Coroutine musicFadeCoroutine;
+
+    [Header("Mission Timer")]
+    [Tooltip("Track mission time")]
+    public bool trackMissionTime = true;
+
+    [Tooltip("Format: mm:ss or mm:ss.ff")]
+    public bool showMilliseconds = false;
+
+    private float missionStartTime;
+    private float missionEndTime;
+    private float missionDuration;
+
+    [Header("Mission Triggers")]
+    [Tooltip("List of mission triggers")]
+    public List<MissionTrigger> missionTriggers = new List<MissionTrigger>();
 
     [Header("Fade Settings")]
     [Tooltip("Time to wait before showing result screen after game end")]
@@ -42,7 +161,7 @@ public class GameController : MonoBehaviour
     public GameObject resultCanvasObject;
 
     [Tooltip("Background panel Image (will fade to black)")]
-    public Image resultPanel; // should be black; alpha controlled by script
+    public Image resultPanel;
 
     [Tooltip("Result text (e.g. 'VICTORY' / 'DEFEATED')")]
     public TextMeshProUGUI resultText;
@@ -58,6 +177,9 @@ public class GameController : MonoBehaviour
 
     [Tooltip("target kill bar")]
     public GameObject TGTkill;
+
+    [Tooltip("Message display text")]
+    public TextMeshProUGUI messageText;
 
     [Header("UI Colors")]
     [Tooltip("Alpha target for the black background (0..1)")]
@@ -92,6 +214,21 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        // Start mission timer
+        if (trackMissionTime)
+        {
+            missionStartTime = Time.time;
+        }
+
+        // Setup music
+        SetupBackgroundMusic();
+
+        // Start playing music
+        if (musicTracks.Count > 0 && currentMusicIndex >= 0 && currentMusicIndex < musicTracks.Count)
+        {
+            PlayMusic(currentMusicIndex);
+        }
+
         PrepareResultUI();
         if (resultPanel != null)
         {
@@ -111,7 +248,374 @@ public class GameController : MonoBehaviour
 
         if (mainMenuButton != null)
             mainMenuButton.gameObject.SetActive(false);
+
+        if (messageText != null)
+            messageText.gameObject.SetActive(false);
     }
+
+    private void Update()
+    {
+        // Update triggers
+        if (!gameEnded)
+        {
+            UpdateTriggers();
+        }
+    }
+
+    #region Background Music
+
+    private void SetupBackgroundMusic()
+    {
+        musicSource = gameObject.GetComponent<AudioSource>();
+        if (musicSource == null)
+        {
+            musicSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        musicSource.loop = loopMusic;
+        musicSource.volume = musicVolume;
+        musicSource.playOnAwake = false;
+    }
+
+    public void PlayMusic(int trackIndex, bool fadeIn = true)
+    {
+        if (trackIndex < 0 || trackIndex >= musicTracks.Count)
+        {
+            Debug.LogWarning($"Invalid music track index: {trackIndex}");
+            return;
+        }
+
+        // Stop any ongoing fade
+        if (musicFadeCoroutine != null)
+        {
+            StopCoroutine(musicFadeCoroutine);
+            musicFadeCoroutine = null;
+        }
+
+        currentMusicIndex = trackIndex;
+        musicSource.clip = musicTracks[trackIndex];
+
+        if (fadeIn)
+        {
+            musicSource.volume = 0f;
+            musicSource.Play();
+            musicFadeCoroutine = StartCoroutine(FadeMusic(0f, musicVolume, musicFadeInDuration));
+            Debug.Log($"Playing music track (fade in): {musicTracks[trackIndex].name}");
+        }
+        else
+        {
+            musicSource.volume = musicVolume;
+            musicSource.Play();
+            Debug.Log($"Playing music track: {musicTracks[trackIndex].name}");
+        }
+    }
+
+    public void StopMusic(bool fadeOut = true)
+    {
+        if (musicSource != null)
+        {
+            // Stop any ongoing fade
+            if (musicFadeCoroutine != null)
+            {
+                StopCoroutine(musicFadeCoroutine);
+                musicFadeCoroutine = null;
+            }
+
+            if (fadeOut && musicSource.isPlaying)
+            {
+                musicFadeCoroutine = StartCoroutine(FadeMusicAndStop());
+            }
+            else
+            {
+                musicSource.Stop();
+            }
+        }
+    }
+
+    private IEnumerator FadeMusic(float fromVolume, float toVolume, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            musicSource.volume = Mathf.Lerp(fromVolume, toVolume, elapsed / duration);
+            yield return null;
+        }
+        musicSource.volume = toVolume;
+        musicFadeCoroutine = null;
+    }
+
+    private IEnumerator FadeMusicAndStop()
+    {
+        yield return StartCoroutine(FadeMusic(musicSource.volume, 0f, musicFadeOutDuration));
+        musicSource.Stop();
+        musicSource.volume = musicVolume; // Reset for next play
+        musicFadeCoroutine = null;
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = Mathf.Clamp01(volume);
+        if (musicSource != null)
+        {
+            musicSource.volume = musicVolume;
+        }
+    }
+
+    public void ChangeMusicWithCrossfade(int newTrackIndex)
+    {
+        if (newTrackIndex < 0 || newTrackIndex >= musicTracks.Count)
+        {
+            Debug.LogWarning($"Invalid music track index: {newTrackIndex}");
+            return;
+        }
+
+        // If music not playing, just play new track
+        if (!musicSource.isPlaying)
+        {
+            PlayMusic(newTrackIndex, fadeIn: true);
+            return;
+        }
+
+        // Crossfade
+        StartCoroutine(CrossfadeMusic(newTrackIndex));
+    }
+
+    private IEnumerator CrossfadeMusic(int newTrackIndex)
+    {
+        // Fade out current track
+        yield return StartCoroutine(FadeMusic(musicSource.volume, 0f, musicFadeOutDuration));
+
+        // Switch track
+        musicSource.clip = musicTracks[newTrackIndex];
+        currentMusicIndex = newTrackIndex;
+        musicSource.Play();
+
+        // Fade in new track
+        yield return StartCoroutine(FadeMusic(0f, musicVolume, musicFadeInDuration));
+
+        Debug.Log($"Crossfaded to music track: {musicTracks[newTrackIndex].name}");
+    }
+
+    #endregion
+
+    #region Mission Timer
+
+    public float GetMissionTime()
+    {
+        if (!trackMissionTime) return 0f;
+
+        if (gameEnded)
+        {
+            return missionDuration;
+        }
+        else
+        {
+            return Time.time - missionStartTime;
+        }
+    }
+
+    public string GetFormattedMissionTime()
+    {
+        float time = GetMissionTime();
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        int milliseconds = Mathf.FloorToInt((time * 100f) % 100f);
+
+        if (showMilliseconds)
+        {
+            return $"{minutes:00}:{seconds:00}.{milliseconds:00}";
+        }
+        else
+        {
+            return $"{minutes:00}:{seconds:00}";
+        }
+    }
+
+    #endregion
+
+    #region Trigger System
+
+    private void UpdateTriggers()
+    {
+        foreach (MissionTrigger trigger in missionTriggers)
+        {
+            if (!trigger.isActive || trigger.hasTriggered)
+                continue;
+
+            if (CheckTriggerCondition(trigger))
+            {
+                ExecuteTrigger(trigger);
+            }
+        }
+    }
+
+    private bool CheckTriggerCondition(MissionTrigger trigger)
+    {
+        switch (trigger.condition)
+        {
+            case TriggerCondition.TimeElapsed:
+                return GetMissionTime() >= trigger.timeThreshold;
+
+            case TriggerCondition.EnemiesKilled:
+                return defeatedEnemies >= trigger.enemyCountThreshold;
+
+            case TriggerCondition.PlayerHealthBelow:
+                if (playerEntity != null && playerEntity.healthSystem != null)
+                {
+                    float healthPercent = playerEntity.healthSystem.GetHealthPercent();
+                    return healthPercent <= (trigger.timeThreshold / 100f); // Reuse timeThreshold as percentage
+                }
+                return false;
+
+            case TriggerCondition.AllEnemiesDead:
+                return defeatedEnemies >= totalEnemies && totalEnemies > 0;
+
+            case TriggerCondition.CheckpointReached:
+                // This is called manually via TriggerCheckpoint()
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    private void ExecuteTrigger(MissionTrigger trigger)
+    {
+        trigger.hasTriggered = true;
+
+        if (trigger.showDebugMessages)
+        {
+            Debug.Log($"[GameController] Trigger '{trigger.triggerName}' executed!");
+        }
+
+        foreach (TriggerAction action in trigger.actions)
+        {
+            ExecuteAction(action);
+        }
+    }
+
+    private void ExecuteAction(TriggerAction action)
+    {
+        switch (action.actionType)
+        {
+            case ActionType.SpawnEnemies:
+                SpawnEnemies(action);
+                break;
+
+            case ActionType.GivePoints:
+                GivePoints(action.pointAmount);
+                break;
+
+            case ActionType.ShowMessage:
+                ShowMessage(action.messageText, action.messageDuration);
+                break;
+
+            case ActionType.PlaySound:
+                if (action.audioClip != null)
+                {
+                    //musicSource.PlayClipAtPoint(action.audioClip, Camera.main.transform.position);
+                    musicSource.PlayOneShot(action.audioClip);
+                }
+                break;
+
+            case ActionType.ChangeMusic:
+                // Use spawnCount as music index, with crossfade
+                ChangeMusicWithCrossfade(action.spawnCount);
+                break;
+        }
+    }
+
+    private void SpawnEnemies(TriggerAction action)
+    {
+        if (action.enemyPrefab == null)
+        {
+            Debug.LogWarning("SpawnEnemies: No enemy prefab assigned!");
+            return;
+        }
+
+        for (int i = 0; i < action.spawnCount; i++)
+        {
+            // Calculate spawn position with spread
+            Vector3 spawnPos = action.spawnPosition;
+            if (action.spawnSpread > 0 && action.spawnCount > 1)
+            {
+                Vector2 randomOffset = Random.insideUnitCircle * action.spawnSpread;
+                spawnPos += new Vector3(randomOffset.x, 0, randomOffset.y);
+            }
+
+            Quaternion spawnRot = Quaternion.Euler(action.spawnRotation);
+            GameObject enemy = Instantiate(action.enemyPrefab, spawnPos, spawnRot);
+
+            Debug.Log($"Spawned enemy: {enemy.name} at {spawnPos}");
+        }
+    }
+
+    private void GivePoints(int points)
+    {
+        PointObtained += points;
+        Debug.Log($"Points awarded: +{points} (Total: {PointObtained})");
+    }
+
+    private void ShowMessage(string message, float duration)
+    {
+        if (messageText != null)
+        {
+            StartCoroutine(DisplayMessage(message, duration));
+        }
+        else
+        {
+            Debug.Log($"[MESSAGE] {message}");
+        }
+    }
+
+    private IEnumerator DisplayMessage(string message, float duration)
+    {
+        messageText.text = message;
+        messageText.gameObject.SetActive(true);
+
+        // Fade in
+        CanvasGroup cg = messageText.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            cg = messageText.gameObject.AddComponent<CanvasGroup>();
+        }
+
+        float fadeTime = 0.5f;
+        yield return StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, fadeTime));
+
+        // Display
+        yield return new WaitForSeconds(duration - (fadeTime * 2));
+
+        // Fade out
+        yield return StartCoroutine(FadeCanvasGroup(cg, 1f, 0f, fadeTime));
+
+        messageText.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Manually trigger a checkpoint (called from external scripts)
+    /// </summary>
+    public void TriggerCheckpoint(string checkpointID)
+    {
+        Debug.Log($"[GameController] Checkpoint triggered: {checkpointID}");
+
+        foreach (MissionTrigger trigger in missionTriggers)
+        {
+            if (!trigger.isActive || trigger.hasTriggered)
+                continue;
+
+            if (trigger.condition == TriggerCondition.CheckpointReached &&
+                trigger.checkpointID == checkpointID)
+            {
+                ExecuteTrigger(trigger);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Entity Management
 
     /// <summary>
     /// Register an entity with the GameController
@@ -145,7 +649,7 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Called when an entity dies
     /// </summary>
-    public void NotifyEntityDeath(Health healthSystem, string entityTag, bool isPlayer , GameObject attacker = null)
+    public void NotifyEntityDeath(Health healthSystem, string entityTag, bool isPlayer, GameObject attacker = null)
     {
         if (gameEnded) return;
 
@@ -156,11 +660,16 @@ public class GameController : MonoBehaviour
         }
         else if (entityTag == "Enemy")
         {
-            if(attacker.GetComponent<Health>().isPlayer == true)
+            if (attacker != null)
             {
-                PopUpKillConfirm();
-                PointObtained += healthSystem.point;
+                Health attackerHealth = attacker.GetComponent<Health>();
+                if (attackerHealth != null && attackerHealth.isPlayer == true)
+                {
+                    PopUpKillConfirm();
+                    PointObtained += healthSystem.point;
+                }
             }
+
             defeatedEnemies++;
             Debug.Log($"[GameController] Enemy defeated! ({defeatedEnemies}/{totalEnemies})");
 
@@ -179,10 +688,17 @@ public class GameController : MonoBehaviour
 
     IEnumerator ShowKillConfirm()
     {
-        TGTkill.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
-        TGTkill.SetActive(false);
+        if (TGTkill != null)
+        {
+            TGTkill.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+            TGTkill.SetActive(false);
+        }
     }
+
+    #endregion
+
+    #region Game End
 
     /// <summary>
     /// Handle victory condition
@@ -191,27 +707,52 @@ public class GameController : MonoBehaviour
     {
         gameEnded = true;
 
-        if (victorySound != null)
+        // Record mission end time
+        if (trackMissionTime)
         {
-            AudioSource.PlayClipAtPoint(victorySound, Vector3.zero);
+            missionEndTime = Time.time;
+            missionDuration = missionEndTime - missionStartTime;
         }
 
-        StartCoroutine(ShowResultSequence(true));
+        StartCoroutine(HandleGameEnd(true));
     }
 
-    /// <summary>
-    /// Handle loss condition
-    /// </summary>
     private void HandleGameLoss()
     {
         gameEnded = true;
 
-        if (defeatSound != null)
+        // Record mission end time
+        if (trackMissionTime)
         {
-            AudioSource.PlayClipAtPoint(defeatSound, Vector3.zero);
+            missionEndTime = Time.time;
+            missionDuration = missionEndTime - missionStartTime;
         }
 
-        StartCoroutine(ShowResultSequence(false));
+        StartCoroutine(HandleGameEnd(false));
+    }
+
+    private IEnumerator HandleGameEnd(bool isVictory)
+    {
+        // Fade out background music first
+        StopMusic(fadeOut: true);
+
+        // Wait for music to fade
+        yield return new WaitForSeconds(musicFadeOutDuration);
+
+        // Play victory/defeat sound (now music is silent)
+        if (isVictory && victorySound != null)
+        {
+            //musicSource.PlayClipAtPoint(victorySound, Camera.main.transform.position);
+            musicSource.PlayOneShot(victorySound);
+        }
+        else if (!isVictory && defeatSound != null)
+        {
+            //musicSource.PlayClipAtPoint(defeatSound, Camera.main.transform.position);
+            musicSource.PlayOneShot(defeatSound);
+        }
+
+        // Show results screen
+        StartCoroutine(ShowResultSequence(isVictory));
     }
 
     /// <summary>
@@ -219,7 +760,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     private IEnumerator ShowResultSequence(bool isVictory)
     {
-        ImprovedPlaneController pc = playerEntity.gameObject.GetComponent<ImprovedPlaneController>();
+        ImprovedPlaneController pc = playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
 
         if (pc != null)
         {
@@ -231,8 +772,12 @@ public class GameController : MonoBehaviour
         // Prepare texts
         if (resultText != null)
             resultText.text = isVictory ? "VICTORY!" : "DEFEATED!";
+
         if (statText != null)
-            statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)} /n {PointObtained} points";
+        {
+            string timeString = trackMissionTime ? $"\nTime: {GetFormattedMissionTime()}" : "";
+            statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
+        }
 
         // Ensure buttons hidden before fade
         if (restartButton != null)
@@ -281,18 +826,14 @@ public class GameController : MonoBehaviour
         }
     }
 
-    #region Helpers & UI Setup
+    #endregion
 
-            /// <summary>
-            /// Prepare references: if inspector references exist, use them; otherwise create the minimal UI.
-            /// Also ensures CanvasGroups for fading text.
-            /// </summary>
+    #region UI Helpers
+
     private void PrepareResultUI()
     {
-        // If a resultCanvasObject is assigned, use it. Otherwise create one.
         if (resultCanvasObject == null)
         {
-            // Create main canvas
             resultCanvasObject = new GameObject("ResultCanvas");
             Canvas canvas = resultCanvasObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -301,7 +842,7 @@ public class GameController : MonoBehaviour
             CanvasScaler scaler = resultCanvasObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
 
-            resultCanvasObject.AddComponent<CanvasGroup>(); // keep for completeness
+            resultCanvasObject.AddComponent<CanvasGroup>();
 
             // Create background panel
             GameObject panelObj = new GameObject("Panel");
@@ -314,7 +855,7 @@ public class GameController : MonoBehaviour
             panelRect.offsetMax = Vector2.zero;
 
             resultPanel = panelObj.AddComponent<Image>();
-            resultPanel.color = new Color(0, 0, 0, 0f); // start transparent black
+            resultPanel.color = new Color(0, 0, 0, 0f);
 
             // Create result text
             GameObject resultTextObj = new GameObject("ResultText");
@@ -363,16 +904,14 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            // If resultPanel is assigned, force it to have transparent alpha initially and set to black
             if (resultPanel != null)
             {
                 Color c = resultPanel.color;
-                c.r = 0f; c.g = 0f; c.b = 0f; // force black
+                c.r = 0f; c.g = 0f; c.b = 0f;
                 c.a = 0f;
                 resultPanel.color = c;
             }
 
-            // If resultText exists, ensure a CanvasGroup exists for fade control
             if (resultText != null)
             {
                 resultTextCanvasGroup = resultText.GetComponent<CanvasGroup>();
@@ -381,7 +920,6 @@ public class GameController : MonoBehaviour
                 resultTextCanvasGroup.alpha = 0f;
             }
 
-            // If statText exists, ensure a CanvasGroup exists for fade control
             if (statText != null)
             {
                 statTextCanvasGroup = statText.GetComponent<CanvasGroup>();
@@ -390,7 +928,6 @@ public class GameController : MonoBehaviour
                 statTextCanvasGroup.alpha = 0f;
             }
 
-            // If buttons were assigned, start hidden & not interactable
             if (restartButton != null)
             {
                 restartButton.interactable = false;
@@ -403,7 +940,6 @@ public class GameController : MonoBehaviour
             }
         }
 
-        // If we created the typography elements above, ensure CanvasGroups exist for them too
         if (resultText != null && resultTextCanvasGroup == null)
         {
             resultTextCanvasGroup = resultText.GetComponent<CanvasGroup>() ?? resultText.gameObject.AddComponent<CanvasGroup>();
@@ -416,9 +952,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Helper method to create a button (used only when creating fallback UI)
-    /// </summary>
     private Button CreateButton(GameObject parent, string name, string label, UnityEngine.Events.UnityAction callback)
     {
         GameObject buttonObj = new GameObject(name);
@@ -433,14 +966,12 @@ public class GameController : MonoBehaviour
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(callback);
 
-        // Add hover effect
         ColorBlock colors = button.colors;
         colors.normalColor = new Color(0.2f, 0.2f, 0.2f, 1f);
         colors.highlightedColor = new Color(0.4f, 0.4f, 0.4f, 1f);
         colors.pressedColor = new Color(0.1f, 0.1f, 0.1f, 1f);
         button.colors = colors;
 
-        // Create text for button
         GameObject textObj = new GameObject("Text");
         textObj.transform.SetParent(buttonObj.transform, false);
 
@@ -475,7 +1006,6 @@ public class GameController : MonoBehaviour
         cg.alpha = to;
     }
 
-    // Fallback for TMP text if CanvasGroup was not present (rare because we add CanvasGroup)
     private IEnumerator FadeTMPAlpha(TextMeshProUGUI tmp, float from, float to, float duration)
     {
         float elapsed = 0f;
@@ -495,53 +1025,48 @@ public class GameController : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// Restart the current game scene
-    /// </summary>
+    #region Scene Management
+
     private void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    /// <summary>
-    /// Go to main menu
-    /// </summary>
     private void GoToMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
-    /// <summary>
-    /// Get game status
-    /// </summary>
+    #endregion
+
+    #region Public Getters
+
     public bool IsGameEnded()
     {
         return gameEnded;
     }
 
-    /// <summary>
-    /// Get player status
-    /// </summary>
     public bool IsPlayerAlive()
     {
         return playerEntity != null && playerEntity.healthSystem != null && playerEntity.healthSystem.IsAlive();
     }
 
-    /// <summary>
-    /// Get enemy count
-    /// </summary>
     public int GetTotalEnemies()
     {
         return totalEnemies;
     }
 
-    /// <summary>
-    /// Get defeated enemy count
-    /// </summary>
     public int GetDefeatedEnemies()
     {
         return defeatedEnemies;
     }
+
+    public int GetPoints()
+    {
+        return PointObtained;
+    }
+
+    #endregion
 }

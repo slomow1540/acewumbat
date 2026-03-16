@@ -406,15 +406,15 @@ MonoBehaviour:
   detectionAngle: 180
   scanInterval: 0.2
   enemyMissileTag: player missile
-  lockTime: 0.5
-  allowMultipleLocks: 0
+  lockTime: 0.1
+  allowMultipleLocks: 1
   maxSimultaneousLocks: 2
   interceptorPrefab: {fileID: 2137459680999894693, guid: 63f1c1eac8e08984caa33214a64c4804, type: 3}
   launchPoints:
   - {fileID: 4444574913132084082}
-  maxInterceptors: 5
-  currentInterceptors: 5
-  launchCooldown: 1.5
+  maxInterceptors: 10
+  currentInterceptors: 10
+  launchCooldown: 1
   interceptorLaunchSpeed: 500
   interceptorDamage: 30
   prioritizeClosest: 1

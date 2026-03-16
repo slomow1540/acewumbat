@@ -637,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5592218751967544801, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6801667520544167552, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1461,7 +1461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5592218751967544801, guid: 9cb7e9c410113054aa711eb3d0227b67, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6801667520544167552, guid: 9cb7e9c410113054aa711eb3d0227b67, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1633,7 +1633,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5592218751967544801, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6801667520544167552, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2273,7 +2273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5592218751967544801, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6801667520544167552, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3253,7 +3253,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &1976333381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3628,7 +3628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].enemyCountThreshold
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].actionType

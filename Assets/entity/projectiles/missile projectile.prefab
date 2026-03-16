@@ -100,18 +100,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Missile
   damage: 51
-  launchSpeed: 100
-  maxSpeed: 300
-  acceleration: 50
+  launchSpeed: 150
+  maxSpeed: 350
+  acceleration: 35
   lifetime: 15
   explosionRadius: 10
   minDirectHitDamage: 0.5
-  navigationGain: 3.5
-  maxTurnRate: 180
+  navigationGain: 1
+  maxTurnRate: 55
   leadMultiplier: 1
-  terminalGuidanceRange: 100
+  terminalGuidanceRange: 30
   terminalGainMultiplier: 0.5
-  maxTrackingAngle: 90
+  maxTrackingAngle: 20
   maxTrackingRange: 2000
   lockLossTime: 3
   minTrackingSpeed: 50

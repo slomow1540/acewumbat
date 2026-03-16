@@ -4446,7 +4446,7 @@ MonoBehaviour:
   lockLostSound: {fileID: 0}
   lockingVolume: 0.5
   lockedVolume: 0.7
-  launchVolume: 0.5
+  launchVolume: 0.25
   lockLostVolume: 0.4
   masterVolume: 1
   slowBeepInterval: 0.5

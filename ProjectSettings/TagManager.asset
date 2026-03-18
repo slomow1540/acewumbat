@@ -8,6 +8,8 @@ TagManager:
   - enemy missile
   - FxTemporaire
   - player missile
+  - gun projectile
+  - interceptor missile
   layers:
   - Default
   - TransparentFX

@@ -317,11 +317,11 @@ MonoBehaviour:
   useGuns: 1
   useMissiles: 1
   projectilePrefab: {fileID: 4643293625211329145, guid: bafd52d8ddc88b8439f4cdee8b3b77fc, type: 3}
-  missilePrefab: {fileID: 2137459680999894693, guid: 6312990c9776db84f8c651c60ad2f991, type: 3}
+  missilePrefab: {fileID: 2137459680999894693, guid: 74488a8cf2191cf4da547b1ac48e281e, type: 3}
   firePoints:
   - {fileID: 4444574913132084082}
   gunDamage: 8
-  missileDamage: 25
+  missileDamage: 32
   gunFireRate: 20
   missileFireRate: 0.5
   maxGunRange: 800

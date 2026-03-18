@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 7042492557521500140}
   - component: {fileID: 1669295532512293047}
   - component: {fileID: 7789577584417153568}
+  - component: {fileID: 456452279814824859}
   - component: {fileID: 2809354508085425495}
-  - component: {fileID: -279903711975299272}
   m_Layer: 0
-  m_Name: interceptor missile
-  m_TagString: interceptor missile
+  m_Name: enemy missile 2
+  m_TagString: enemy missile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,6 +87,41 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &456452279814824859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137459680999894693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5efe2401898ad834ab560bbe66be7761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Missile
+  damage: 32
+  launchSpeed: 150
+  maxSpeed: 350
+  acceleration: 35
+  lifetime: 15
+  explosionRadius: 10
+  minDirectHitDamage: 0.5
+  navigationGain: 0.8
+  maxTurnRate: 55
+  leadMultiplier: 1
+  terminalGuidanceRange: 15
+  terminalGainMultiplier: 0.5
+  maxTrackingAngle: 20
+  maxTrackingRange: 2000
+  lockLossTime: 3
+  minTrackingSpeed: 50
+  target: {fileID: 0}
+  owner: {fileID: 0}
+  hasTarget: 0
+  explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
+  trailRenderer: {fileID: 0}
+  engineParticles: {fileID: 0}
+  flightAudio: {fileID: 0}
 --- !u!96 &2809354508085425495
 TrailRenderer:
   serializedVersion: 4
@@ -206,30 +241,6 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &-279903711975299272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2137459680999894693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cc879965594b5043bd41300d4d34662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InterceptorMissile
-  targetMissile: {fileID: 0}
-  owner: {fileID: 0}
-  speed: 500
-  turnRate: 360
-  lifetime: 10
-  detonationRange: 10
-  explosionRadius: 15
-  explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
-  trail: {fileID: 0}
-  engineParticles: {fileID: 0}
-  launchSound: {fileID: 0}
-  explosionSound: {fileID: 0}
 --- !u!1 &5724680133044073800
 GameObject:
   m_ObjectHideFlags: 0

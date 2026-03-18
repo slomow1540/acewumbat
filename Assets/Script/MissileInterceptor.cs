@@ -19,7 +19,7 @@ public class MissileInterceptor : MonoBehaviour
     public float scanInterval = 0.2f;
 
     [Tooltip("Tag of enemy missiles to intercept")]
-    public string enemyMissileTag = "EnemyMissile";
+    public string enemyMissileTag = "enemy missile";
 
     [Header("Lock Settings")]
     [Tooltip("Time required to lock onto a threat before firing")]
@@ -430,7 +430,7 @@ public class MissileInterceptor : MonoBehaviour
         // Tag as friendly missile (optional)
         if (gameObject.tag != "Untagged")
         {
-            interceptorObj.tag = gameObject.tag + "Missile";
+            interceptorObj.tag = "interceptor missile";
         }
 
         // Decrease ammo

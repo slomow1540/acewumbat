@@ -17,39 +17,25 @@ public class Health : MonoBehaviour
         public float hpPercentageThreshold = 50f;
 
         [Tooltip("Object to enable at this HP threshold")]
-        public GameObject effectPrefab;
+        public GameObject effectObject;
 
-        [Tooltip("If true, all effects at this threshold activate. If false, only one activates")]
-        public bool activateAllEffectsAtThreshold = true;
-
-        [Tooltip("If false, only the first matching effect activates at this threshold")]
-        public bool isActive = true;
-
-        private GameObject spawnedEffect;
-
-        public void Activate(Transform parent)
+        public void Activate()
         {
-            if (!isActive || effectPrefab == null) return;
-
-            if (spawnedEffect == null)
+            if (effectObject != null)
             {
-                spawnedEffect = Instantiate(effectPrefab, parent.position, parent.rotation, parent);
-            }
-            else if (!spawnedEffect.activeInHierarchy)
-            {
-                spawnedEffect.SetActive(true);
+                effectObject.SetActive(true);
             }
         }
 
         public void Deactivate()
         {
-            if (spawnedEffect != null)
+            if (effectObject != null)
             {
-                spawnedEffect.SetActive(false);
+                effectObject.SetActive(false);
             }
         }
 
-        public bool IsActivated => spawnedEffect != null && spawnedEffect.activeInHierarchy;
+        public bool IsActivated => effectObject != null && effectObject.activeInHierarchy;
     }
 
     [Header("Health Settings")]
@@ -115,6 +101,13 @@ public class Health : MonoBehaviour
     [Tooltip("List of effects to enable at specific HP thresholds")]
     public List<HealthEffect> healthEffects = new List<HealthEffect>();
 
+    [Header("Death Effects")]
+    [Tooltip("Plane model child object to disable on death")]
+    public GameObject planeModelObject;
+
+    [Tooltip("Particle emitters to stop on death")]
+    public List<ParticleSystem> damageEmitters = new List<ParticleSystem>();
+
     [Header("Events")]
     public UnityEvent onDeath;
     public UnityEvent<float> onDamage; // Passes damage amount
@@ -162,20 +155,11 @@ public class Health : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        // Check health effects each frame
-        CheckHealthEffects();
-    }
-
-    /// <summary>
     /// Setup child parts for multipart objects
-    /// </summary>
     private void SetupChildParts()
     {
         if (childParts == null || childParts.Count == 0) return;
 
-        // Iterate through child parts and setup references
         for (int i = 0; i < childParts.Count; i++)
         {
             if (childParts[i] == null) continue;
@@ -183,7 +167,6 @@ public class Health : MonoBehaviour
             Health childHealth = childParts[i].GetComponent<Health>();
             if (childHealth != null)
             {
-                // Mark as child part
                 childHealth.isChildPart = true;
                 childHealth.parentObject = gameObject;
             }
@@ -194,9 +177,7 @@ public class Health : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Apply damage to this object
-    /// </summary>
+    /// Apply damage duh
     public void TakeDamage(float damage, GameObject attacker = null)
     {
         if (isInvulnerable || currentHealth <= 0) return;
@@ -206,6 +187,8 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         onDamage?.Invoke(actualDamage);
+
+        CheckHealthEffects();
 
         if (currentHealth <= 0)
         {
@@ -235,24 +218,11 @@ public class Health : MonoBehaviour
 
             if (currentHealthPercent <= effect.hpPercentageThreshold)
             {
-                if (!activatedThresholds.Contains(effect.hpPercentageThreshold))
-                {
-                    effect.Activate(transform);
-                    activatedThresholds.Add(effect.hpPercentageThreshold);
-
-                    // If not activating all, break after first
-                    if (!effect.activateAllEffectsAtThreshold)
-                    {
-                        break;
-                    }
-                }
+                effect.Activate();
             }
         }
     }
 
-    /// <summary>
-    /// Called when a child part dies (for multipart objects)
-    /// </summary>
     public void NotifyChildPartDead(float damageMultIncrease)
     {
         if (!isMultipartObject) return;
@@ -263,9 +233,7 @@ public class Health : MonoBehaviour
         Debug.Log($"{gameObject.name} lost a part! Total parts lost: {partsDead}, New damage multiplier: {damageMultiplier}");
     }
 
-    /// <summary>
-    /// Notify parent that this child part died
-    /// </summary>
+    /// Notify parent that this child part 
     private void NotifyParentOfDeath()
     {
         if (!isChildPart || parentObject == null) return;
@@ -277,33 +245,27 @@ public class Health : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Main death function
-    /// </summary>
     public void Die(GameObject attacker = null)
     {
         if (isDead) return;
         isDead = true;
 
-        // If this is a child part, notify parent
         if (isChildPart)
         {
             NotifyParentOfDeath();
         }
 
-        // If this is a multipart parent, kill all children with same attacker
         if (isMultipartObject)
         {
             KillAllChildParts(attacker);
         }
 
-        // Force controls to act as if crashing (if not stationary)
         if (!isStationary && planeController != null)
         {
             ForceCrashControls();
         }
 
-        // Determine if instant death or delayed
         bool willBeInstant = Random.value < instantDeathChance;
 
         if (willBeInstant)
@@ -315,16 +277,25 @@ public class Health : MonoBehaviour
             Invoke(nameof(ExecuteDeath), destroyDelay);
         }
 
-        // Notify GameController
         if (gameController != null)
         {
             gameController.NotifyEntityDeath(this, gameObject.tag, isPlayer, attacker);
         }
     }
 
-    /// <summary>
-    /// Kill all child parts when parent dies (propagates attacker for scoring)
-    /// </summary>
+    private void StopDamageEmitters()
+    {
+        if (damageEmitters == null || damageEmitters.Count == 0) return;
+
+        foreach (ParticleSystem emitter in damageEmitters)
+        {
+            if (emitter != null)
+            {
+                emitter.Stop();
+            }
+        }
+    }
+
     private void KillAllChildParts(GameObject attacker)
     {
         if (childParts == null || childParts.Count == 0) return;
@@ -336,33 +307,31 @@ public class Health : MonoBehaviour
             Health partHealth = part.GetComponent<Health>();
             if (partHealth != null && partHealth.IsAlive())
             {
-                // Kill part with same attacker (for scoring)
                 partHealth.Die(attacker);
             }
         }
     }
 
-    /// <summary>
-    /// Execute the actual death sequence
-    /// </summary>
     private void ExecuteDeath()
     {
-        // Spawn explosion
+        if (planeModelObject != null)
+        {
+            planeModelObject.SetActive(false);
+            StopDamageEmitters();
+        }
+
         if (explodeOnDeath && explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         }
 
-        // Play death sound
         if (deathSound != null)
         {
             AudioSource.PlayClipAtPoint(deathSound, transform.position);
         }
 
-        // Invoke death event
         onDeath?.Invoke();
 
-        // Destroy object (player plane is handled by GameController)
         if (!isPlayer)
         {
             Destroy(gameObject);
@@ -377,17 +346,12 @@ public class Health : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Force plane controls to crash (zeroes input, induces downward spiral)
-    /// </summary>
     private void ForceCrashControls()
     {
         if (!isStationary && planeController != null)
         {
-            // Set thrust to zero
             planeController.thrust = 0f;
 
-            // Add strong downward and random rotational forces to simulate crash
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -398,49 +362,31 @@ public class Health : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Check if object is alive
-    /// </summary>
     public bool IsAlive()
     {
         return currentHealth > 0;
     }
 
-    /// <summary>
-    /// Get health as percentage (0-1)
-    /// </summary>
     public float GetHealthPercent()
     {
         return currentHealth / maxHealth;
     }
 
-    /// <summary>
-    /// Get current health value
-    /// </summary>
     public float GetCurrentHealth()
     {
         return currentHealth;
     }
 
-    /// <summary>
-    /// Get max health value
-    /// </summary>
     public float GetMaxHealth()
     {
         return maxHealth;
     }
 
-    /// <summary>
-    /// Get number of parts destroyed (for multipart objects)
-    /// </summary>
     public int GetPartsDestroyed()
     {
         return partsDead;
     }
 
-    /// <summary>
-    /// Get total number of parts (for multipart objects)
-    /// </summary>
     public int GetTotalParts()
     {
         if (childParts == null) return 0;
@@ -449,7 +395,6 @@ public class Health : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Cleanup health effects
         if (healthEffects != null)
         {
             foreach (HealthEffect effect in healthEffects)

@@ -390,6 +390,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -891,6 +893,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -1127,6 +1131,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -1363,6 +1369,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1360519485188000618, guid: 676656453f999674aaab895c1ce183a5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5592218751967544801, guid: 676656453f999674aaab895c1ce183a5, type: 3}
       propertyPath: m_Name
       value: LV6 EnemyPlane
@@ -2084,6 +2094,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -2426,6 +2438,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -2678,6 +2692,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -3119,6 +3135,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -3253,7 +3271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1976333381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3410,6 +3428,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -3591,10 +3611,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1898061705}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
-      propertyPath: showMilliseconds
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: resultCanvasObject
       value: 
       objectReference: {fileID: 1137510167}
@@ -3605,13 +3621,17 @@ PrefabInstance:
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: 'musicTracks.Array.data[0]'
       value: 
-      objectReference: {fileID: 8300000, guid: 8309cb5703af3c5468e30b79026bd0d4, type: 3}
+      objectReference: {fileID: 8300000, guid: 260daa9d2943b284cb5aec9b12a28923, type: 3}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].isActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].isActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
@@ -3619,16 +3639,32 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].condition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].triggerName
       value: bruh
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].triggerName
+      value: finish
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].enemyCountThreshold
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].enemyCountThreshold
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].actionType
@@ -3639,12 +3675,28 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].actionType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].spawnCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].enemyPrefab
       value: 
       objectReference: {fileID: 5592218751967544801, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].messageText
-      value: wallahi my guy a murderer
+      value: << its about damn time >>
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].enemyPrefab
+      value: 
+      objectReference: {fileID: 5592218751967544801, guid: 9766d74e5f4ecd248a9b70e26d2173aa, type: 3}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].messageText
+      value: << almost there buddy >>
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].messageDuration
@@ -3656,6 +3708,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].spawnPosition.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].messageDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].spawnPosition.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].spawnPosition.y
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6131786518784621896, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
@@ -3736,17 +3800,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 147660008303419196, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 147660008303419196, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: enableCockpitMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 147660008303419196, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: positionFollowSpeed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 147660008303419196, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: rotationFollowSpeed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 720903616109613777, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2265854262047508880, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: SoundVolume
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7819918401245782514, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
-      propertyPath: maxHealth
-      value: 120
-      objectReference: {fileID: 0}
     - target: {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_Name
       value: Player Craft
+      objectReference: {fileID: 0}
+    - target: {fileID: 8652415228466485267, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9112476151360918429, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_LocalPosition.x

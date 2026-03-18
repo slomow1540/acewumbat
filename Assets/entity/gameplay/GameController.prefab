@@ -55,7 +55,7 @@ MonoBehaviour:
   musicFadeInDuration: 2
   musicFadeOutDuration: 1.5
   trackMissionTime: 1
-  showMilliseconds: 0
+  showMilliseconds: 1
   missionTriggers: []
   resultScreenDelay: 1
   fadeDuration: 1

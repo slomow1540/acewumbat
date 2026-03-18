@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 456452279814824859}
   - component: {fileID: 2809354508085425495}
   m_Layer: 0
-  m_Name: enemy missile
-  m_TagString: enemy missile
+  m_Name: friendly missile
+  m_TagString: player missile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5efe2401898ad834ab560bbe66be7761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Missile
-  damage: 15
+  damage: 25
   launchSpeed: 100
   maxSpeed: 200
   acceleration: 25
@@ -117,6 +117,7 @@ MonoBehaviour:
   minTrackingSpeed: 50
   target: {fileID: 0}
   owner: {fileID: 0}
+  hasTarget: 0
   explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
   trailRenderer: {fileID: 0}
   engineParticles: {fileID: 0}

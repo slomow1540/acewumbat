@@ -137,8 +137,9 @@ GameObject:
   - component: {fileID: 1091033204620688545}
   - component: {fileID: 8666426294980299261}
   - component: {fileID: 5395833819781210270}
+  - component: {fileID: 1360519485188000618}
   m_Layer: 0
-  m_Name: EnemyPlane
+  m_Name: LV6 EnemyPlane
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,12 +225,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImprovedPlaneController
   thrustAcceleration: 2
-  maxThrust: 35000
+  maxThrust: 39000
   rollResponsiveness: 15
   pitchResponsiveness: 12
   yawResponsiveness: 8
   minControlSpeed: 20
-  maxAngularVelocity: 180
+  maxAngularVelocity: 360
   liftCoefficient: 0.02
   dragCoefficient: 0.1
   sidewaysDragMultiplier: 5
@@ -237,7 +238,7 @@ MonoBehaviour:
   angularDragCoefficient: 2
   stabilityFactor: 0.5
   airDensity: 1.225
-  perceivedSpeedMultiplier: 3
+  perceivedSpeedMultiplier: 1.5
   maxGForce: 9
   gForceLimiterStrength: 0.8
   turnGForceMultiplier: 0.5
@@ -245,12 +246,12 @@ MonoBehaviour:
   highGModeControlMultiplier: 2.5
   highGModeSpeedLoss: 35
   highGModeLimitBoost: 6
-  allowMouseControl: 0
-  mouseSensitivity: 1.5
-  mouseDeadzone: 0.1
+  allowMouseControl: 1
+  mouseSensitivity: 50
+  mouseDeadzone: 0.5
   mouseSmoothing: 0.7
   maxMouseInputMagnitude: 1.5
-  invertMouseY: 0
+  invertMouseY: 1
   thrustText: {fileID: 0}
   gForceText: {fileID: 0}
   speedText: {fileID: 0}
@@ -270,8 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0f6c4e37efa914da3c3f36781ad458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
-  point: 100
+  maxHealth: 175
+  point: 300
   currentHealth: 0
   isInvulnerable: 0
   isPlayer: 0
@@ -330,8 +331,8 @@ MonoBehaviour:
   closeRangeAccuracy: 0.9
   longRangeAccuracy: 0.3
   closeRange: 200
-  leadAccuracy: 0.8
-  missileLockTime: 4
+  leadAccuracy: 0.9
+  missileLockTime: 3
   currentLockProgress: 0
   requireLineOfSight: 1
 --- !u!114 &8666426294980299261
@@ -351,7 +352,7 @@ MonoBehaviour:
   detectionRange: 2000
   targetUpdateRate: 1
   aiInput: {fileID: 5395833819781210270}
-  cruiseSpeed: 80
+  cruiseSpeed: 100
   combatSpeed: 100
   evasionSpeed: 100
   currentBehavior: 1
@@ -361,7 +362,7 @@ MonoBehaviour:
   maxChaseRange: 200
   optimalMissileRange: 250
   evasionDistance: 50
-  evasionAggressiveness: 0.8
+  evasionAggressiveness: 1
   missileTag: player missile
   evasionHealthThreshold: 0
   opportunisticSwitchDistance: 600
@@ -389,6 +390,40 @@ MonoBehaviour:
   aiYawInput: 0
   aiThrustTarget: 50
   aiHighGMode: 0
+--- !u!114 &1360519485188000618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5592218751967544801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8517d041f984b8e448a28718d9226dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MissileInterceptor
+  detectionRange: 2000
+  detectionAngle: 180
+  scanInterval: 0.2
+  enemyMissileTag: player missile
+  lockTime: 0.1
+  allowMultipleLocks: 1
+  maxSimultaneousLocks: 2
+  interceptorPrefab: {fileID: 2137459680999894693, guid: 63f1c1eac8e08984caa33214a64c4804, type: 3}
+  launchPoints:
+  - {fileID: 4444574913132084082}
+  maxInterceptors: 10
+  currentInterceptors: 10
+  launchCooldown: 1
+  interceptorLaunchSpeed: 500
+  interceptorDamage: 30
+  prioritizeClosest: 1
+  prioritizeTimeToImpact: 1
+  autoEngage: 1
+  lockingSound: {fileID: 0}
+  launchSound: {fileID: 0}
+  emptySound: {fileID: 0}
+  showDebugLines: 1
 --- !u!1 &6627108452905540077
 GameObject:
   m_ObjectHideFlags: 0

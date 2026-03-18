@@ -44,6 +44,7 @@ public class PlaneWeaponSystem : MonoBehaviour
     public GameObject muzzleFlashPrefab;
     [Tooltip("Sound effect when firing")]
     public AudioClip fireSound;
+    //public float SoundVolume = 0.5f;
 
     private float nextFireTime;
     private AudioSource audioSource;
@@ -58,10 +59,15 @@ public class PlaneWeaponSystem : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null && fireSound != null)
         {
+            //audioSource.volume = SoundVolume;
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.spatialBlend = 1f; // 3D sound
             audioSource.playOnAwake = false;
         }
+        //else
+        //{
+        //    audioSource.volume = SoundVolume;
+        //}
 
         // Get plane's rigidbody for velocity inheritance
         planeRigidbody = GetComponent<Rigidbody>();

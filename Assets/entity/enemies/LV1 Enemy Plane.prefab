@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 8666426294980299261}
   - component: {fileID: 5395833819781210270}
   m_Layer: 0
-  m_Name: EnemyPlane
+  m_Name: LV1 Enemy Plane
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,13 +223,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b387b401e9198b438bb61bea535ff33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImprovedPlaneController
-  thrustAcceleration: 2
-  maxThrust: 35000
-  rollResponsiveness: 15
-  pitchResponsiveness: 12
-  yawResponsiveness: 8
+  thrustAcceleration: 1
+  maxThrust: 20000
+  rollResponsiveness: 6
+  pitchResponsiveness: 6
+  yawResponsiveness: 4
   minControlSpeed: 20
-  maxAngularVelocity: 180
+  maxAngularVelocity: 30
   liftCoefficient: 0.02
   dragCoefficient: 0.1
   sidewaysDragMultiplier: 5
@@ -238,7 +238,7 @@ MonoBehaviour:
   stabilityFactor: 0.5
   airDensity: 1.225
   perceivedSpeedMultiplier: 3
-  maxGForce: 9
+  maxGForce: 6
   gForceLimiterStrength: 0.8
   turnGForceMultiplier: 0.5
   turnRateLossOverGLimit: 0.8
@@ -270,8 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0f6c4e37efa914da3c3f36781ad458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
-  point: 100
+  maxHealth: 50
+  point: 30
   currentHealth: 0
   isInvulnerable: 0
   isPlayer: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 1000
+  detectionRange: 600
   targetUpdateRate: 1
   useGuns: 1
   useMissiles: 1
@@ -327,11 +327,11 @@ MonoBehaviour:
   maxMissileRange: 1500
   gunFiringFOV: 20
   missileLockFOV: 80
-  closeRangeAccuracy: 0.9
-  longRangeAccuracy: 0.3
+  closeRangeAccuracy: 0.8
+  longRangeAccuracy: 0.2
   closeRange: 200
   leadAccuracy: 0.8
-  missileLockTime: 4
+  missileLockTime: 5
   currentLockProgress: 0
   requireLineOfSight: 1
 --- !u!114 &8666426294980299261
@@ -361,7 +361,7 @@ MonoBehaviour:
   maxChaseRange: 200
   optimalMissileRange: 250
   evasionDistance: 50
-  evasionAggressiveness: 0.8
+  evasionAggressiveness: 0.2
   missileTag: player missile
   evasionHealthThreshold: 0
   opportunisticSwitchDistance: 600

@@ -48,9 +48,6 @@ public class PlaneHUD : MonoBehaviour
     [Tooltip("Size of the arrow")]
     public float arrowSize = 40f;
 
-    [Header("Crosshair")]
-    public GameObject crosshair;
-
     private RectTransform lockIndicatorRect;
     private RectTransform offScreenArrowRect;
     private Canvas canvas;

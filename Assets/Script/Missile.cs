@@ -269,6 +269,12 @@ public class Missile : MonoBehaviour
             return;
         }
 
+        if (collision.gameObject.CompareTag("gun projectile"))
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            return;
+        }
+
         hasHit = true;
 
         // Get explosion point

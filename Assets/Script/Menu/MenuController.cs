@@ -24,15 +24,17 @@ public class MenuController : MonoBehaviour
     public BackButton backButton;
 
     [Header("Audio")]
-    public AudioSource audioSource;
-    public AudioClip hoverSound;
-    public AudioClip clickSound;
+    private AudioManager audioManager;
+    public AudioClip switchSound;
+    public AudioClip confirmSound;
     public AudioClip startSound;
+    public AudioClip moveSound;
 
     private int currentIndex = 0;
 
     void Start()
     {
+        audioManager = AudioManager.Instance;
         menuPanel.SetActive(false);
         pressAnyKeyText.SetActive(true);
     }
@@ -61,7 +63,7 @@ public class MenuController : MonoBehaviour
         state = MenuState.Transition;
 
         pressAnyKeyText.SetActive(false);
-        PlayStart();
+        audioManager.Play(startSound);
 
         Invoke(nameof(ShowMenu), 0.5f);
     }
@@ -105,7 +107,8 @@ public class MenuController : MonoBehaviour
         if (currentIndex < 0)
             currentIndex = items.Length - 1;
 
-        PlayHover();
+        audioManager.Play(switchSound);
+        audioManager.Play(items[currentIndex].selectSound);
         UpdateSelection();
     }
 
@@ -115,7 +118,8 @@ public class MenuController : MonoBehaviour
         if (currentIndex >= items.Length)
             currentIndex = 0;
 
-        PlayHover();
+        audioManager.Play(switchSound);
+        audioManager.Play(items[currentIndex].selectSound);
         UpdateSelection();
     }
 
@@ -128,7 +132,8 @@ public class MenuController : MonoBehaviour
     {
         state = MenuState.Confirm;
 
-        PlayClick();
+        audioManager.Play(confirmSound);
+        audioManager.Play(items[currentIndex].confirmSound);
 
         items[currentIndex].Confirm();
 
@@ -174,6 +179,8 @@ public class MenuController : MonoBehaviour
         pointer.Show(0.1f);
         pointer.Follow(GetCurrentRect());
 
+        audioManager.Play(confirmSound);
+
         gameManager.ApplyMenu(GameManager.MenuType.Idle);
     }
 
@@ -215,7 +222,6 @@ public class MenuController : MonoBehaviour
         if (currentIndex != i)
         {
             currentIndex = i;
-            PlayHover();
             UpdateSelection();
         }
     }
@@ -234,20 +240,5 @@ public class MenuController : MonoBehaviour
     RectTransform GetCurrentRect()
     {
         return items[currentIndex].GetComponent<RectTransform>();
-    }
-
-    void PlayHover()
-    {
-        audioSource.PlayOneShot(hoverSound);
-    }
-
-    void PlayClick()
-    {
-        audioSource.PlayOneShot(clickSound);
-    }
-
-    void PlayStart()
-    {
-        audioSource.PlayOneShot(startSound);
     }
 }

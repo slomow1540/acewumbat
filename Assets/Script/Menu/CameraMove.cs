@@ -4,29 +4,41 @@ using UnityEngine;
 public class CameraMover : MonoBehaviour
 {
     public Transform[] points;
+    private Transform currentTarget;
 
     public float moveDuration = 1.5f;
     public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Coroutine currentMove;
+    private int currentIndex = 0;
+
+    private AudioManager audioManager;
+    public AudioClip moveSound;
+
+    void Start()
+    {
+        audioManager = AudioManager.Instance;
+    }
 
     public void MoveTo(int index)
     {
         if (index < 0 || index >= points.Length)
             return;
 
+        if (currentIndex == index)
+            return;
+
+        currentIndex = index;
+
         if (currentMove != null)
             StopCoroutine(currentMove);
+
+        if (audioManager != null && moveSound != null)
+        {
+            audioManager.Play(moveSound);
+        }
 
         currentMove = StartCoroutine(MoveRoutine(points[index]));
-    }
-
-    public void MoveTo(Transform target)
-    {
-        if (currentMove != null)
-            StopCoroutine(currentMove);
-
-        currentMove = StartCoroutine(MoveRoutine(target));
     }
 
     IEnumerator MoveRoutine(Transform target)

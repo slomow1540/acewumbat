@@ -6,6 +6,9 @@ public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandle
     public int index;
     public MenuController controller;
 
+    public AudioClip selectSound;
+    public AudioClip confirmSound;
+
     private bool isHovered = false;
     private bool isConfirmed = false;
 

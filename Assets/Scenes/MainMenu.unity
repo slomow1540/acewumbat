@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: d9dca9ae1786c394f9e79c637aa9a7bf, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: efd1c33efd2d58340b88804268e6833f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!108 &17872060 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: -5124017303186392456, guid: 311e43472cbfc5647b51eb1e76f9eec0, type: 3}
+  m_PrefabInstance: {fileID: 216078408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &86584638
 GameObject:
   m_ObjectHideFlags: 0
@@ -2026,7 +2031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 720, y: 425}
+  m_AnchoredPosition: {x: 640, y: 470}
   m_SizeDelta: {x: 578.1207, y: 60.2141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &745210880
@@ -2283,11 +2288,6 @@ MonoBehaviour:
   controller: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 628e10caf8de89f4caa3dc970557bcbd, type: 3}
   confirmSound: {fileID: 8300000, guid: 6de2c3e85e796b544a5aa99e2c943f29, type: 3}
---- !u!108 &856341709 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: -3679744457112470946, guid: 311e43472cbfc5647b51eb1e76f9eec0, type: 3}
-  m_PrefabInstance: {fileID: 216078408}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1041935966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2356,13 +2356,13 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10486974bb9fbad438661fa5ce0563de, type: 3}
-      insertIndex: 7
+      insertIndex: -1
       addedObject: {fileID: 673585660}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10486974bb9fbad438661fa5ce0563de, type: 3}
-      insertIndex: 8
+      insertIndex: -1
       addedObject: {fileID: 1278700846}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10486974bb9fbad438661fa5ce0563de, type: 3}
-      insertIndex: 9
+      insertIndex: -1
       addedObject: {fileID: 1659830218}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10486974bb9fbad438661fa5ce0563de, type: 3}
@@ -2411,8 +2411,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightingController
   outsideLights:
-  - {fileID: 856341709}
-  - {fileID: 1470698493}
+  - {fileID: 1324239501}
+  - {fileID: 17872060}
 --- !u!1 &1112409620
 GameObject:
   m_ObjectHideFlags: 0
@@ -2631,6 +2631,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278700845}
   m_Mesh: {fileID: -2228417370725966487, guid: 10486974bb9fbad438661fa5ce0563de, type: 3}
+--- !u!108 &1324239501 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: -3679744457112470946, guid: 311e43472cbfc5647b51eb1e76f9eec0, type: 3}
+  m_PrefabInstance: {fileID: 216078408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1432705966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2704,11 +2709,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1580811344}
   m_LocalEulerAnglesHint: {x: 0, y: -30, z: 0}
---- !u!108 &1470698493 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: -5124017303186392456, guid: 311e43472cbfc5647b51eb1e76f9eec0, type: 3}
-  m_PrefabInstance: {fileID: 216078408}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1502057869
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,7 +4131,6 @@ MonoBehaviour:
   switchSound: {fileID: 8300000, guid: ae72203628ea52a4f9061b8be01e52b8, type: 3}
   confirmSound: {fileID: 8300000, guid: 7d3178aa79c1dd042892bbf750fc499d, type: 3}
   startSound: {fileID: 8300000, guid: 32abe095f9c1ee647852006916d321d1, type: 3}
-  moveSound: {fileID: 8300000, guid: 6a4b24910f9be1f49a73e61dee1114c0, type: 3}
 --- !u!1 &2028488486
 GameObject:
   m_ObjectHideFlags: 0

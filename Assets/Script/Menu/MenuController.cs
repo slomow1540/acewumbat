@@ -28,7 +28,6 @@ public class MenuController : MonoBehaviour
     public AudioClip switchSound;
     public AudioClip confirmSound;
     public AudioClip startSound;
-    public AudioClip moveSound;
 
     private int currentIndex = 0;
 

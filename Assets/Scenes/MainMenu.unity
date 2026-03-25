@@ -4128,7 +4128,7 @@ MonoBehaviour:
   - {fileID: 162118271}
   pointer: {fileID: 325922223}
   backButton: {fileID: 1884819169}
-  switchSound: {fileID: 8300000, guid: ae72203628ea52a4f9061b8be01e52b8, type: 3}
+  switchSound: {fileID: 8300000, guid: 6d5691546479c7747a63436456203c2f, type: 3}
   confirmSound: {fileID: 8300000, guid: 7d3178aa79c1dd042892bbf750fc499d, type: 3}
   startSound: {fileID: 8300000, guid: 32abe095f9c1ee647852006916d321d1, type: 3}
 --- !u!1 &2028488486

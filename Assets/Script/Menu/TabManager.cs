@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class TabManager : MonoBehaviour
 {
     [System.Serializable]
@@ -25,6 +24,8 @@ public class TabManager : MonoBehaviour
     public float fadeSpeed = 5f;
     private Material mat;
 
+    public AudioClip clickSound;
+
     int currentTab = -1;
 
     void Start()
@@ -32,6 +33,10 @@ public class TabManager : MonoBehaviour
         mat = hologramRenderer.material;
         SelectTab(0);
         Hide();
+        for (int i = 0; i < tabs.Length; i++)
+        {
+            tabs[i].Setup(this, i);
+        }
     }
 
     public void Show()

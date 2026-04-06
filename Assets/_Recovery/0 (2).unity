@@ -1297,35 +1297,6 @@ MonoBehaviour:
   - {fileID: 1586803735}
   - {fileID: 516782538}
   - {fileID: 581611518}
-  hologramData:
-  - mesh: {fileID: 0}
-    hologramColor: {r: 1, g: 1, b: 1, a: 1}
-    textureTintColor: {r: 1, g: 1, b: 1, a: 1}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 1, g: 1, b: 1, a: 1}
-    textureTintColor: {r: 1, g: 1, b: 1, a: 1}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 1, g: 1, b: 1, a: 1}
-    textureTintColor: {r: 1, g: 1, b: 1, a: 1}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 1, g: 1, b: 1, a: 1}
-    textureTintColor: {r: 1, g: 1, b: 1, a: 1}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  hologramMesh: {fileID: 8324602472414300655}
-  hologramRenderer: {fileID: 6080451713792687397}
-  fadeSpeed: 5
-  clickSound: {fileID: 8300000, guid: e4dcb69ebcfe3ba45aa05616b92b807e, type: 3}
 --- !u!1 &325922217
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,9 +1988,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.24705882}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.2627451}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.4117647}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.37254903}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -2245,9 +2216,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.24705882}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.2627451}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.4117647}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.37254903}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -2355,7 +2326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.025520835, y: 0.81200004}
   m_AnchorMax: {x: 0.970375, y: 0.8888519}
-  m_AnchoredPosition: {x: 4.159912, y: 0.5}
+  m_AnchoredPosition: {x: 4.159973, y: 0.5}
   m_SizeDelta: {x: -2.1865234, y: 7.396118}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &611995439
@@ -2945,7 +2916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 852037890}
   m_Layer: 5
-  m_Name: Audio
+  m_Name: Sound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3623,9 +3594,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.24705882}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.2627451}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.4117647}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.37254903}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -4135,9 +4106,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.24705882}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.2627451}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.4117647}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.37254903}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -5119,7 +5090,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Audio
+  m_text: Sound
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
   m_sharedMaterial: {fileID: -2962246858991115109, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
@@ -6513,7 +6484,7 @@ GameObject:
   - component: {fileID: 8324602472414300655}
   - component: {fileID: 6080451713792687397}
   m_Layer: 0
-  m_Name: Mesh
+  m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

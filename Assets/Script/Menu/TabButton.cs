@@ -7,6 +7,7 @@ public class TabButton : GeneralUI
     private Button button;
     private int index;
     private TabManager manager;
+    private AudioManager audioManager;
 
     public void Setup(TabManager m, int i)
     {
@@ -16,6 +17,8 @@ public class TabButton : GeneralUI
 
     public void OnClick()
     {
+        audioManager = AudioManager.Instance;
+        audioManager.Play(manager.clickSound);
         manager.SelectTab(index);
     }
 
@@ -25,12 +28,9 @@ public class TabButton : GeneralUI
 
         ColorBlock cb = button.colors;
 
-        Color c = cb.normalColor;
+        cb.normalColor = active ? new Color(1f, 1f, 1f, 0.26f) : new Color(1f, 1f, 1f, 0f);
 
-        c.a = active ? 0.4f : 0f;
-
-        cb.normalColor = c;
-        cb.pressedColor = c;
+        cb.selectedColor = cb.normalColor;
 
         button.colors = cb;
     }

@@ -5,14 +5,8 @@ using UnityEngine.UI;
 public class TabButton : GeneralUI
 {
     private Button button;
-
     private int index;
     private TabManager manager;
-
-    void Start()
-    {
-        button = GetComponent<Button>();
-    }
 
     public void Setup(TabManager m, int i)
     {
@@ -27,6 +21,8 @@ public class TabButton : GeneralUI
 
     public void SetActive(bool active)
     {
+        button = GetComponent<Button>();
+
         ColorBlock cb = button.colors;
 
         Color c = cb.normalColor;

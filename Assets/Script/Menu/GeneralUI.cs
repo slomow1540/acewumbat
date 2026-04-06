@@ -101,7 +101,7 @@ public class GeneralUI : MonoBehaviour
         alpha = Mathf.Lerp(alpha, 0f, Time.deltaTime * speed);
         rect.anchoredPosition = Vector2.Lerp(
             rect.anchoredPosition,
-            basePos + new Vector2(-150f, 0),
+            basePos + new Vector2(-2000f, 0),
             Time.deltaTime * speed
         );
 

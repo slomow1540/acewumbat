@@ -106,8 +106,8 @@ MonoBehaviour:
   lifetime: 15
   explosionRadius: 10
   minDirectHitDamage: 0.5
-  navigationGain: 0.8
-  maxTurnRate: 55
+  navigationGain: 0.65
+  maxTurnRate: 45
   leadMultiplier: 1
   terminalGuidanceRange: 15
   terminalGainMultiplier: 0.5

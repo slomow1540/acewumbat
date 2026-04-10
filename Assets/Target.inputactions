@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "Target",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "c88a9acd-fcf1-4711-8720-b78d3109b82a",
+            "actions": [
+                {
+                    "name": "Target",
+                    "type": "Button",
+                    "id": "05c57dc5-fb6b-4255-a7d4-6b4014ba7e8b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "18463566-715a-4c2c-9439-906dee2b7371",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Target",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

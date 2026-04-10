@@ -10,8 +10,13 @@ public class Hologram : MonoBehaviour
     private Vector3 shownPos;
     private Vector3 hiddenPos;
 
+    private AudioManager audioManager;
+    public AudioClip enterSound;
+
     void Awake()
     {
+        audioManager = AudioManager.Instance;
+
         shownPos = transform.localPosition;
         hiddenPos = shownPos + hiddenOffset;
 
@@ -21,12 +26,14 @@ public class Hologram : MonoBehaviour
 
     public void Show()
     {
+        audioManager.Play(enterSound);
         StopAllCoroutines();
         StartCoroutine(Animate(show: true));
     }
 
     public void Hide()
     {
+        audioManager.Play(enterSound);
         StopAllCoroutines();
         StartCoroutine(Animate(show: false));
     }

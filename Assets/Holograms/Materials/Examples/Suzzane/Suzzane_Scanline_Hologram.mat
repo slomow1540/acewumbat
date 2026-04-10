@@ -72,8 +72,8 @@ Material:
     m_Colors:
     - _Displacement_Direction: {r: 0, g: 1, b: 0, a: 0}
     - _Displacement_Noise_Direction: {r: 1, g: 0, b: 0, a: 0}
-    - _Hologram_Color: {r: 1, g: 0.97883666, b: 0, a: 1}
+    - _Hologram_Color: {r: 0, g: 1, b: 0.04386854, a: 1}
     - _Pattern_Direction: {r: 0, g: 1, b: 0, a: 0}
-    - _Texture_Tint_Color: {r: 0, g: 0.9757848, b: 1, a: 0.2509804}
+    - _Texture_Tint_Color: {r: 1, g: 0.05960547, b: 0, a: 0.2509804}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

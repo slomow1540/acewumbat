@@ -23,6 +23,10 @@ public class MenuController : MonoBehaviour
     public Pointer pointer;
     public BackButton backButton;
 
+    public TabManager tabManager;
+
+    public CreditButton[] creditButton;
+
     [Header("Audio")]
     private AudioManager audioManager;
     public AudioClip switchSound;
@@ -139,6 +143,23 @@ public class MenuController : MonoBehaviour
         state = MenuState.Confirm;
 
         audioManager.Play(confirmSound);
+
+        gameManager.ApplyMenu((GameManager.MenuType)(currentIndex + 1));
+
+        if (currentIndex == 3)
+        {
+            settingsHologram.Show();
+            overlay.FadeTo(0.7f);
+            tabManager.Show();
+        }
+        else if (currentIndex == 4)
+        {
+            for (int i = 0; i < creditButton.Length; i++)
+            {
+                creditButton[i].Show();
+            }
+        }
+
         audioManager.Play(items[currentIndex].confirmSound);
 
         items[currentIndex].Confirm();
@@ -153,14 +174,6 @@ public class MenuController : MonoBehaviour
         backButton.Show();
 
         StartCoroutine(DelayedSelect());
-
-        gameManager.ApplyMenu((GameManager.MenuType)(currentIndex + 1));
-
-        if (currentIndex == 3)
-        {
-            settingsHologram.Show();
-            overlay.FadeTo(0.7f);
-        }
     }
 
     System.Collections.IEnumerator DelayedSelect()
@@ -183,8 +196,19 @@ public class MenuController : MonoBehaviour
 
         backButton.Hide();
 
-        settingsHologram.Hide();
-        overlay.FadeTo(0f);
+        if (currentIndex == 3)
+        {
+            settingsHologram.Hide();
+            overlay.FadeTo(0f);
+            tabManager.Hide();
+        }
+        else if (currentIndex == 4)
+        {
+            for (int i = 0; i < creditButton.Length; i++)
+            {
+                creditButton[i].Hide();
+            }
+        }
 
         for (int i = 0; i < items.Length; i++)
         {

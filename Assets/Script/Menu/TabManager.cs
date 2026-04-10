@@ -17,7 +17,7 @@ public class TabManager : MonoBehaviour
     }
 
     [Header("UI")]
-    public GameObject[] panels;
+    public TabPanel[] panels;
     public TabButton[] tabs;
 
     [Header("Hologram")]
@@ -53,12 +53,17 @@ public class TabManager : MonoBehaviour
             tabs[i].Setup(this, i);
         }
 
-        SelectTab(0);
+        for (int i = 0; i < panels.Length; i++)
+        {
+            panels[i].HideInstant();
+        }
+
         Hide();
     }
 
     public void Show()
     {
+        SelectTab(0);
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].Show(i * 0.05f);
@@ -83,7 +88,14 @@ public class TabManager : MonoBehaviour
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].SetActive(i == index);
-            // panels[i].SetActive(i == index); // kalau mau dipakai
+            if (i == index)
+            {
+                panels[i].Show();
+            }
+            else
+            {
+                panels[i].Hide();
+            }
         }
 
         StopAllCoroutines();

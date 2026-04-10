@@ -25,6 +25,8 @@ public class MenuController : MonoBehaviour
 
     public TabManager tabManager;
 
+    public CreditButton[] creditButton;
+
     [Header("Audio")]
     private AudioManager audioManager;
     public AudioClip switchSound;
@@ -150,6 +152,13 @@ public class MenuController : MonoBehaviour
             overlay.FadeTo(0.7f);
             tabManager.Show();
         }
+        else if (currentIndex == 4)
+        {
+            for (int i = 0; i < creditButton.Length; i++)
+            {
+                creditButton[i].Show();
+            }
+        }
 
         audioManager.Play(items[currentIndex].confirmSound);
 
@@ -192,6 +201,13 @@ public class MenuController : MonoBehaviour
             settingsHologram.Hide();
             overlay.FadeTo(0f);
             tabManager.Hide();
+        }
+        else if (currentIndex == 4)
+        {
+            for (int i = 0; i < creditButton.Length; i++)
+            {
+                creditButton[i].Hide();
+            }
         }
 
         for (int i = 0; i < items.Length; i++)

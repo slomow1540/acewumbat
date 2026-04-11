@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 8666426294980299261}
   - component: {fileID: 5395833819781210270}
   m_Layer: 0
-  m_Name: EnemyPlane
+  m_Name: LV5 EnemyPlane
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

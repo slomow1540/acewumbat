@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0f6c4e37efa914da3c3f36781ad458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 50
+  maxHealth: 40
   point: 30
   currentHealth: 0
   isInvulnerable: 0
@@ -288,6 +288,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []

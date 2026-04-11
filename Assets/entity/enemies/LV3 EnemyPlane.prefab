@@ -137,9 +137,8 @@ GameObject:
   - component: {fileID: 1091033204620688545}
   - component: {fileID: 8666426294980299261}
   - component: {fileID: 5395833819781210270}
-  - component: {fileID: 1360519485188000618}
   m_Layer: 0
-  m_Name: LV6 EnemyPlane
+  m_Name: LV3 EnemyPlane
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,13 +223,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b387b401e9198b438bb61bea535ff33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImprovedPlaneController
-  thrustAcceleration: 2
-  maxThrust: 39000
-  rollResponsiveness: 15
-  pitchResponsiveness: 12
-  yawResponsiveness: 8
+  thrustAcceleration: 1.5
+  maxThrust: 27500
+  rollResponsiveness: 11
+  pitchResponsiveness: 9
+  yawResponsiveness: 6
   minControlSpeed: 20
-  maxAngularVelocity: 360
+  maxAngularVelocity: 90
   liftCoefficient: 0.02
   dragCoefficient: 0.1
   sidewaysDragMultiplier: 5
@@ -238,8 +237,8 @@ MonoBehaviour:
   angularDragCoefficient: 2
   stabilityFactor: 0.5
   airDensity: 1.225
-  perceivedSpeedMultiplier: 1.5
-  maxGForce: 9
+  perceivedSpeedMultiplier: 3
+  maxGForce: 7
   gForceLimiterStrength: 0.8
   turnGForceMultiplier: 0.5
   turnRateLossOverGLimit: 0.8
@@ -247,8 +246,8 @@ MonoBehaviour:
   highGModeSpeedLoss: 35
   highGModeLimitBoost: 6
   allowMouseControl: 0
-  mouseSensitivity: 50
-  mouseDeadzone: 0.5
+  mouseSensitivity: 1.5
+  mouseDeadzone: 0.1
   mouseSmoothing: 0.7
   maxMouseInputMagnitude: 1.5
   invertMouseY: 0
@@ -271,8 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0f6c4e37efa914da3c3f36781ad458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 175
-  point: 300
+  maxHealth: 75
+  point: 55
   currentHealth: 0
   isInvulnerable: 0
   isPlayer: 0
@@ -314,27 +313,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 1000
+  detectionRange: 800
   targetUpdateRate: 1
   useGuns: 1
   useMissiles: 1
   projectilePrefab: {fileID: 4643293625211329145, guid: bafd52d8ddc88b8439f4cdee8b3b77fc, type: 3}
-  missilePrefab: {fileID: 2137459680999894693, guid: 74488a8cf2191cf4da547b1ac48e281e, type: 3}
+  missilePrefab: {fileID: 2137459680999894693, guid: 6312990c9776db84f8c651c60ad2f991, type: 3}
   firePoints:
   - {fileID: 4444574913132084082}
   gunDamage: 8
-  missileDamage: 32
+  missileDamage: 25
   gunFireRate: 20
   missileFireRate: 0.5
   maxGunRange: 800
   maxMissileRange: 1500
   gunFiringFOV: 20
   missileLockFOV: 80
-  closeRangeAccuracy: 0.9
-  longRangeAccuracy: 0.3
+  closeRangeAccuracy: 0.85
+  longRangeAccuracy: 0.25
   closeRange: 200
-  leadAccuracy: 0.9
-  missileLockTime: 3
+  leadAccuracy: 0.8
+  missileLockTime: 4.5
   currentLockProgress: 0
   requireLineOfSight: 1
 --- !u!114 &8666426294980299261
@@ -354,7 +353,7 @@ MonoBehaviour:
   detectionRange: 2000
   targetUpdateRate: 1
   aiInput: {fileID: 5395833819781210270}
-  cruiseSpeed: 100
+  cruiseSpeed: 80
   combatSpeed: 100
   evasionSpeed: 100
   currentBehavior: 1
@@ -364,7 +363,7 @@ MonoBehaviour:
   maxChaseRange: 200
   optimalMissileRange: 250
   evasionDistance: 50
-  evasionAggressiveness: 1
+  evasionAggressiveness: 0.5
   missileTag: player missile
   evasionHealthThreshold: 0
   opportunisticSwitchDistance: 600
@@ -392,40 +391,6 @@ MonoBehaviour:
   aiYawInput: 0
   aiThrustTarget: 50
   aiHighGMode: 0
---- !u!114 &1360519485188000618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5592218751967544801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8517d041f984b8e448a28718d9226dee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MissileInterceptor
-  detectionRange: 2000
-  detectionAngle: 180
-  scanInterval: 0.2
-  enemyMissileTag: player missile
-  lockTime: 0.1
-  allowMultipleLocks: 1
-  maxSimultaneousLocks: 2
-  interceptorPrefab: {fileID: 2137459680999894693, guid: 63f1c1eac8e08984caa33214a64c4804, type: 3}
-  launchPoints:
-  - {fileID: 4444574913132084082}
-  maxInterceptors: 10
-  currentInterceptors: 10
-  launchCooldown: 1
-  interceptorLaunchSpeed: 500
-  interceptorDamage: 30
-  prioritizeClosest: 1
-  prioritizeTimeToImpact: 1
-  autoEngage: 1
-  lockingSound: {fileID: 0}
-  launchSound: {fileID: 0}
-  emptySound: {fileID: 0}
-  showDebugLines: 1
 --- !u!1 &6627108452905540077
 GameObject:
   m_ObjectHideFlags: 0

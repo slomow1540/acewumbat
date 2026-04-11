@@ -59,7 +59,7 @@ public class CreditButton : MonoBehaviour
     public void Hide()
     {
         StopAllCoroutines();
-        gameObject.SetActive(false);
+        StartCoroutine(AnimateExit());
     }
 
     IEnumerator AnimateEnter()
@@ -81,5 +81,27 @@ public class CreditButton : MonoBehaviour
         }
 
         rect.anchoredPosition = targetPos;
+    }
+
+    IEnumerator AnimateExit()
+    {
+        Vector2 startPos = rect.anchoredPosition;
+        Vector2 endPos = targetPos + new Vector2(offsetX, 0);
+
+        float time = 0f;
+
+        while (time < 1f)
+        {
+            time += Time.deltaTime * animSpeed;
+            float t = Mathf.SmoothStep(0f, 1f, time);
+
+            rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
+
+            yield return null;
+        }
+
+        rect.anchoredPosition = endPos;
+
+        gameObject.SetActive(false);
     }
 }

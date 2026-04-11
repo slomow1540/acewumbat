@@ -75,6 +75,7 @@ public class TabManager : MonoBehaviour
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].Hide(i * 0.05f);
+            panels[i].Hide();
         }
     }
 

@@ -1392,7 +1392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 5
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 66ee7e0d52ac2b14a9895db914b381fa, type: 3}
   confirmSound: {fileID: 8300000, guid: b358bc3717304754d9417c4ee7e50403, type: 3}
 --- !u!114 &162118272
@@ -2795,30 +2795,30 @@ MonoBehaviour:
   - {fileID: 936370803}
   - {fileID: 1370937865}
   hologramData:
-  - mesh: {fileID: 0}
-    hologramColor: {r: 0, g: 0, b: 0, a: 0}
-    textureTintColor: {r: 0, g: 0, b: 0, a: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 0, g: 0, b: 0, a: 0}
-    textureTintColor: {r: 0, g: 0, b: 0, a: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 0, g: 0, b: 0, a: 0}
-    textureTintColor: {r: 0, g: 0, b: 0, a: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
-  - mesh: {fileID: 0}
-    hologramColor: {r: 0, g: 0, b: 0, a: 0}
-    textureTintColor: {r: 0, g: 0, b: 0, a: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
+  - mesh: {fileID: 6081231653780672522, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
+    hologramColor: {r: 0.9714507, g: 1, b: 0, a: 1}
+    textureTintColor: {r: 0, g: 1, b: 0.9332645, a: 0.25490198}
+    position: {x: 0, y: 0.05, z: 0}
+    rotation: {x: -105, y: -90, z: 0}
+    scale: {x: 5, y: 5, z: 5}
+  - mesh: {fileID: -2432090755550338912, guid: 7ccb1dbc695354a078ca7d4c4c59174d, type: 3}
+    hologramColor: {r: 0.54622364, g: 0, b: 1, a: 1}
+    textureTintColor: {r: 0, g: 1, b: 0.11510205, a: 0.25490198}
+    position: {x: 0, y: 0.05, z: 0}
+    rotation: {x: 0, y: 180, z: 0}
+    scale: {x: 0.25, y: 0.25, z: 0.25}
+  - mesh: {fileID: -2441359178632667905, guid: 4d4a3dadd91ae484cb3d093842a55207, type: 3}
+    hologramColor: {r: 0, g: 0.052667618, b: 1, a: 1}
+    textureTintColor: {r: 1, g: 0.94037676, b: 0, a: 0.25490198}
+    position: {x: 0, y: 0.05, z: 0}
+    rotation: {x: 0, y: 180, z: 0}
+    scale: {x: 20, y: 20, z: 20}
+  - mesh: {fileID: -2432090755550338912, guid: ea5267998635b344b96f604ca1e5f80c, type: 3}
+    hologramColor: {r: 0, g: 1, b: 0.03375435, a: 1}
+    textureTintColor: {r: 1, g: 0, b: 0, a: 0.25490198}
+    position: {x: 0, y: 0.05, z: 0}
+    rotation: {x: 0, y: 180, z: 0}
+    scale: {x: 0.12, y: 0.12, z: 0.12}
   hologramMesh: {fileID: 8324602472414300655}
   hologramRenderer: {fileID: 6080451713792687397}
   hologramLights:
@@ -2827,6 +2827,7 @@ MonoBehaviour:
   lightMultiplier: 0.35
   fadeSpeed: 5
   clickSound: {fileID: 8300000, guid: e4dcb69ebcfe3ba45aa05616b92b807e, type: 3}
+  enterSound: {fileID: 8300000, guid: a67417a4645933f49a064c0e69000969, type: 3}
   settingsHologram: {fileID: 2092575351}
   overlay: {fileID: 1733089895}
   overlayFadeSpeed: 5
@@ -3222,6 +3223,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 325922218}
   - {fileID: 1793571936}
   - {fileID: 1610883522}
   - {fileID: 853733584}
@@ -3247,7 +3249,6 @@ GameObject:
   - component: {fileID: 325922220}
   - component: {fileID: 325922221}
   - component: {fileID: 325922219}
-  - component: {fileID: 325922222}
   - component: {fileID: 325922223}
   m_Layer: 5
   m_Name: Pointer
@@ -3268,11 +3269,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1861278861}
+  m_Father: {fileID: 322515137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: 210}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 556.0408, y: 49.8789}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &325922219
@@ -3387,18 +3388,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &325922222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325922217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cce664c5fe5bc204c8c4e3f9cd14020e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pointer
 --- !u!114 &325922223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3722,7 +3711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 3
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 21173fb2f14a2a44984c7cd30fee0af0, type: 3}
   confirmSound: {fileID: 8300000, guid: 440e28bcb4ab8b84c9f153b617a97b71, type: 3}
 --- !u!114 &395169752
@@ -4756,7 +4745,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06065}
+  m_AnchoredPosition: {x: 8.5, y: -159.06061}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -5111,7 +5100,6 @@ GameObject:
   - component: {fileID: 516782537}
   - component: {fileID: 516782541}
   - component: {fileID: 516782540}
-  - component: {fileID: 516782538}
   - component: {fileID: 516782539}
   - component: {fileID: 516782542}
   m_Layer: 5
@@ -5141,33 +5129,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140, y: -30}
   m_SizeDelta: {x: 280, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &516782538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516782536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c5f937099f652949bf378fce9dcd73f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabButton
-  text: {fileID: 0}
-  rect: {fileID: 0}
-  basePos: {x: 0, y: 0}
-  offsetPos: {x: 0, y: 0}
-  alpha: 0
-  isShowing: 0
-  isHiding: 0
-  isMoving: 0
-  speed: 8
-  delay: 0
-  timer: 0
-  button: {fileID: 0}
-  index: 0
-  manager: {fileID: 0}
-  audioManager: {fileID: 0}
 --- !u!114 &516782539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5925,7 +5886,6 @@ GameObject:
   - component: {fileID: 581611517}
   - component: {fileID: 581611521}
   - component: {fileID: 581611520}
-  - component: {fileID: 581611518}
   - component: {fileID: 581611519}
   - component: {fileID: 581611522}
   m_Layer: 5
@@ -5955,33 +5915,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140, y: -30}
   m_SizeDelta: {x: 280, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &581611518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581611516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c5f937099f652949bf378fce9dcd73f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabButton
-  text: {fileID: 0}
-  rect: {fileID: 0}
-  basePos: {x: 0, y: 0}
-  offsetPos: {x: 0, y: 0}
-  alpha: 0
-  isShowing: 0
-  isHiding: 0
-  isMoving: 0
-  speed: 8
-  delay: 0
-  timer: 0
-  button: {fileID: 0}
-  index: 0
-  manager: {fileID: 0}
-  audioManager: {fileID: 0}
 --- !u!114 &581611519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7903,7 +7836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 2
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 628e10caf8de89f4caa3dc970557bcbd, type: 3}
   confirmSound: {fileID: 8300000, guid: 6de2c3e85e796b544a5aa99e2c943f29, type: 3}
 --- !u!1 &855399783
@@ -9825,7 +9758,6 @@ GameObject:
   - component: {fileID: 1136875863}
   - component: {fileID: 1136875867}
   - component: {fileID: 1136875866}
-  - component: {fileID: 1136875864}
   - component: {fileID: 1136875865}
   - component: {fileID: 1136875868}
   m_Layer: 5
@@ -9855,33 +9787,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140, y: -30}
   m_SizeDelta: {x: 280, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1136875864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136875862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c5f937099f652949bf378fce9dcd73f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabButton
-  text: {fileID: 0}
-  rect: {fileID: 0}
-  basePos: {x: 0, y: 0}
-  offsetPos: {x: 0, y: 0}
-  alpha: 0
-  isShowing: 0
-  isHiding: 0
-  isMoving: 0
-  speed: 8
-  delay: 0
-  timer: 0
-  button: {fileID: 0}
-  index: 0
-  manager: {fileID: 0}
-  audioManager: {fileID: 0}
 --- !u!114 &1136875865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12863,7 +12768,6 @@ GameObject:
   - component: {fileID: 1586803734}
   - component: {fileID: 1586803738}
   - component: {fileID: 1586803737}
-  - component: {fileID: 1586803735}
   - component: {fileID: 1586803736}
   - component: {fileID: 1586803739}
   m_Layer: 5
@@ -12893,33 +12797,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140, y: -30}
   m_SizeDelta: {x: 280, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1586803735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1586803733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c5f937099f652949bf378fce9dcd73f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TabButton
-  text: {fileID: 0}
-  rect: {fileID: 0}
-  basePos: {x: 0, y: 0}
-  offsetPos: {x: 0, y: 0}
-  alpha: 0
-  isShowing: 0
-  isHiding: 0
-  isMoving: 0
-  speed: 8
-  delay: 0
-  timer: 0
-  button: {fileID: 0}
-  index: 0
-  manager: {fileID: 0}
-  audioManager: {fileID: 0}
 --- !u!114 &1586803736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13214,7 +13091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 1
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 9172f9d2b6c10d7409ab67a988286baf, type: 3}
   confirmSound: {fileID: 8300000, guid: c1d043c2761ae2f4ba16655f761d203c, type: 3}
 --- !u!1 &1626499239
@@ -15036,7 +14913,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 0
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 77358ec06164eb34a8dbcf4602f096f6, type: 3}
   confirmSound: {fileID: 8300000, guid: 948cec2bc7bd19f4fb10479d7b505a3b, type: 3}
 --- !u!114 &1793571934
@@ -15675,7 +15552,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 325922218}
   - {fileID: 322515137}
   m_Father: {fileID: 1432705967}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15822,7 +15698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BackButton
   label: {fileID: 473604175}
   arrow: {fileID: 672414451}
-  maanger: {fileID: 0}
+  manager: {fileID: 2025565463}
 --- !u!4 &1904660070 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
@@ -16010,7 +15886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
   index: 4
-  manager: {fileID: 0}
+  manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: ef0bd2fde15da69428f52e97c288e9eb, type: 3}
   confirmSound: {fileID: 8300000, guid: 119c15027f9daf24c8516a32d6a129ce, type: 3}
 --- !u!114 &1932483362
@@ -16635,9 +16511,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   state: 0
-  menuManager: {fileID: 0}
-  settingManager: {fileID: 0}
-  creditManager: {fileID: 0}
+  menuManager: {fileID: 1432705968}
+  settingManager: {fileID: 304007977}
+  creditManager: {fileID: 58495376}
   gameManager: {fileID: 1626499240}
 --- !u!1 &2028488486
 GameObject:
@@ -17683,7 +17559,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  enterSound: {fileID: 8300000, guid: a67417a4645933f49a064c0e69000969, type: 3}
 --- !u!1001 &2097223658
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17852,7 +17727,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.7368916
+  m_Size: 0.73688084
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -18156,13 +18031,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5720388386794544368}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0.56098557, y: -0.43045938, z: -0.56098557, w: 0.43045938}
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
-  m_LocalScale: {x: 0.120000005, y: 0.120000005, z: 0.120000005}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2092575350}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -105, y: -90, z: 0}
 --- !u!1 &5398366221018209236
 GameObject:
   m_ObjectHideFlags: 0
@@ -18476,7 +18351,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5720388386794544368}
-  m_Mesh: {fileID: -2432090755550338912, guid: ea5267998635b344b96f604ca1e5f80c, type: 3}
+  m_Mesh: {fileID: 6081231653780672522, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
 --- !u!1 &8584127767026416904
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,14 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TabButton : GeneralUI
+public class SettingButton : GeneralUI
 {
     private Button button;
     private int index;
-    private TabManager manager;
+    private SettingManager manager;
     private AudioManager audioManager;
 
-    public void Setup(TabManager m, int i)
+    public void Setup(SettingManager m, int i)
     {
         manager = m;
         index = i;

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TabPanel : MonoBehaviour
+public class SettingPanel : MonoBehaviour
 {
     public float animSpeed = 6f;
     private Vector3 hiddenOffset = new Vector3(0, -50f, 0);

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TabManager : MonoBehaviour
+public class SettingManager : MonoBehaviour
 {
     [System.Serializable]
     public class HologramData
@@ -17,8 +17,8 @@ public class TabManager : MonoBehaviour
     }
 
     [Header("UI")]
-    public TabPanel[] panels;
-    public TabButton[] tabs;
+    public SettingButton[] tabs;
+    public SettingPanel[] panels;
 
     [Header("Hologram")]
     public HologramData[] hologramData;
@@ -36,10 +36,18 @@ public class TabManager : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip clickSound;
+    public AudioClip enterSound;
     private AudioManager audioManager;
 
     private Material mat;
     private int currentTab = -1;
+
+    [Header("Hologram")]
+    public Hologram settingsHologram;
+
+    [Header("Overlay")]
+    public Overlay overlay;
+    public float overlayFadeSpeed = 5f;
 
     void Start()
     {
@@ -58,23 +66,33 @@ public class TabManager : MonoBehaviour
             panels[i].HideInstant();
         }
 
-        Hide();
+        Hide(false);
     }
 
     public void Show()
     {
+        audioManager.Play(enterSound);
         SelectTab(0);
+        settingsHologram.Show();
+        overlay.FadeTo(0.7f);
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].Show(i * 0.05f);
         }
     }
 
-    public void Hide()
+    public void Hide(bool play = true)
     {
+        if (play)
+        {
+            audioManager.Play(enterSound);
+        }
+        settingsHologram.Hide();
+        overlay.FadeTo(0f);
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].Hide(i * 0.05f);
+            panels[i].Hide();
         }
     }
 

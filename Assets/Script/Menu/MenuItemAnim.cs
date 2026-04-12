@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandler
 {
     public int index;
-    public MenuController controller;
+    public UIManager manager;
 
     public AudioClip selectSound;
     public AudioClip confirmSound;
@@ -48,7 +48,7 @@ public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandle
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
-        controller.SetIndexFromMouse(index);
+        manager.SetIndexFromMouse(index);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -58,6 +58,6 @@ public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        controller.SelectFromMouse(index);
+        manager.SelectFromMouse(index);
     }
 }

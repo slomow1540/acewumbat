@@ -6,7 +6,7 @@ public class BackButton : MonoBehaviour, IPointerClickHandler
     public GeneralUI label;
     public GeneralUI arrow;
 
-    public MenuController controller;
+    public UIManager manager;
 
     public void Show()
     {
@@ -22,6 +22,6 @@ public class BackButton : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        controller.ResetMenu();
+        manager.ResetMenu();
     }
 }

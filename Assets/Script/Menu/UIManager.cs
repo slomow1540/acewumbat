@@ -137,7 +137,11 @@ public class UIManager : MonoBehaviour
 
     void OpenSettings() => settingManager.Show();
 
-    void OpenCredits() => creditManager.Show();
+    void OpenCredits()
+    {
+        creditManager.Show();
+        creditManager.UpdateText();
+    }
 
     void QuitGame() => Application.Quit();
 
@@ -156,5 +160,6 @@ public class UIManager : MonoBehaviour
     void CloseCredits()
     {
         creditManager.Hide();
+        creditManager.ResetPos();
     }
 }

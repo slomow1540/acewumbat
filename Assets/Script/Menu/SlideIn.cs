@@ -1,17 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class CreditButton : MonoBehaviour
+public class SlideIn : MonoBehaviour
 {
-    public CameraMover cameraMover;
-
-    private int creditPos = 4;
+    public float animSpeed = 6f;
+    public Vector2 offset;
 
     private RectTransform rect;
-
-    public float animSpeed = 6f;
-    public float offsetX = 300f;
-
     private Vector2 targetPos;
 
     void Awake()
@@ -23,29 +18,6 @@ public class CreditButton : MonoBehaviour
     {
         targetPos = rect.anchoredPosition;
         gameObject.SetActive(false);
-    }
-
-    public void ResetPos()
-    {
-        creditPos = 4;
-    }
-
-    public void GoRight()
-    {
-        creditPos++;
-        if (creditPos > 7)
-            creditPos = 4;
-
-        cameraMover.MoveTo(creditPos);
-    }
-
-    public void GoLeft()
-    {
-        creditPos--;
-        if (creditPos < 4)
-            creditPos = 7;
-
-        cameraMover.MoveTo(creditPos);
     }
 
     public void Show()
@@ -64,7 +36,7 @@ public class CreditButton : MonoBehaviour
 
     IEnumerator AnimateEnter()
     {
-        Vector2 startPos = targetPos + new Vector2(offsetX, 0);
+        Vector2 startPos = targetPos + offset;
 
         rect.anchoredPosition = startPos;
 
@@ -86,7 +58,7 @@ public class CreditButton : MonoBehaviour
     IEnumerator AnimateExit()
     {
         Vector2 startPos = rect.anchoredPosition;
-        Vector2 endPos = targetPos + new Vector2(offsetX, 0);
+        Vector2 endPos = targetPos + offset;
 
         float time = 0f;
 

@@ -31,6 +31,14 @@ public class Hologram : MonoBehaviour
         StartCoroutine(Animate(show: false));
     }
 
+    public void HideInstant()
+    {
+        StopAllCoroutines();
+
+        transform.localPosition = hiddenPos;
+        transform.localScale = Vector3.zero;
+    }
+
     IEnumerator Animate(bool show)
     {
         float time = 0f;

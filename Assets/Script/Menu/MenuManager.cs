@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour
         index = (index + 1) % items.Length;
 
         audioManager.Play(switchSound);
-        audioManager.Play(items[index].selectSound);
+        audioManager.Play(items[index].selectSound, AudioManager.AudioChannel.Narrator);
 
         pointer.Follow(GetRect(index));
 
@@ -70,7 +70,7 @@ public class MenuManager : MonoBehaviour
     public void Confirm(int index)
     {
         audioManager.Play(confirmSound);
-        audioManager.Play(items[index].confirmSound);
+        audioManager.Play(items[index].confirmSound, AudioManager.AudioChannel.Narrator);
 
         items[index].Confirm();
 
@@ -83,6 +83,7 @@ public class MenuManager : MonoBehaviour
 
     public void Reset(int index)
     {
+        audioManager.Play(confirmSound);
         backButton.Hide();
 
         for (int i = 0; i < items.Length; i++)

@@ -87,6 +87,7 @@ public class SettingManager : MonoBehaviour
         {
             audioManager.Play(enterSound);
         }
+        SelectTab(-1);
         settingsHologram.Hide();
         overlay.FadeTo(0f);
         for (int i = 0; i < tabs.Length; i++)

@@ -6,24 +6,41 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    private AudioSource audioSource;
+    public enum AudioChannel
+    {
+        SFX,
+        Music,
+        Narrator
+    }
 
-    [Header("Settings")]
-    [Range(0f, 1f)]
-    public float volume = 1f;
-    public bool randomPitch = false;
-    public Vector2 pitchRange = new Vector2(0.95f, 1.05f);
+    [System.Serializable]
+    public class Channel
+    {
+        public AudioSource source;
 
-    [Header("Queue Settings")]
-    public int maxQueueSize = 3;
+        [Range(0f, 1f)]
+        public float volume = 1f;
 
-    private Queue<AudioClip> audioQueue = new Queue<AudioClip>();
-    private bool isPlaying = false;
+        public bool randomPitch = false;
+        public Vector2 pitchRange = new Vector2(0.95f, 1.05f);
+
+        [Header("Queue")]
+        public int maxQueueSize = 3;
+
+        [HideInInspector]
+        public Queue<AudioClip> queue = new Queue<AudioClip>();
+
+        [HideInInspector]
+        public bool isPlaying = false;
+    }
+
+    [Header("Channels")]
+    public Channel sfx;
+    public Channel music;
+    public Channel narrator;
 
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-
         if (Instance == null)
             Instance = this;
         else
@@ -33,53 +50,72 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(AudioClip clip)
+
+    public void Play(AudioClip clip, AudioChannel channelType = AudioChannel.SFX)
     {
-        if (clip == null)
-            return;
+        if (clip == null) return;
 
-        clip.LoadAudioData();
+        Channel channel = GetChannel(channelType);
 
-        if (audioQueue.Count >= maxQueueSize)
-            audioQueue.Dequeue();
+        if (channel.queue.Count >= channel.maxQueueSize)
+            channel.queue.Dequeue();
 
-        audioQueue.Enqueue(clip);
+        channel.queue.Enqueue(clip);
 
-        if (!isPlaying)
-            StartCoroutine(PlayQueue());
+        if (!channel.isPlaying)
+            StartCoroutine(PlayQueue(channel));
     }
 
-    IEnumerator PlayQueue()
+    IEnumerator PlayQueue(Channel channel)
     {
-        isPlaying = true;
+        channel.isPlaying = true;
 
-        while (audioQueue.Count > 0)
+        while (channel.queue.Count > 0)
         {
-            AudioClip clip = audioQueue.Dequeue();
+            AudioClip clip = channel.queue.Dequeue();
 
-            if (randomPitch)
-                audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
+            if (channel.randomPitch)
+                channel.source.pitch = Random.Range(channel.pitchRange.x, channel.pitchRange.y);
             else
-                audioSource.pitch = 1f;
+                channel.source.pitch = 1f;
 
-            audioSource.clip = clip;
-            audioSource.volume = volume;
-            audioSource.Play();
+            channel.source.clip = clip;
+            channel.source.volume = channel.volume;
+            channel.source.Play();
 
-            while (audioSource.isPlaying)
-            {
+            while (channel.source.isPlaying)
                 yield return null;
-            }
         }
 
-        isPlaying = false;
+        channel.isPlaying = false;
+    }
+
+
+    Channel GetChannel(AudioChannel type)
+    {
+        switch (type)
+        {
+            case AudioChannel.Music: return music;
+            case AudioChannel.Narrator: return narrator;
+            default: return sfx;
+        }
+    }
+
+
+    public void Stop(AudioChannel type)
+    {
+        Channel channel = GetChannel(type);
+
+        StopCoroutine(PlayQueue(channel));
+        channel.queue.Clear();
+        channel.source.Stop();
+        channel.isPlaying = false;
     }
 
     public void StopAllAudio()
     {
-        StopAllCoroutines();
-        audioQueue.Clear();
-        audioSource.Stop();
-        isPlaying = false;
+        Stop(AudioChannel.SFX);
+        Stop(AudioChannel.Music);
+        Stop(AudioChannel.Narrator);
     }
 }

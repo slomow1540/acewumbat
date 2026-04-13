@@ -27,6 +27,23 @@ public class CreditManager : MonoBehaviour
     public CameraMover cameraMover;
 
     private int creditPos = 4;
+    private bool isActive = false;
+
+    void Update()
+    {
+        if (!isActive)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            GoRight();
+        }
+
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            GoLeft();
+        }
+    }
 
     public void ResetPos()
     {
@@ -70,6 +87,7 @@ public class CreditManager : MonoBehaviour
 
     public void Show()
     {
+        isActive = true;
         for (int i = 0; i < creditButtons.Length; i++)
         {
             creditButtons[i].Show();
@@ -82,6 +100,7 @@ public class CreditManager : MonoBehaviour
 
     public void Hide()
     {
+        isActive = false;
         for (int i = 0; i < creditButtons.Length; i++)
         {
             creditButtons[i].Hide();

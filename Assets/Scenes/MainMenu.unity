@@ -4862,7 +4862,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06226}
+  m_AnchoredPosition: {x: 8.5, y: -159.06084}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -7331,7 +7331,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 650, y: 470}
-  m_SizeDelta: {x: 578.1207, y: 60.2141}
+  m_SizeDelta: {x: 580.9, y: 60.2141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &745210880
 MonoBehaviour:
@@ -7353,7 +7353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Let's Get Dizzy!
+  m_text: Project Wormbat
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
   m_sharedMaterial: {fileID: -2962246858991115109, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
@@ -18796,8 +18796,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000054
-  m_Size: 0.73689014
+  m_Value: 1.0000007
+  m_Size: 0.7368916
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

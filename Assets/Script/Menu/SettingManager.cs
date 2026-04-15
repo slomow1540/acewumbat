@@ -155,7 +155,8 @@ public class SettingManager : MonoBehaviour
 
         Transform t = hologramMesh.transform;
 
-        Vector3 startScale = t.localScale;
+        //Vector3 startScale = t.localScale;
+        Vector3 startScale = new Vector3(0, 0, 0);
         Vector3 targetScale = data.scale;
 
         Color startHolo = mat != null ? mat.GetColor("_Hologram_Color") : Color.white;

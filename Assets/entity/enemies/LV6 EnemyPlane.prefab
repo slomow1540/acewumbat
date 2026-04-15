@@ -351,7 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPlaneAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 2000
+  detectionRange: 5000
   targetUpdateRate: 1
   aiInput: {fileID: 5395833819781210270}
   cruiseSpeed: 100

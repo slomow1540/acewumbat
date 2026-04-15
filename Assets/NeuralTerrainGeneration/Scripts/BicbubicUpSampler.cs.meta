@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2bdf779ad9269664d8b06ee5f81f0370
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249580
+  packageName: Neural Terrain Generation
+  packageVersion: 1.4.1
+  assetPath: Assets/NeuralTerrainGeneration/Scripts/BicbubicUpSampler.cs
+  uploadId: 597485

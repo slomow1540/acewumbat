@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2458a1d6b0c2efd4994929422b239518
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249580
+  packageName: Neural Terrain Generation
+  packageVersion: 1.4.1
+  assetPath: Assets/NeuralTerrainGeneration/Scripts/BarraUpSampler.cs
+  uploadId: 597485

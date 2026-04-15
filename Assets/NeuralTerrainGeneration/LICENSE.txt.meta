@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9c5244235e3d4cd4b957ddf5f2cc8dc0
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249580
+  packageName: Neural Terrain Generation
+  packageVersion: 1.4.1
+  assetPath: Assets/NeuralTerrainGeneration/LICENSE.txt
+  uploadId: 597485

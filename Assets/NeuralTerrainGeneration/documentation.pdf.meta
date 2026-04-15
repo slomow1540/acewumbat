@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a3bbffe7c3b76e94bad535cf7f49ecd4
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249580
+  packageName: Neural Terrain Generation
+  packageVersion: 1.4.1
+  assetPath: Assets/NeuralTerrainGeneration/documentation.pdf
+  uploadId: 597485

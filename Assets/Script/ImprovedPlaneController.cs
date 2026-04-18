@@ -79,10 +79,17 @@ public class ImprovedPlaneController : MonoBehaviour
     [Tooltip("Invert mouse Y axis (up = pitch down)")]
     public bool invertMouseY = false;
 
+    [Header("Altitude Settings")]
+    [Tooltip("Layers considered terrain for altitude measurement")]
+    public LayerMask terrainLayerMask;
+    [Tooltip("Maximum distance to search downward for terrain")]
+    public float altitudeRaycastDistance = 20000f;
+
     [Header("UI")]
     public TextMeshProUGUI thrustText;
     public TextMeshProUGUI gForceText;
     public TextMeshProUGUI speedText;
+    public TextMeshProUGUI altitudeText;
 
     [Header("misc")]
     [Tooltip("high g trail render")]
@@ -92,6 +99,7 @@ public class ImprovedPlaneController : MonoBehaviour
     // Public variables
     public float thrust;
     public float currentGForce;
+    public float currentAltitude;
 
     // Private variables
     private float roll;
@@ -267,6 +275,7 @@ public class ImprovedPlaneController : MonoBehaviour
     private void Update()
     {
         HandleInputs();
+        UpdateAltitude();
         UpdateUI();
         highGtrail();
     }
@@ -492,14 +501,22 @@ public class ImprovedPlaneController : MonoBehaviour
             else if (currentGForce > effectiveMaxGForce * 0.8f)
                 gForceText.color = Color.yellow;
             else
-                gForceText.color = Color.white;
+                gForceText.color = Color.green;
         }
 
         if (speedText != null)
         {
             // Display PERCEIVED speed (multiplied)
             float perceivedSpeed = rb.linearVelocity.magnitude * perceivedSpeedMultiplier;
-            speedText.text = $"Speed: {perceivedSpeed:F0} m/s";
+            speedText.text = $"{perceivedSpeed:F0}";
+        }
+
+        if (altitudeText != null)
+        {
+            if (currentAltitude >= 0f)
+                altitudeText.text = $"{currentAltitude:F0}";
+            else
+                altitudeText.text = "--";
         }
     }
 
@@ -517,6 +534,20 @@ public class ImprovedPlaneController : MonoBehaviour
         {
             trail.emitting = false;
             trail2.emitting = false;
+        }
+    }
+
+    private void UpdateAltitude()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, altitudeRaycastDistance, terrainLayerMask))
+        {
+            currentAltitude = hit.distance;
+        }
+        else
+        {
+            currentAltitude = -1f;
         }
     }
 }

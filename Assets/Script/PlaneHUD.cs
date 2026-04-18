@@ -19,9 +19,9 @@ public class PlaneHUD : MonoBehaviour
 
     [Header("Weapon UI")]
     public TextMeshProUGUI ammoText;
-    public Image ammoBar;
+    //public Image ammoBar;
     public TextMeshProUGUI missileText;
-    public Image missileBar;
+    //public Image missileBar;
 
     [Header("Target UI")]
     public TextMeshProUGUI targetInfoText;
@@ -93,7 +93,7 @@ public class PlaneHUD : MonoBehaviour
 
         if (healthText != null)
         {
-            healthText.text = $"HP: {planeHealth.currentHealth:F0}/{planeHealth.maxHealth:F0}";
+            healthText.text = $"DMG: {(1f - planeHealth.currentHealth / planeHealth.maxHealth) * 100f:F0}%";
         }
 
         if (healthBar != null)
@@ -101,9 +101,9 @@ public class PlaneHUD : MonoBehaviour
             healthBar.fillAmount = planeHealth.GetHealthPercent();
 
             // Color based on health
-            if (planeHealth.GetHealthPercent() > 0.5f)
+            if (planeHealth.GetHealthPercent() > 0.75f)
                 healthBar.color = Color.green;
-            else if (planeHealth.GetHealthPercent() > 0.25f)
+            else if (planeHealth.GetHealthPercent() > 0.3f)
                 healthBar.color = Color.yellow;
             else
                 healthBar.color = Color.red;
@@ -118,7 +118,7 @@ public class PlaneHUD : MonoBehaviour
         {
             if (weaponSystem.useAmmo)
             {
-                ammoText.text = $"AMMO: {weaponSystem.currentAmmo}/{weaponSystem.maxAmmo}";
+                ammoText.text = $"AMMO: {weaponSystem.currentAmmo}";
             }
             else
             {
@@ -126,7 +126,7 @@ public class PlaneHUD : MonoBehaviour
             }
         }
 
-        if (ammoBar != null)
+        /*if (ammoBar != null)
         {
             ammoBar.fillAmount = weaponSystem.GetAmmoPercent();
 
@@ -137,7 +137,7 @@ public class PlaneHUD : MonoBehaviour
                 ammoBar.color = Color.yellow;
             else
                 ammoBar.color = Color.red;
-        }
+        }*/
     }
 
     private void UpdateMissileUI()
@@ -146,22 +146,21 @@ public class PlaneHUD : MonoBehaviour
 
         if (missileText != null)
         {
-            missileText.text = $"MISSILES: {missileLauncher.currentMissiles}/{missileLauncher.maxMissiles}";
+            missileText.text = $"MSL: {missileLauncher.currentMissiles}";
         }
 
-        if (missileBar != null)
+        /*if (missileBar != null)
         {
             float missilePercent = (float)missileLauncher.currentMissiles / missileLauncher.maxMissiles;
             missileBar.fillAmount = missilePercent;
 
-            // Color based on missiles remaining
             if (missilePercent > 0.3f)
                 missileBar.color = Color.cyan;
             else if (missilePercent > 0)
                 missileBar.color = Color.yellow;
             else
                 missileBar.color = Color.red;
-        }
+        }*/
     }
 
     private void UpdateTargetUI()

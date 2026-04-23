@@ -1293,6 +1293,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!54 &1452349797
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1653,6 +1654,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!54 &1644840058
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2196,6 +2198,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!54 &1974258674
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2489,6 +2492,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!1001 &570406151017270956
 PrefabInstance:
   m_ObjectHideFlags: 0

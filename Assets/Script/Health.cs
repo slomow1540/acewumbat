@@ -113,6 +113,10 @@ public class Health : MonoBehaviour
     public UnityEvent<float> onDamage; // Passes damage amount
     public UnityEvent<float> onHeal; // Passes heal amount
 
+    [Header("Terrain Collision")]
+    [Tooltip("Layer name that should cause instant death on collision")]
+    public string terrainLayerName = "Terrain";
+
     // References
     private GameController gameController;
     private ImprovedPlaneController planeController;
@@ -310,6 +314,47 @@ public class Health : MonoBehaviour
                 partHealth.Die(attacker);
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isStationary || isDead) return;
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer(terrainLayerName))
+        {
+            DieInstantlyFromTerrain(collision.gameObject);
+        }
+    }
+
+    private void DieInstantlyFromTerrain(GameObject attacker = null)
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Cancel any delayed death that may already be scheduled
+        CancelInvoke(nameof(ExecuteDeath));
+
+        if (isChildPart)
+        {
+            NotifyParentOfDeath();
+        }
+
+        if (isMultipartObject)
+        {
+            KillAllChildParts(attacker);
+        }
+
+        if (!isStationary && planeController != null)
+        {
+            ForceCrashControls();
+        }
+
+        if (gameController != null)
+        {
+            gameController.NotifyEntityDeath(this, gameObject.tag, isPlayer, attacker);
+        }
+
+        ExecuteDeath();
     }
 
     private void ExecuteDeath()

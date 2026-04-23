@@ -2,6 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Enemy plane AI that flies realistically and has combat behaviors
+/// With predictive terrain avoidance system
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyPlaneAI : MonoBehaviour
@@ -74,6 +75,20 @@ public class EnemyPlaneAI : MonoBehaviour
     [Tooltip("Layer mask for ground detection")]
     public LayerMask groundLayer;
 
+    [Header("Predictive Terrain Avoidance")]
+    [Tooltip("Enable forward terrain scanning")]
+    public bool enableTerrainScanning = true;
+    [Tooltip("Base lookahead distance (multiplied by speed)")]
+    public float baseLookaheadDistance = 200f;
+    [Tooltip("Number of forward raycasts")]
+    public int scanRayCount = 5;
+    [Tooltip("Scan spread angle (degrees)")]
+    public float scanSpreadAngle = 30f;
+    [Tooltip("How early to start avoiding (safety margin)")]
+    public float avoidanceMargin = 50f;
+    [Tooltip("Show debug rays in editor")]
+    public bool showTerrainDebug = false;
+
     // Private variables
     private Rigidbody rb;
     private Health health;
@@ -85,6 +100,11 @@ public class EnemyPlaneAI : MonoBehaviour
     private GameObject nearestMissile;
     private float lastMissileCheckTime;
     private float currentAltitude;
+
+    // Terrain avoidance
+    private bool terrainThreatDetected;
+    private Vector3 terrainAvoidanceDirection;
+    private float terrainThreatUrgency;
 
     public enum BehaviorMode
     {
@@ -152,7 +172,13 @@ public class EnemyPlaneAI : MonoBehaviour
                 break;
         }
 
-        // Ground avoidance (PRIORITY)
+        // Predictive terrain avoidance (PRIORITY - runs before ground check)
+        if (enableTerrainScanning)
+        {
+            CheckPredictiveTerrainAvoidance();
+        }
+
+        // Ground avoidance fallback (emergency)
         CheckGroundAvoidance();
 
         // Apply flight controls
@@ -225,8 +251,138 @@ public class EnemyPlaneAI : MonoBehaviour
         }
     }
 
+    private void CheckPredictiveTerrainAvoidance()
+    {
+        // Reset threat detection
+        terrainThreatDetected = false;
+        terrainAvoidanceDirection = Vector3.zero;
+        terrainThreatUrgency = 0f;
+
+        // Calculate speed-based lookahead distance
+        float currentSpeed = rb.linearVelocity.magnitude;
+        float speedFactor = Mathf.Clamp(currentSpeed / 100f, 0.5f, 3f); // Scale with speed
+        float lookaheadDistance = baseLookaheadDistance * speedFactor;
+
+        // Scan forward in multiple directions
+        Vector3 closestThreatPoint = Vector3.zero;
+        float closestThreatDistance = float.MaxValue;
+        bool foundThreat = false;
+
+        for (int i = 0; i < scanRayCount; i++)
+        {
+            // Calculate scan angle
+            float angle = 0f;
+            if (scanRayCount > 1)
+            {
+                angle = Mathf.Lerp(-scanSpreadAngle, scanSpreadAngle, (float)i / (scanRayCount - 1));
+            }
+
+            // Create scan direction (pitch variation)
+            Vector3 scanDir = Quaternion.AngleAxis(angle, transform.right) * transform.forward;
+
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, scanDir, out hit, lookaheadDistance, groundLayer))
+            {
+                float distanceToHit = hit.distance;
+
+                // Calculate how soon we'll hit (time to impact)
+                float timeToImpact = distanceToHit / Mathf.Max(currentSpeed, 1f);
+
+                // Add safety margin
+                float effectiveThreatDistance = distanceToHit - avoidanceMargin;
+
+                if (effectiveThreatDistance < lookaheadDistance && distanceToHit < closestThreatDistance)
+                {
+                    foundThreat = true;
+                    closestThreatDistance = distanceToHit;
+                    closestThreatPoint = hit.point;
+                    terrainThreatDetected = true;
+
+                    // Calculate urgency (0 = far, 1 = very close)
+                    terrainThreatUrgency = 1f - Mathf.Clamp01(distanceToHit / lookaheadDistance);
+                }
+
+                // Debug visualization
+                if (showTerrainDebug)
+                {
+                    Debug.DrawRay(transform.position, scanDir * distanceToHit, Color.red);
+                }
+            }
+            else if (showTerrainDebug)
+            {
+                Debug.DrawRay(transform.position, scanDir * lookaheadDistance, Color.green);
+            }
+        }
+
+        // Calculate avoidance direction if threat detected
+        if (foundThreat)
+        {
+            // Calculate direction away from threat
+            Vector3 awayFromThreat = (transform.position - closestThreatPoint).normalized;
+
+            // Prefer pulling up (safer than diving)
+            Vector3 upBias = Vector3.up;
+
+            // Also consider banking away horizontally
+            Vector3 horizontalAway = Vector3.ProjectOnPlane(awayFromThreat, Vector3.up).normalized;
+
+            // Combine: mostly up, some horizontal evasion
+            terrainAvoidanceDirection = (upBias * 0.7f + horizontalAway * 0.3f).normalized;
+
+            // Apply avoidance with urgency-based blending
+            desiredDirection = Vector3.Slerp(
+                desiredDirection,
+                terrainAvoidanceDirection,
+                terrainThreatUrgency
+            ).normalized;
+
+            // If very urgent, full override
+            if (terrainThreatUrgency > 0.7f)
+            {
+                desiredDirection = terrainAvoidanceDirection;
+                SetThrust(evasionSpeed); // Full throttle to escape
+                UseHighGMode(true); // Aggressive maneuver
+            }
+            else if (terrainThreatUrgency > 0.4f)
+            {
+                // Medium urgency - increase thrust
+                SetThrust(combatSpeed);
+            }
+        }
+    }
+
+    private void CheckGroundAvoidance()
+    {
+        // Emergency fallback if predictive system fails
+        // Only activates when VERY close to ground
+        if (currentAltitude < pullUpAltitude)
+        {
+            float urgency = 1f - (currentAltitude / pullUpAltitude);
+            urgency = Mathf.Clamp01(urgency) * pullUpStrength;
+
+            // Override desired direction to pull up
+            Vector3 pullUpDirection = Vector3.up;
+            desiredDirection = Vector3.Lerp(desiredDirection, pullUpDirection, urgency);
+
+            // If VERY low, full override
+            if (currentAltitude < minAltitude)
+            {
+                desiredDirection = Vector3.up;
+                SetThrust(evasionSpeed); // Full throttle to gain altitude
+                UseHighGMode(true);
+            }
+        }
+    }
+
     private void DecideBehavior()
     {
+        // Priority 0: Terrain avoidance overrides everything
+        if (terrainThreatDetected && terrainThreatUrgency > 0.5f)
+        {
+            // Don't change behavior, terrain avoidance is handling it
+            return;
+        }
+
         // Priority 1: Evade if under missile threat
         if (nearestMissile != null)
         {
@@ -506,27 +662,6 @@ public class EnemyPlaneAI : MonoBehaviour
         }
     }
 
-    private void CheckGroundAvoidance()
-    {
-        // CRITICAL: Pull up if too low
-        if (currentAltitude < pullUpAltitude)
-        {
-            float urgency = 1f - (currentAltitude / pullUpAltitude);
-            urgency = Mathf.Clamp01(urgency) * pullUpStrength;
-
-            // Override desired direction to pull up
-            Vector3 pullUpDirection = Vector3.up;
-            desiredDirection = Vector3.Lerp(desiredDirection, pullUpDirection, urgency);
-
-            // If VERY low, full override
-            if (currentAltitude < minAltitude)
-            {
-                desiredDirection = Vector3.up;
-                SetThrust(evasionSpeed); // Full throttle to gain altitude
-            }
-        }
-    }
-
     private void ApplyFlightControls()
     {
         if (aiInput == null) return;
@@ -617,6 +752,13 @@ public class EnemyPlaneAI : MonoBehaviour
         {
             Gizmos.color = currentAltitude < pullUpAltitude ? Color.red : Color.green;
             Gizmos.DrawRay(transform.position, Vector3.down * currentAltitude);
+        }
+
+        // Draw terrain threat indicator
+        if (Application.isPlaying && terrainThreatDetected)
+        {
+            Gizmos.color = terrainThreatUrgency > 0.7f ? Color.red : Color.yellow;
+            Gizmos.DrawRay(transform.position, terrainAvoidanceDirection * 100f);
         }
     }
 }

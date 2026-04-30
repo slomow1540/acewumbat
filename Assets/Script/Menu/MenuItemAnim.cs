@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandler
+public class MenuItemAnim : ListItem, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int index;
     public UIManager manager;
@@ -9,55 +9,33 @@ public class MenuItemAnim : GeneralUI, IPointerEnterHandler, IPointerClickHandle
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
-    private bool isHovered = false;
-    private bool isConfirmed = false;
+    private AudioManager audioManager;
 
-    protected override void Update()
+    void Start()
     {
-        base.Update();
-        HandleVisual();
-    }
-
-    void HandleVisual()
-    {
-        float targetScale = 1f;
-
-        if (isConfirmed)
-            targetScale = 1.18f;
-        else if (isHovered)
-            targetScale = 1.08f;
-
-        transform.localScale = Vector3.Lerp(
-            transform.localScale,
-            Vector3.one * targetScale,
-            Time.deltaTime * 10f
-        );
-    }
-
-    public void Confirm()
-    {
-        isConfirmed = true;
-        Invoke(nameof(ResetConfirm), 0.2f);
-    }
-
-    void ResetConfirm()
-    {
-        isConfirmed = false;
+        audioManager = AudioManager.Instance;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        isHovered = true;
+        SetHovered(true);
+
         manager.SetIndexFromMouse(index);
+
+        if (selectSound != null)
+            audioManager.Play(selectSound);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        isHovered = false;
+        SetHovered(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         manager.SelectFromMouse(index);
+
+        if (confirmSound != null)
+            audioManager.Play(confirmSound);
     }
 }

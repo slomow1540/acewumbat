@@ -18,13 +18,13 @@ public class PopOut : MonoBehaviour
     private Vector3 shownPos;
     private Vector3 hiddenPos;
 
-    void Awake()
+    protected void Awake()
     {
         shownPos = transform.localPosition;
         hiddenPos = shownPos + offset;
 
-        transform.localPosition = hiddenPos;
-        transform.localScale = hiddenScale;
+        // transform.localPosition = hiddenPos;
+        // transform.localScale = hiddenScale;
     }
 
     public void Show()

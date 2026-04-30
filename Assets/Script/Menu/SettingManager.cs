@@ -43,7 +43,7 @@ public class SettingManager : MonoBehaviour
     private int currentTab = -1;
 
     [Header("Hologram")]
-    public Hologram settingsHologram;
+    public PopOut settingsHologram;
 
     [Header("Overlay")]
     public Overlay overlay;

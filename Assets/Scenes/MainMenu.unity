@@ -1539,12 +1539,32 @@ MonoBehaviour:
     location: 
     threat: 
     previewImage: {fileID: 0}
+  - title: 
+    location: 
+    threat: 
+    previewImage: {fileID: 0}
+  - title: 
+    location: 
+    threat: 
+    previewImage: {fileID: 0}
+  - title: 
+    location: 
+    threat: 
+    previewImage: {fileID: 0}
+  - title: 
+    location: 
+    threat: 
+    previewImage: {fileID: 0}
+  - title: 
+    location: 
+    threat: 
+    previewImage: {fileID: 0}
   itemPrefab: {fileID: -4074503181104883290, guid: 59a56e0d674dd40e6adf767c052aee8b, type: 3}
   content: {fileID: 1966468054}
   pointer: {fileID: 122128366}
   tablet: {fileID: 23084187}
   itemSpacing: 80
-  visibleCount: 5
+  visibleCount: 8
   moveSound: {fileID: 8300000, guid: 6d5691546479c7747a63436456203c2f, type: 3}
   selectSound: {fileID: 8300000, guid: 7d3178aa79c1dd042892bbf750fc499d, type: 3}
 --- !u!1 &102014871 stripped

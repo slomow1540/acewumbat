@@ -22,6 +22,7 @@ public class MenuManager : MonoBehaviour
 
         pressAnyKeyText.SetActive(true);
         menuPanel.SetActive(false);
+        pointer.isBlinking = true;
     }
 
     public void StartMenu()

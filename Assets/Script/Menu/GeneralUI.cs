@@ -14,6 +14,7 @@ public class GeneralUI : MonoBehaviour
     protected bool isShowing = false;
     protected bool isHiding = false;
     protected bool isMoving = false;
+    public bool isBlinking = false;
 
     protected float speed = 8f;
 
@@ -46,6 +47,11 @@ public class GeneralUI : MonoBehaviour
 
         if (isMoving)
             MoveToBase();
+
+        if (isBlinking)
+        {
+            Blink();
+        }
     }
 
     public virtual void Show(float delay = 0f, float offsetX = -100f)
@@ -137,5 +143,21 @@ public class GeneralUI : MonoBehaviour
             c.a = a;
             text.color = c;
         }
+    }
+
+    protected void Blink()
+    {
+        float alpha = Mathf.Abs(Mathf.Sin(Time.time * 2));
+        var color = GetComponent<TMPro.TextMeshProUGUI>().color;
+        color.a = alpha;
+        GetComponent<TMPro.TextMeshProUGUI>().color = color;
+    }
+
+    public void RefreshBasePosition()
+    {
+        if (rect == null)
+            rect = GetComponent<RectTransform>();
+
+        basePos = rect.anchoredPosition;
     }
 }

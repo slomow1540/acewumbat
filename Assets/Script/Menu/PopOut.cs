@@ -1,34 +1,50 @@
 using System.Collections;
 using UnityEngine;
 
-public class Hologram : MonoBehaviour
+public class PopOut : MonoBehaviour
 {
     public float duration = 0.5f;
-    public Vector3 hiddenOffset = new Vector3(0, -2f, 0);
+
+    [Header("Offset (arah muncul)")]
+    public Vector3 offset = new Vector3(0, -2f, 0);
+
+    [Header("Scale")]
+    public Vector3 hiddenScale = Vector3.zero;
+    public Vector3 shownScale = Vector3.one;
+
+    [Header("Animation")]
     public AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Vector3 shownPos;
     private Vector3 hiddenPos;
 
-    void Awake()
+    protected void Awake()
     {
         shownPos = transform.localPosition;
-        hiddenPos = shownPos + hiddenOffset;
+        hiddenPos = shownPos + offset;
 
         transform.localPosition = hiddenPos;
-        transform.localScale = Vector3.zero;
+        transform.localScale = hiddenScale;
     }
 
     public void Show()
     {
         StopAllCoroutines();
-        StartCoroutine(Animate(show: true));
+        StartCoroutine(Animate(true));
     }
 
     public void Hide()
     {
         StopAllCoroutines();
-        StartCoroutine(Animate(show: false));
+        StartCoroutine(Animate(false));
+    }
+
+    public void ShowInstant()
+    {
+        StopAllCoroutines();
+
+        transform.localPosition = shownPos;
+        transform.localScale = shownScale;
     }
 
     public void HideInstant()
@@ -36,7 +52,7 @@ public class Hologram : MonoBehaviour
         StopAllCoroutines();
 
         transform.localPosition = hiddenPos;
-        transform.localScale = Vector3.zero;
+        transform.localScale = hiddenScale;
     }
 
     IEnumerator Animate(bool show)
@@ -46,8 +62,8 @@ public class Hologram : MonoBehaviour
         Vector3 startPos = show ? hiddenPos : shownPos;
         Vector3 endPos = show ? shownPos : hiddenPos;
 
-        Vector3 startScale = show ? Vector3.zero : Vector3.one;
-        Vector3 endScale = show ? Vector3.one : Vector3.zero;
+        Vector3 startScale = show ? hiddenScale : shownScale;
+        Vector3 endScale = show ? shownScale : hiddenScale;
 
         while (time < duration)
         {

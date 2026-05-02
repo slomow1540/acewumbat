@@ -15,6 +15,7 @@ public class LevelItem : ListItem, IPointerEnterHandler, IPointerClickHandler
 
     void Awake()
     {
+        base.Awake();
         label = GetComponent<TextMeshProUGUI>();
     }
 

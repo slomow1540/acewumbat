@@ -14,6 +14,7 @@ public class MissionManager : MonoBehaviour
     public RectTransform content;
     public Pointer pointer;
     public TabletManager tablet;
+    public GeneralUI header;
 
     [Header("Scroll")]
     public float itemSpacing = 80f;
@@ -29,6 +30,9 @@ public class MissionManager : MonoBehaviour
     private int currentIndex = 0;
     private int topIndex = 0;
     private int panelOffest = 290;
+    private bool isUsingMouse = true;
+    private float mouseCooldown = 0.2f;
+    private float lastKeyboardTime;
 
     void Start()
     {
@@ -48,6 +52,11 @@ public class MissionManager : MonoBehaviour
     {
         HandleInput();
         HandleMouseScroll();
+
+        if (!isUsingMouse && Time.time - lastKeyboardTime > mouseCooldown)
+        {
+            isUsingMouse = true;
+        }
     }
 
     int GetDefaultIndex()
@@ -86,6 +95,8 @@ public class MissionManager : MonoBehaviour
             rect.anchoredPosition = new Vector2(20, -15 - i * itemSpacing);
 
             items[i] = item;
+
+            item.RefreshBasePosition();
         }
     }
 
@@ -103,6 +114,9 @@ public class MissionManager : MonoBehaviour
 
     void Move(int dir)
     {
+        isUsingMouse = false;
+        lastKeyboardTime = Time.time;
+
         currentIndex += dir;
 
         if (currentIndex < 0)
@@ -113,22 +127,30 @@ public class MissionManager : MonoBehaviour
 
         audioManager.Play(moveSound);
 
-        HandleScroll();
+        if (currentIndex < topIndex)
+            topIndex = currentIndex;
+        else if (currentIndex > topIndex + visibleCount - 1)
+            topIndex = currentIndex - (visibleCount - 1);
+
+        ScrollToTopIndex();
         UpdateSelection();
     }
 
     void HandleScroll()
     {
+        int targetTop = topIndex;
+
         if (currentIndex < topIndex)
-            topIndex = currentIndex;
+            targetTop = currentIndex;
 
         else if (currentIndex > topIndex + visibleCount - 1)
-            topIndex = currentIndex - (visibleCount - 1);
+            targetTop = currentIndex - (visibleCount - 1);
 
-        Vector2 target = new Vector2(0, topIndex * itemSpacing);
-
-        StopAllCoroutines();
-        StartCoroutine(SmoothScroll(target));
+        if (targetTop != topIndex)
+        {
+            topIndex = targetTop;
+            ScrollToTopIndex();
+        }
     }
 
     IEnumerator SmoothScroll(Vector2 target)
@@ -176,7 +198,6 @@ public class MissionManager : MonoBehaviour
     void HandleMouseScroll()
     {
         Vector2 localMousePos;
-
         RectTransform viewport = content.parent as RectTransform;
 
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -188,7 +209,7 @@ public class MissionManager : MonoBehaviour
 
         float height = viewport.rect.height;
 
-        if (localMousePos.y > height * 0.4f)
+        if (localMousePos.y > height * 0.4f && currentIndex <= topIndex)
         {
             if (topIndex > 0)
             {
@@ -196,8 +217,7 @@ public class MissionManager : MonoBehaviour
                 ScrollToTopIndex();
             }
         }
-
-        else if (localMousePos.y < -height * 0.4f)
+        else if (localMousePos.y < -height * 0.4f && currentIndex >= topIndex + visibleCount - 1)
         {
             if (topIndex < levels.Length - visibleCount)
             {
@@ -217,11 +237,18 @@ public class MissionManager : MonoBehaviour
 
     public void SetIndexFromMouse(int i)
     {
+        if (!isUsingMouse) return;
+
         if (currentIndex == i) return;
 
         currentIndex = i;
 
-        HandleScroll();
+        if (currentIndex < topIndex)
+            topIndex = currentIndex;
+        else if (currentIndex > topIndex + visibleCount - 1)
+            topIndex = currentIndex - (visibleCount - 1);
+
+        ScrollToTopIndex();
         UpdateSelection();
     }
 
@@ -231,5 +258,33 @@ public class MissionManager : MonoBehaviour
 
         UpdateSelection();
         Confirm();
+    }
+
+    public void ShowAll()
+    {
+        pointer.isBlinking = true;
+        tablet.Show();
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            items[i].Show(i * 0.05f, -100f);
+        }
+
+        pointer.Show();
+        header.Show();
+    }
+
+    public void HideAll()
+    {
+        pointer.isBlinking = false;
+        tablet.Hide();
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            items[i].Hide(i * 0.02f);
+        }
+
+        pointer.Hide();
+        header.Hide();
     }
 }

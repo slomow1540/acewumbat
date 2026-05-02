@@ -23,8 +23,8 @@ public class PopOut : MonoBehaviour
         shownPos = transform.localPosition;
         hiddenPos = shownPos + offset;
 
-        // transform.localPosition = hiddenPos;
-        // transform.localScale = hiddenScale;
+        transform.localPosition = hiddenPos;
+        transform.localScale = hiddenScale;
     }
 
     public void Show()

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Enemy AI that can fight back using guns or missiles
@@ -67,6 +67,45 @@ public class EnemyAI : MonoBehaviour
     [Tooltip("Only shoot when target is in front")]
     public bool requireLineOfSight = true;
 
+    // ─────────────────────────────────────────────────────────────────────────
+    [Header("Turret Mode")]
+    [Tooltip("Enable turret mode – the AI will physically rotate azimuth / elevation objects to face the target instead of relying only on FOV checks.")]
+    public bool isTurret = false;
+
+    [System.Serializable]
+    public class TurretAxis
+    {
+        [Tooltip("The Transform to rotate for this axis (e.g. the horizontal base or vertical barrel mount).")]
+        public Transform target;
+
+        [Tooltip("Which local axis to ROTATE AROUND (the hinge / pivot axis).")]
+        public RotationAxis rotationAxis = RotationAxis.Y;
+
+        [Tooltip("Which local axis points DOWN THE BARREL / in the firing direction. " +
+                 "Check Scene view arrows on the object: X = red, Y = green, Z = blue.")]
+        public RotationAxis forwardAxis = RotationAxis.Z;
+
+        [Tooltip("Flip the forward axis 180°. Use this when the barrel faces the opposite direction " +
+                 "to the arrow you selected above.")]
+        public bool invertForward = false;
+
+        [Tooltip("Rotation speed in degrees per second.")]
+        public float rotationSpeed = 90f;
+
+        [Tooltip("Invert the rotation direction.")]
+        public bool inverted = false;
+    }
+
+    public enum RotationAxis { X, Y, Z }
+
+    [Tooltip("Azimuth (horizontal / yaw) axis settings.")]
+    public TurretAxis azimuth = new TurretAxis();
+
+    [Tooltip("Elevation (vertical / pitch) axis settings.")]
+    public TurretAxis elevation = new TurretAxis();
+
+    // ─────────────────────────────────────────────────────────────────────────
+
     private float nextGunFireTime;
     private float nextMissileFireTime;
     private float nextTargetUpdateTime;
@@ -108,6 +147,13 @@ public class EnemyAI : MonoBehaviour
             nextTargetUpdateTime = Time.time + targetUpdateRate;
         }
 
+        // Drive turret rotation every frame
+        if (isTurret && currentTarget != null)
+        {
+            RotateTurretAxis(azimuth, currentTarget.transform.position);
+            RotateTurretAxis(elevation, currentTarget.transform.position);
+        }
+
         // Try to shoot at target
         if (currentTarget != null)
         {
@@ -136,6 +182,65 @@ public class EnemyAI : MonoBehaviour
             hasMissileLock = false;
         }
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Turret helpers
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Rotates a single turret axis (azimuth or elevation) toward the world-space target position.
+    /// Works for any combination of rotation axis and barrel forward axis.
+    /// </summary>
+    private void RotateTurretAxis(TurretAxis axis, Vector3 worldTargetPos)
+    {
+        if (axis == null || axis.target == null) return;
+
+        Transform pivot = axis.target;
+
+        // Direction to target in the pivot's PARENT local space.
+        // For elevation (child of azimuth) this is already in azimuth-rotated space.
+        Vector3 localDir = pivot.parent != null
+            ? pivot.parent.InverseTransformDirection(worldTargetPos - pivot.position)
+            : worldTargetPos - pivot.position;
+
+        if (localDir.sqrMagnitude < 0.0001f) return;
+
+        Vector3 rotAxisVec = AxisToVector(axis.rotationAxis);
+        Vector3 fwdAxisVec = AxisToVector(axis.forwardAxis);
+        if (axis.invertForward) fwdAxisVec = -fwdAxisVec;
+
+        // Project the target direction onto the plane the pivot can actually rotate in.
+        // This isolates the component the pivot is responsible for.
+        Vector3 targetOnPlane = Vector3.ProjectOnPlane(localDir, rotAxisVec);
+
+        if (targetOnPlane.sqrMagnitude < 0.0001f) return; // target is directly along hinge — no meaningful angle
+
+        // Signed angle from the barrel forward to the projected target, around the hinge.
+        float desiredAngle = Vector3.SignedAngle(fwdAxisVec, targetOnPlane, rotAxisVec);
+
+        if (axis.inverted) desiredAngle = -desiredAngle;
+
+        // Build a clean single-axis rotation and step toward it
+        Quaternion targetRotation = Quaternion.AngleAxis(desiredAngle, rotAxisVec);
+
+        pivot.localRotation = Quaternion.RotateTowards(
+            pivot.localRotation,
+            targetRotation,
+            axis.rotationSpeed * Time.deltaTime
+        );
+    }
+
+    private static Vector3 AxisToVector(RotationAxis axis)
+    {
+        switch (axis)
+        {
+            case RotationAxis.X: return Vector3.right;
+            case RotationAxis.Y: return Vector3.up;
+            default: return Vector3.forward;
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void FindTarget()
     {
@@ -184,7 +289,14 @@ public class EnemyAI : MonoBehaviour
         if (requireLineOfSight)
         {
             Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
-            float angle = Vector3.Angle(transform.forward, directionToTarget);
+
+            // In turret mode use the firepoint's forward (barrel is what's actually aimed).
+            // In non-turret mode use the root transform forward.
+            Vector3 aimForward = (isTurret && firePoints != null && firePoints.Length > 0)
+                ? firePoints[currentFirePointIndex % firePoints.Length].forward
+                : transform.forward;
+
+            float angle = Vector3.Angle(aimForward, directionToTarget);
 
             if (angle > gunFiringFOV)
                 return false;
@@ -237,7 +349,12 @@ public class EnemyAI : MonoBehaviour
         if (requireLineOfSight)
         {
             Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
-            float angle = Vector3.Angle(transform.forward, directionToTarget);
+
+            Vector3 aimForward = (isTurret && firePoints != null && firePoints.Length > 0)
+                ? firePoints[currentFirePointIndex % firePoints.Length].forward
+                : transform.forward;
+
+            float angle = Vector3.Angle(aimForward, directionToTarget);
 
             if (angle > missileLockFOV)
             {
@@ -271,8 +388,11 @@ public class EnemyAI : MonoBehaviour
         Transform firePoint = firePoints[currentFirePointIndex];
         currentFirePointIndex = (currentFirePointIndex + 1) % firePoints.Length;
 
-        // Calculate accuracy-adjusted aim
-        Vector3 aimDirection = CalculateAimDirection(firePoint.position);
+        // In turret mode the barrel is already physically aimed — fire straight out.
+        // In non-turret mode use the lead + accuracy calculation.
+        Vector3 aimDirection = isTurret
+            ? ApplySpread(firePoint.forward, firePoint.position)
+            : CalculateAimDirection(firePoint.position);
 
         // Spawn projectile
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(aimDirection));
@@ -312,6 +432,24 @@ public class EnemyAI : MonoBehaviour
         // Reset lock after firing
         currentLockProgress = 0f;
         hasMissileLock = false;
+    }
+
+    /// <summary>
+    /// Applies accuracy-based random spread to an already-correct direction (turret mode).
+    /// </summary>
+    private Vector3 ApplySpread(Vector3 baseDirection, Vector3 firePosition)
+    {
+        float distance = currentTarget != null
+            ? Vector3.Distance(firePosition, currentTarget.transform.position)
+            : 0f;
+
+        float accuracyValue = CalculateAccuracy(distance);
+        float maxSpread = (1f - accuracyValue) * 30f;
+
+        float spreadX = Random.Range(-maxSpread, maxSpread);
+        float spreadY = Random.Range(-maxSpread, maxSpread);
+
+        return (Quaternion.Euler(spreadY, spreadX, 0f) * baseDirection).normalized;
     }
 
     private Vector3 CalculateAimDirection(Vector3 firePosition)
@@ -422,5 +560,35 @@ public class EnemyAI : MonoBehaviour
             Gizmos.DrawRay(transform.position, right);
             Gizmos.DrawRay(transform.position, left);
         }
+
+        // Draw turret axis pivots
+        if (isTurret)
+        {
+            DrawTurretAxisGizmo(azimuth, Color.blue, "AZ");
+            DrawTurretAxisGizmo(elevation, Color.green, "EL");
+        }
+    }
+
+    private void DrawTurretAxisGizmo(TurretAxis axis, Color color, string label)
+    {
+        if (axis == null || axis.target == null) return;
+
+        Gizmos.color = color;
+
+        // Draw a small cross at the pivot
+        float size = 5f;
+        Gizmos.DrawLine(axis.target.position - axis.target.right * size,
+                        axis.target.position + axis.target.right * size);
+        Gizmos.DrawLine(axis.target.position - axis.target.up * size,
+                        axis.target.position + axis.target.up * size);
+        Gizmos.DrawLine(axis.target.position - axis.target.forward * size,
+                        axis.target.position + axis.target.forward * size);
+
+        // Draw forward arrow to show where the pivot is currently pointing
+        Gizmos.DrawRay(axis.target.position, axis.target.forward * size * 2f);
+
+#if UNITY_EDITOR
+        UnityEditor.Handles.Label(axis.target.position + Vector3.up * (size + 1f), label);
+#endif
     }
 }

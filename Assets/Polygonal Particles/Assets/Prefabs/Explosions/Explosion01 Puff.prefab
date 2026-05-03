@@ -4811,7 +4811,7 @@ GameObject:
   - component: {fileID: 199642119402857292}
   - component: {fileID: -1666390424493832488}
   m_Layer: 0
-  m_Name: Explosion01
+  m_Name: Explosion01 Puff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4951,7 +4951,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 40
+      scalar: 80
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5339,7 +5339,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: -5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5396,7 +5396,7 @@ ParticleSystem:
     angle: 0
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 0
+    radiusThickness: 1
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -7335,16 +7335,16 @@ ParticleSystem:
           time: 0
           value: 1
           inSlope: 14.952831
-          outSlope: -0.41794705
+          outSlope: -0.44080472
           tangentMode: 69
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.58205295
-          inSlope: -0.41794705
-          outSlope: -0.41794705
+          value: 0.5591953
+          inSlope: -0.44080472
+          outSlope: -0.44080472
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334

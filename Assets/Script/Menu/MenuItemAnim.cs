@@ -21,9 +21,6 @@ public class MenuItemAnim : ListItem, IPointerEnterHandler, IPointerExitHandler,
         SetHovered(true);
 
         manager.SetIndexFromMouse(index);
-
-        if (selectSound != null)
-            audioManager.Play(selectSound);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -34,8 +31,5 @@ public class MenuItemAnim : ListItem, IPointerEnterHandler, IPointerExitHandler,
     public void OnPointerClick(PointerEventData eventData)
     {
         manager.SelectFromMouse(index);
-
-        if (confirmSound != null)
-            audioManager.Play(confirmSound);
     }
 }

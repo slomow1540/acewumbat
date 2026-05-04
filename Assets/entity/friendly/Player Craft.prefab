@@ -6324,7 +6324,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 450}
-  m_SizeDelta: {x: 500, y: 50}
+  m_SizeDelta: {x: 1250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3609676224771722972
 CanvasRenderer:
@@ -6354,7 +6354,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: brrrbrb
+  m_text: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14348,6 +14348,7 @@ MonoBehaviour:
   trail2: {fileID: 8702999420210593039}
   thrust: 50
   currentGForce: 0
+  currentAltitude: 0
 --- !u!114 &7819918401245782514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14395,6 +14396,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!114 &2265854262047508880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14438,7 +14440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 116e2d5495b7aaf449cec8801319291d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetingSystem
-  maxTargetRange: 2000
+  maxTargetRange: 5000
   targetingFOV: 360
   enemyTag: Enemy
   targetLayers:

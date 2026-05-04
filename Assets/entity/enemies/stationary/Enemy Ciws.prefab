@@ -254,7 +254,7 @@ MonoBehaviour:
   missileDamage: 50
   gunFireRate: 10
   missileFireRate: 0.5
-  maxGunRange: 900
+  maxGunRange: 1500
   maxMissileRange: 1500
   gunFiringFOV: 10
   missileLockFOV: 80

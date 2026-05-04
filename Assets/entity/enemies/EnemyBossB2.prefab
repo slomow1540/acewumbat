@@ -130,13 +130,19 @@ MonoBehaviour:
   mouseSmoothing: 0.7
   maxMouseInputMagnitude: 1.5
   invertMouseY: 0
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  altitudeRaycastDistance: 20000
   thrustText: {fileID: 0}
   gForceText: {fileID: 0}
   speedText: {fileID: 0}
+  altitudeText: {fileID: 0}
   trail: {fileID: 0}
   trail2: {fileID: 0}
   thrust: 50
   currentGForce: 0
+  currentAltitude: 0
 --- !u!114 &2062395239724839538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,10 +156,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 300
+  point: 100
   currentHealth: 0
   isInvulnerable: 0
   isPlayer: 0
   isStationary: 0
+  isMultipartObject: 0
+  childParts: []
+  damageMultiplierPerPartLost: 0.5
+  isChildPart: 0
+  parentObject: {fileID: 0}
   damageMultiplier: 1
   explodeOnDeath: 1
   explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
@@ -161,6 +173,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -170,6 +184,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!114 &8226445257697031723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 1000
+  detectionRange: 1200
   targetUpdateRate: 1
   useGuns: 0
   useMissiles: 1
@@ -207,6 +222,21 @@ MonoBehaviour:
   missileLockTime: 0.75
   currentLockProgress: 0
   requireLineOfSight: 1
+  isTurret: 0
+  azimuth:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
+  elevation:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
 --- !u!114 &3534602529901271287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPlaneAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 2000
+  detectionRange: 15000
   targetUpdateRate: 1
   aiInput: {fileID: 4277547448694555859}
   cruiseSpeed: 80
@@ -245,6 +275,12 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  enableTerrainScanning: 1
+  baseLookaheadDistance: 200
+  scanRayCount: 5
+  scanSpreadAngle: 30
+  avoidanceMargin: 50
+  showTerrainDebug: 0
 --- !u!114 &4277547448694555859
 MonoBehaviour:
   m_ObjectHideFlags: 0

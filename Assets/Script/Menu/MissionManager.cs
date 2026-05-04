@@ -13,8 +13,9 @@ public class MissionManager : MonoBehaviour
     [Header("UI")]
     public RectTransform content;
     public Pointer pointer;
-    public TabletManager tablet;
     public GeneralUI header;
+    public TabletManager tablet;
+    public GameObject panel;
 
     [Header("Scroll")]
     public float itemSpacing = 80f;
@@ -46,6 +47,9 @@ public class MissionManager : MonoBehaviour
         content.anchoredPosition = new Vector2(0, topIndex * itemSpacing);
 
         UpdateSelection();
+
+        pointer.isBlinking = true;
+        panel.SetActive(false);
     }
 
     void Update()
@@ -262,29 +266,27 @@ public class MissionManager : MonoBehaviour
 
     public void ShowAll()
     {
-        pointer.isBlinking = true;
+        panel.SetActive(true);
+
         tablet.Show();
+        header.Show();
 
         for (int i = 0; i < items.Length; i++)
         {
             items[i].Show(i * 0.05f, -100f);
         }
-
-        pointer.Show();
-        header.Show();
     }
 
     public void HideAll()
     {
-        pointer.isBlinking = false;
         tablet.Hide();
+        header.Hide();
 
         for (int i = 0; i < items.Length; i++)
         {
             items[i].Hide(i * 0.02f);
         }
 
-        pointer.Hide();
-        header.Hide();
+        panel.SetActive(false);
     }
 }

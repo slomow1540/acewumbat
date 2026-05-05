@@ -463,10 +463,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 76922591308590417, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
-      propertyPath: targetingFOV
-      value: 60
-      objectReference: {fileID: 0}
     - target: {fileID: 720903616109613777, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
       propertyPath: m_IsActive
       value: 0

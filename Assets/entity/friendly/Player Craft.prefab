@@ -14441,7 +14441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetingSystem
   maxTargetRange: 5000
-  targetingFOV: 360
+  targetingFOV: 60
   enemyTag: Enemy
   targetLayers:
     serializedVersion: 2

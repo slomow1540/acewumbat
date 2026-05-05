@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +14,7 @@ public class TargetingSystem : MonoBehaviour
     public string enemyTag = "Enemy";
     [Tooltip("Layer mask for raycasting")]
     public LayerMask targetLayers;
-    
+
     [Header("Target Lock")]
     [Tooltip("Current locked target")]
     public GameObject currentTarget;
@@ -24,209 +24,205 @@ public class TargetingSystem : MonoBehaviour
     public KeyCode previousTargetKey = KeyCode.T;
     [Tooltip("Key to clear target")]
     public KeyCode clearTargetKey = KeyCode.Y;
-    
+
     [Header("Auto-Targeting")]
     [Tooltip("Automatically lock onto nearest target in front")]
     public bool autoTarget = true;
     [Tooltip("How often to update auto-target (seconds)")]
     public float autoTargetUpdateRate = 0.5f;
-    
+
     private List<GameObject> availableTargets = new List<GameObject>();
     private float lastAutoTargetUpdate;
     private Transform cameraTransform;
-    
+
     private void Start()
     {
-        // Find camera for targeting calculations
         cameraTransform = Camera.main?.transform;
         if (cameraTransform == null)
-        {
-            cameraTransform = transform; // Fallback to plane's transform
-        }
+            cameraTransform = transform;
     }
-    
+
     private void Update()
     {
         HandleTargetInput();
-        
-        // Auto-target update
+
         if (autoTarget && Time.time - lastAutoTargetUpdate > autoTargetUpdateRate)
         {
             UpdateAutoTarget();
             lastAutoTargetUpdate = Time.time;
         }
-        
-        // Clear target if it's destroyed or out of range
-        if (currentTarget != null)
-        {
-            if (!IsValidTarget(currentTarget))
-            {
-                ClearTarget();
-            }
-        }
-    }
-    
-    private void HandleTargetInput()
-    {
-        // Cycle to next target
-        if (Input.GetKeyDown(nextTargetKey))
-        {
-            CycleTarget(1);
-        }
-        
-        // Cycle to previous target
-        if (Input.GetKeyDown(previousTargetKey))
-        {
-            CycleTarget(-1);
-        }
-        
-        // Clear target
-        if (Input.GetKeyDown(clearTargetKey))
+
+        // Only clear if the target object was destroyed or is dead.
+        // Going out of FOV or range does NOT clear the lock.
+        if (currentTarget != null && !IsAliveAndExists(currentTarget))
         {
             ClearTarget();
         }
     }
-    
+
+    private void HandleTargetInput()
+    {
+        if (Input.GetKeyDown(nextTargetKey))
+            CycleTarget(1);
+
+        if (Input.GetKeyDown(previousTargetKey))
+            CycleTarget(-1);
+
+        if (Input.GetKeyDown(clearTargetKey))
+            ClearTarget();
+    }
+
     private void UpdateAutoTarget()
     {
-        // Find all potential targets
-        GameObject[] potentialTargets = GameObject.FindGameObjectsWithTag(enemyTag);
-        availableTargets.Clear();
-        
-        foreach (GameObject target in potentialTargets)
-        {
-            if (IsValidTarget(target))
-            {
-                availableTargets.Add(target);
-            }
-        }
-        
-        // If no current target, lock onto nearest
+        RefreshAvailableTargets();
+
+        // Only auto-acquire if we have no target yet
         if (currentTarget == null && availableTargets.Count > 0)
         {
-            currentTarget = GetClosestTargetInFOV();
+            currentTarget = GetBestAutoTarget();
         }
     }
-    
+
     private void CycleTarget(int direction)
     {
-        UpdateAutoTarget(); // Refresh target list
-        
+        RefreshAvailableTargets();
+
         if (availableTargets.Count == 0)
         {
             ClearTarget();
             return;
         }
-        
+
         int currentIndex = availableTargets.IndexOf(currentTarget);
-        
+
         if (currentIndex == -1)
         {
-            // No current target, select first
             currentTarget = availableTargets[0];
         }
         else
         {
-            // Cycle through targets
             currentIndex += direction;
-            
+
             if (currentIndex < 0)
                 currentIndex = availableTargets.Count - 1;
             else if (currentIndex >= availableTargets.Count)
                 currentIndex = 0;
-            
+
             currentTarget = availableTargets[currentIndex];
         }
     }
-    
+
     private void ClearTarget()
     {
         currentTarget = null;
     }
-    
+
+    /// <summary>
+    /// Rebuilds the available target list. Validity is range + alive only — FOV is NOT a filter here.
+    /// </summary>
+    private void RefreshAvailableTargets()
+    {
+        GameObject[] potentialTargets = GameObject.FindGameObjectsWithTag(enemyTag);
+        availableTargets.Clear();
+
+        foreach (GameObject target in potentialTargets)
+        {
+            if (IsValidTarget(target))
+                availableTargets.Add(target);
+        }
+    }
+
+    /// <summary>
+    /// A target is valid if it exists, is alive, and is within range.
+    /// FOV is intentionally NOT checked here — a locked target stays locked even outside FOV.
+    /// </summary>
     private bool IsValidTarget(GameObject target)
     {
         if (target == null) return false;
-        
-        // Check if target is alive
-        Health targetHealth = target.GetComponent<Health>();
-        if (targetHealth != null && !targetHealth.IsAlive())
-            return false;
-        
-        // Check range
+
+        if (!IsAliveAndExists(target)) return false;
+
         float distance = Vector3.Distance(transform.position, target.transform.position);
-        if (distance > maxTargetRange)
-            return false;
-        
-        // Check field of view
-        Vector3 directionToTarget = (target.transform.position - cameraTransform.position).normalized;
-        float angle = Vector3.Angle(cameraTransform.forward, directionToTarget);
-        if (angle > targetingFOV)
-            return false;
-        
+        if (distance > maxTargetRange) return false;
+
         return true;
     }
-    
-    private GameObject GetClosestTargetInFOV()
+
+    /// <summary>
+    /// Returns true if the target is not null and its Health component (if any) reports alive.
+    /// </summary>
+    private bool IsAliveAndExists(GameObject target)
     {
-        GameObject closest = null;
+        if (target == null) return false;
+
+        Health targetHealth = target.GetComponent<Health>();
+        if (targetHealth != null && !targetHealth.IsAlive()) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Picks the best initial target:
+    /// 1. Lowest angle within FOV (most centered in the crosshair).
+    /// 2. If nothing is in FOV, falls back to the closest target in range.
+    /// </summary>
+    private GameObject GetBestAutoTarget()
+    {
+        GameObject bestInFOV = null;
+        float lowestAngle = float.MaxValue;
+
+        GameObject closestOverall = null;
         float closestDistance = float.MaxValue;
-        
+
         foreach (GameObject target in availableTargets)
         {
+            Vector3 directionToTarget = (target.transform.position - cameraTransform.position).normalized;
+            float angle = Vector3.Angle(cameraTransform.forward, directionToTarget);
             float distance = Vector3.Distance(transform.position, target.transform.position);
-            
+
+            // Track the most centered target inside the FOV cone
+            if (angle <= targetingFOV && angle < lowestAngle)
+            {
+                lowestAngle = angle;
+                bestInFOV = target;
+            }
+
+            // Track the closest target regardless of FOV (fallback)
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                closest = target;
+                closestOverall = target;
             }
         }
-        
-        return closest;
+
+        // FOV target wins; fallback to closest if FOV is empty
+        return bestInFOV != null ? bestInFOV : closestOverall;
     }
-    
-    /// <summary>
-    /// Get current target position
-    /// </summary>
+
+    // ─── Public API ───────────────────────────────────────────────────────────
+
     public Vector3 GetTargetPosition()
     {
-        if (currentTarget != null)
-            return currentTarget.transform.position;
-        
-        return Vector3.zero;
+        return currentTarget != null ? currentTarget.transform.position : Vector3.zero;
     }
-    
-    /// <summary>
-    /// Check if we have a valid target
-    /// </summary>
+
     public bool HasTarget()
     {
         return currentTarget != null;
     }
-    
-    /// <summary>
-    /// Get distance to current target
-    /// </summary>
+
     public float GetTargetDistance()
     {
-        if (currentTarget != null)
-            return Vector3.Distance(transform.position, currentTarget.transform.position);
-        
-        return -1f;
+        return currentTarget != null
+            ? Vector3.Distance(transform.position, currentTarget.transform.position)
+            : -1f;
     }
-    
-    /// <summary>
-    /// Get angle to current target
-    /// </summary>
+
     public float GetTargetAngle()
     {
-        if (currentTarget != null)
-        {
-            Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
-            return Vector3.Angle(transform.forward, directionToTarget);
-        }
-        
-        return -1f;
+        if (currentTarget == null) return -1f;
+
+        Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
+        return Vector3.Angle(transform.forward, directionToTarget);
     }
 }

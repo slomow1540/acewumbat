@@ -758,6 +758,8 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Shows result UI with sequence: background fade (black) -> result text fade -> stat text fade -> show buttons
     /// </summary>
+    /// 
+    /// howard (add point to global variable)
     private IEnumerator ShowResultSequence(bool isVictory)
     {
         ImprovedPlaneController pc = playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();

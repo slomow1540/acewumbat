@@ -152,34 +152,34 @@ public class GameController : MonoBehaviour
     [Tooltip("Duration of fade effect for each step")]
     public float fadeDuration = 1f;
 
-    [Header("Scene Settings")]
-    [Tooltip("Name of the main menu scene")]
-    public string mainMenuSceneName = "MainMenu";
+    [Header("Player Spawn Location")]
+    [Tooltip("PlayerPosition")]
+    public GameObject PlayerPosition;
 
     [Header("UI References")]
     [Tooltip("Root GameObject of the result UI (should contain Canvas)")]
-    public GameObject resultCanvasObject;
+    private GameObject resultCanvasObject;
 
     [Tooltip("Background panel Image (will fade to black)")]
-    public Image resultPanel;
+    private Image resultPanel;
 
     [Tooltip("Result text (e.g. 'VICTORY' / 'DEFEATED')")]
-    public TextMeshProUGUI resultText;
+    private TextMeshProUGUI resultText;
 
     [Tooltip("Stat text to show additional info")]
-    public TextMeshProUGUI statText;
+    private TextMeshProUGUI statText;
 
     [Tooltip("Restart button GameObject")]
-    public Button restartButton;
+    private Button restartButton;
 
     [Tooltip("Main menu button GameObject")]
-    public Button mainMenuButton;
+    private Button mainMenuButton;
 
     [Tooltip("target kill bar")]
-    public GameObject TGTkill;
+    private GameObject TGTkill;
 
     [Tooltip("Message display text")]
-    public TextMeshProUGUI messageText;
+    private TextMeshProUGUI messageText;
 
     [Header("UI Colors")]
     [Tooltip("Alpha target for the black background (0..1)")]
@@ -208,28 +208,63 @@ public class GameController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        DisplayGameOverInfo();
 
         instance = this;
     }
 
     private void Start()
     {
-        // Start mission timer
+        // --- Find GameValues and spawn selected plane ---
+        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
+        if (gameValuesObj != null)
+        {
+            ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
+            if (valueHolder != null && valueHolder.SelectedPlane != null)
+            {
+                // Determine spawn transform from PlayerPosition
+                Vector3 spawnPos = PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
+                Quaternion spawnRot = PlayerPosition != null ? PlayerPosition.transform.rotation : Quaternion.identity;
+
+                // Spawn the selected plane
+                GameObject spawnedPlane = Instantiate(valueHolder.SelectedPlane, spawnPos, spawnRot);
+                Debug.Log($"[GameController] Spawned plane: {spawnedPlane.name}");
+
+                // Destroy the PlayerPosition marker
+                if (PlayerPosition != null)
+                {
+                    Destroy(PlayerPosition);
+                }
+
+                // Auto-find all UI references inside the spawned plane
+                FindUIReferencesInPlane(spawnedPlane);
+                spawnedPlane.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning("[GameController] ValueHolder missing or SelectedPlane is null.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[GameController] No GameObject with tag 'GameValues' found.");
+        }
+
+        // --- Rest of initialization ---
         if (trackMissionTime)
         {
             missionStartTime = Time.time;
         }
 
-        // Setup music
         SetupBackgroundMusic();
 
-        // Start playing music
         if (musicTracks.Count > 0 && currentMusicIndex >= 0 && currentMusicIndex < musicTracks.Count)
         {
             PlayMusic(currentMusicIndex);
         }
 
         PrepareResultUI();
+
         if (resultPanel != null)
         {
             Color c = resultPanel.color;
@@ -251,6 +286,92 @@ public class GameController : MonoBehaviour
 
         if (messageText != null)
             messageText.gameObject.SetActive(false);
+    }
+
+    private void FindUIReferencesInPlane(GameObject plane)
+    {
+        Transform planeRoot = plane.transform;
+
+        // resultCanvasObject -> "Canvas"
+        Transform canvasT = FindChildByName(planeRoot, "Canvas");
+        if (canvasT != null)
+            resultCanvasObject = canvasT.gameObject;
+        else
+            Debug.LogWarning("[GameController] 'Canvas' not found inside spawned plane.");
+
+        // resultPanel -> "result image"
+        Transform resultImageT = FindChildByName(planeRoot, "result image");
+        if (resultImageT != null)
+            resultPanel = resultImageT.GetComponent<Image>();
+        else
+            Debug.LogWarning("[GameController] 'result image' not found inside spawned plane.");
+
+        // resultText -> "result text"
+        Transform resultTextT = FindChildByName(planeRoot, "result text");
+        if (resultTextT != null)
+            resultText = resultTextT.GetComponent<TextMeshProUGUI>();
+        else
+            Debug.LogWarning("[GameController] 'result text' not found inside spawned plane.");
+
+        // statText -> "stat text"
+        Transform statTextT = FindChildByName(planeRoot, "stat text");
+        if (statTextT != null)
+            statText = statTextT.GetComponent<TextMeshProUGUI>();
+        else
+            Debug.LogWarning("[GameController] 'stat text' not found inside spawned plane.");
+
+        // restartButton -> "restart button"
+        Transform restartT = FindChildByName(planeRoot, "restart button");
+        if (restartT != null)
+        {
+            restartButton = restartT.GetComponent<Button>();
+            restartButton.onClick.AddListener(RestartGame);
+        }
+        else
+            Debug.LogWarning("[GameController] 'restart button' not found inside spawned plane.");
+
+        // mainMenuButton -> "main menu"
+        Transform mainMenuT = FindChildByName(planeRoot, "main menu");
+        if (mainMenuT != null)
+        {
+            mainMenuButton = mainMenuT.GetComponent<Button>();
+            mainMenuButton.onClick.AddListener(GoToMainMenu);
+        } 
+        else
+            Debug.LogWarning("[GameController] 'main menu' not found inside spawned plane.");
+
+        // TGTkill -> "confirmed kill"
+        Transform tgtKillT = FindChildByName(planeRoot, "confirmed kill");
+        if (tgtKillT != null)
+            TGTkill = tgtKillT.gameObject;
+        else
+            Debug.LogWarning("[GameController] 'confirmed kill' not found inside spawned plane.");
+
+        // messageText -> "message text"
+        Transform messageT = FindChildByName(planeRoot, "message text");
+        if (messageT != null)
+            messageText = messageT.GetComponent<TextMeshProUGUI>();
+        else
+            Debug.LogWarning("[GameController] 'message text' not found inside spawned plane.");
+
+        Debug.Log("[GameController] UI references resolved from spawned plane.");
+    }
+
+    /// <summary>
+    /// Recursively searches a transform hierarchy for a child with the given name.
+    /// </summary>
+    private Transform FindChildByName(Transform parent, string targetName)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == targetName)
+                return child;
+
+            Transform result = FindChildByName(child, targetName);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 
     private void Update()
@@ -1038,7 +1159,7 @@ public class GameController : MonoBehaviour
     private void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        SceneManager.LoadScene("MainMenu");
     }
 
     #endregion
@@ -1068,6 +1189,46 @@ public class GameController : MonoBehaviour
     public int GetPoints()
     {
         return PointObtained;
+    }
+
+    private void DisplayGameOverInfo()
+    {
+
+        if (resultText != null)
+        {
+            resultText.text = "Game Over";
+        }
+
+        if (statText != null)
+        {
+            statText.text = "Check your performance!";
+        }
+    }
+
+    //public void RestartGame()
+    //{
+    //    Time.timeScale = 1f;
+    //    string currentSceneName = SceneManager.GetActiveScene().name;
+    //    SceneManager.LoadScene(currentSceneName);
+    //}
+
+    //public void GoToMainMenu()
+    //{
+    //    Time.timeScale = 1f;
+    //    SceneManager.LoadScene("MainMenu");
+    //}
+
+    private void OnDestroy()
+    {
+        if (restartButton != null)
+        {
+            restartButton.onClick.RemoveListener(RestartGame);
+        }
+
+        if (mainMenuButton != null)
+        {
+            mainMenuButton.onClick.RemoveListener(GoToMainMenu);
+        }
     }
 
     #endregion

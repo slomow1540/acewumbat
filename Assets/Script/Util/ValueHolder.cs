@@ -4,6 +4,11 @@ public class ValueHolder : MonoBehaviour
 {
     public static ValueHolder Instance;
 
+    [Header("Data")]
+    public GameObject SelectedPlane;
+
+    public int Points;
+
 
     void Awake()
     {
@@ -22,7 +27,6 @@ public class ValueHolder : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

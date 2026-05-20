@@ -10,6 +10,7 @@ TagManager:
   - player missile
   - gun projectile
   - interceptor missile
+  - GameValues
   layers:
   - Default
   - TransparentFX

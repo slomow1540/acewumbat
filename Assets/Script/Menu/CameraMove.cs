@@ -47,19 +47,47 @@ public class CameraMover : MonoBehaviour
         Quaternion startRot = transform.rotation;
 
         Vector3 targetPos = target.position;
-        Quaternion targetRot = target.rotation;
+
+        // target yang dilihat (pesawat)
+        Transform lookTarget = target.parent;
+
+        // hitung rotasi final sekali
+        Vector3 dir =
+            (lookTarget.position - targetPos).normalized;
+
+        Quaternion targetRot =
+            Quaternion.LookRotation(
+                dir,
+                Vector3.up
+            );
 
         float time = 0f;
 
         while (time < moveDuration)
         {
             time += Time.deltaTime;
-            float t = time / moveDuration;
 
-            float eased = easeCurve.Evaluate(t);
+            float t =
+                Mathf.Clamp01(
+                    time / moveDuration
+                );
 
-            transform.position = Vector3.Lerp(startPos, targetPos, eased);
-            transform.rotation = Quaternion.Slerp(startRot, targetRot, eased);
+            float eased =
+                easeCurve.Evaluate(t);
+
+            transform.position =
+                Vector3.Lerp(
+                    startPos,
+                    targetPos,
+                    eased
+                );
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    startRot,
+                    targetRot,
+                    eased
+                );
 
             yield return null;
         }

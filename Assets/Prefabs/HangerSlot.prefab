@@ -48,7 +48,13 @@ MonoBehaviour:
   anchor: {fileID: 7825663579294876259}
   cameraPoint: {fileID: 2226187883656539674}
   planePoint: {fileID: 8257175876459958492}
-  plane: {fileID: 0}
+  plane:
+    planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
 --- !u!1 &3517805982416004116
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +83,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -0.00050015934}
-  m_LocalScale: {x: 0.45000008, y: 0.45000008, z: 0.45000002}
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45000002}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7825663579294876259}

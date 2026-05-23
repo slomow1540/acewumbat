@@ -5668,7 +5668,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06065}
+  m_AnchoredPosition: {x: 8.5, y: -159.1031}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -14941,7 +14941,127 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f591ff20990c140edad8492283850008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HangarManager
-  planes: []
+  planes:
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
+  - planeName: 
+    price: 0
+    speed: 0
+    armor: 0
+    handling: 0
+    prefab: {fileID: 0}
   slotPrefab: {fileID: 9131758468676489524, guid: c9324b61153524969ad4dc684d7a75b6, type: 3}
   slotParent: {fileID: 1850605667}
   cameraMover: {fileID: 1986532801}
@@ -21698,8 +21818,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.73688376
+  m_Value: 1.0001335
+  m_Size: 0.7368563
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

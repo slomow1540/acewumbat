@@ -40,34 +40,40 @@ public class HangarManager : MonoBehaviour
 
     void GenerateHangar()
     {
-        slots = new HangarSlot[18];
+        int maxSlots = Mathf.Min(planes.Length, 18);
 
-        int planeIndex = 0;
+        slots = new HangarSlot[maxSlots];
 
-        for (int floor = 0; floor < 2; floor++)
+        for (int i = 0; i < maxSlots; i++)
         {
+            int floor = i / 9;
+            int localIndex = i % 9;
+
             float z = floor * floorOffset;
 
-            for (int i = 0; i < 9; i++)
-            {
-                HangarSlot slot =
-                    Instantiate(slotPrefab, slotParent);
+            HangarSlot slot =
+                Instantiate(
+                    slotPrefab,
+                    slotParent
+                );
 
-                slot.transform.localPosition =
-                    GetSlotPosition(i, z);
+            slot.transform.localPosition =
+                GetSlotPosition(
+                    localIndex,
+                    z
+                );
 
-                slot.transform.localRotation =
-                    Quaternion.identity;
+            slot.transform.localRotation =
+                Quaternion.identity;
 
-                SetupAnchor(slot.anchor, i);
+            SetupAnchor(
+                slot.anchor,
+                localIndex
+            );
 
-                if (planeIndex < planes.Length)
-                    slot.Setup(planes[planeIndex]);
+            slot.Setup(planes[i]);
 
-                slots[floor * 9 + i] = slot;
-
-                planeIndex++;
-            }
+            slots[i] = slot;
         }
 
         SetupCameraPoints();

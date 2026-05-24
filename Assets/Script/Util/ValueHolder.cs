@@ -9,7 +9,6 @@ public class ValueHolder : MonoBehaviour
 
     public int Points;
 
-
     void Awake()
     {
         if (Instance == null)
@@ -22,13 +21,8 @@ public class ValueHolder : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void Start()
-    {
-        
-    }
 
-    void Update()
-    {
-        
-    }
+    void Start() { }
+
+    void Update() { }
 }

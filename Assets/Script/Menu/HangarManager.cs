@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Util;
 
@@ -16,21 +17,30 @@ public class HangarManager : MonoBehaviour
     public CameraMover cameraMover;
 
     private HangarSlot[] slots;
-    private int currentIndex;
 
-    const float spacing = 0.07f;
+    private int currentIndex;
+    private int currentCycle;
+
+    private bool isTransitioning;
+
+    private const int cycleSize = 18;
+
     const float floorOffset = 0.0308f;
-    const float rightX = 0.14f;
-    const float leftX = 0f;
 
     void Start()
     {
         GenerateHangar();
-        MoveTo(0);
+        RenderCycle();
+
+        currentIndex = 0;
+        MoveTo(currentIndex);
     }
 
     void Update()
     {
+        if (isTransitioning)
+            return;
+
         if (Input.GetKeyDown(KeyCode.D))
             Next();
 
@@ -40,38 +50,25 @@ public class HangarManager : MonoBehaviour
 
     void GenerateHangar()
     {
-        int maxSlots = Mathf.Min(planes.Length, 18);
+        slots = new HangarSlot[cycleSize];
 
-        slots = new HangarSlot[maxSlots];
-
-        for (int i = 0; i < maxSlots; i++)
+        for (int i = 0; i < cycleSize; i++)
         {
             int floor = i / 9;
             int localIndex = i % 9;
 
             float z = floor * floorOffset;
 
-            HangarSlot slot =
-                Instantiate(
-                    slotPrefab,
-                    slotParent
-                );
+            HangarSlot slot = Instantiate(slotPrefab, slotParent);
 
-            slot.transform.localPosition =
-                GetSlotPosition(
-                    localIndex,
-                    z
-                );
+            slot.transform.localPosition = GetSlotPosition(localIndex, z);
 
-            slot.transform.localRotation =
-                Quaternion.identity;
+            slot.transform.localRotation = Quaternion.identity;
 
-            SetupAnchor(
-                slot.anchor,
-                localIndex
-            );
+            SetupAnchor(slot.anchor, localIndex);
 
-            slot.Setup(planes[i]);
+            // refresh posisi final
+            slot.RefreshPosition();
 
             slots[i] = slot;
         }
@@ -79,24 +76,59 @@ public class HangarManager : MonoBehaviour
         SetupCameraPoints();
     }
 
+    void RenderCycle()
+    {
+        int startIndex = currentCycle * cycleSize;
+
+        for (int i = 0; i < cycleSize; i++)
+        {
+            int planeIndex = startIndex + i;
+
+            if (planeIndex >= planes.Length)
+            {
+                slots[i].plane = null;
+                slots[i].gameObject.SetActive(false);
+                continue;
+            }
+
+            slots[i].gameObject.SetActive(true);
+            slots[i].Setup(planes[planeIndex]);
+        }
+    }
+
     Vector3 GetSlotPosition(int index, float floorZ)
     {
         switch (index)
         {
             // kanan
-            case 0: return new Vector3(0f, 0f, floorZ);       // P1
-            case 1: return new Vector3(0f, 0.07f, floorZ);    // P2
-            case 2: return new Vector3(0f, 0.14f, floorZ);    // P3
+            case 0:
+                return new Vector3(0f, 0f, floorZ);
+
+            case 1:
+                return new Vector3(0f, 0.07f, floorZ);
+
+            case 2:
+                return new Vector3(0f, 0.14f, floorZ);
 
             // belakang
-            case 3: return new Vector3(0f, 0.21f, floorZ);    // P4
-            case 4: return new Vector3(0.05f, 0.21f, floorZ); // P5
-            case 5: return new Vector3(0.10f, 0.21f, floorZ); // P6
+            case 3:
+                return new Vector3(0f, 0.21f, floorZ);
+
+            case 4:
+                return new Vector3(0.05f, 0.21f, floorZ);
+
+            case 5:
+                return new Vector3(0.10f, 0.21f, floorZ);
 
             // kiri
-            case 6: return new Vector3(0.10f, 0.14f, floorZ); // P7
-            case 7: return new Vector3(0.10f, 0.07f, floorZ); // P8
-            case 8: return new Vector3(0.10f, 0f, floorZ);    // P9
+            case 6:
+                return new Vector3(0.10f, 0.14f, floorZ);
+
+            case 7:
+                return new Vector3(0.10f, 0.07f, floorZ);
+
+            case 8:
+                return new Vector3(0.10f, 0f, floorZ);
         }
 
         return Vector3.zero;
@@ -136,49 +168,140 @@ public class HangarManager : MonoBehaviour
                 break;
         }
 
-        anchor.localRotation =
-            Quaternion.Euler(0f, 0f, rotZ);
+        anchor.localRotation = Quaternion.Euler(0f, 0f, rotZ);
     }
 
     void SetupCameraPoints()
     {
-        cameraMover.points =
-            new Transform[slots.Length];
+        cameraMover.points = new Transform[cycleSize];
 
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < cycleSize; i++)
         {
-            cameraMover.points[i] =
-                slots[i].cameraPoint;
+            cameraMover.points[i] = slots[i].cameraPoint;
         }
     }
 
     public void Next()
     {
+        if (isTransitioning)
+            return;
+
         currentIndex++;
 
-        if (currentIndex >= slots.Length)
+        int visibleCount = GetVisibleCount(currentCycle);
+
+        if (currentIndex >= visibleCount)
+        {
+            int targetCycle = currentCycle + 1;
+
+            int totalCycles = Mathf.CeilToInt((float)planes.Length / cycleSize);
+
+            if (targetCycle >= totalCycles)
+                targetCycle = 0;
+
             currentIndex = 0;
+
+            StartCoroutine(ChangeCycle(targetCycle));
+
+            return;
+        }
 
         MoveTo(currentIndex);
     }
 
     public void Previous()
     {
+        if (isTransitioning)
+            return;
+
         currentIndex--;
 
         if (currentIndex < 0)
-            currentIndex = slots.Length - 1;
+        {
+            int targetCycle = currentCycle - 1;
+
+            if (targetCycle < 0)
+            {
+                targetCycle = Mathf.CeilToInt((float)planes.Length / cycleSize) - 1;
+            }
+
+            currentIndex = GetVisibleCount(targetCycle) - 1;
+
+            StartCoroutine(ChangeCycle(targetCycle));
+
+            return;
+        }
 
         MoveTo(currentIndex);
+    }
+
+    int GetVisibleCount(int cycle)
+    {
+        int startIndex = cycle * cycleSize;
+
+        return Mathf.Min(cycleSize, planes.Length - startIndex);
     }
 
     void MoveTo(int index)
     {
         cameraMover.MoveTo(index);
 
-        PlaneData plane = slots[index].plane;
+        int realIndex = currentCycle * cycleSize + index;
+
+        if (realIndex >= planes.Length)
+            return;
+
+        PlaneData plane = planes[realIndex];
 
         if (plane != null)
-            Debug.Log(plane.planeName);
+        {
+            Debug.Log("Selected Plane: " + plane.planeName);
+        }
+    }
+
+    IEnumerator ChangeCycle(int newCycle)
+    {
+        isTransitioning = true;
+
+        for (int i = 9; i < slots.Length; i++)
+        {
+            slots[i].Hide((i - 9) * 0.03f);
+        }
+
+        yield return new WaitForSeconds(0.22f);
+
+        for (int i = 0; i < 9; i++)
+        {
+            slots[i].Hide(i * 0.03f);
+        }
+
+        yield return new WaitForSeconds(0.45f);
+
+        currentCycle = newCycle;
+        RenderCycle();
+
+        for (int i = 9; i < slots.Length; i++)
+        {
+            if (slots[i].plane != null)
+            {
+                slots[i].Show((i - 9) * 0.03f);
+            }
+        }
+
+        yield return new WaitForSeconds(0.22f);
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (slots[i].plane != null)
+            {
+                slots[i].Show(i * 0.03f);
+            }
+        }
+
+        yield return new WaitForSeconds(0.45f);
+
+        isTransitioning = false;
+
+        MoveTo(currentIndex);
     }
 }

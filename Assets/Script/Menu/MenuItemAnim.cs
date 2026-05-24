@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MenuItemAnim : ListItem, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class MenuItemAnim
+    : ListItem,
+        IPointerEnterHandler,
+        IPointerExitHandler,
+        IPointerClickHandler
 {
     public int index;
     public UIManager manager;

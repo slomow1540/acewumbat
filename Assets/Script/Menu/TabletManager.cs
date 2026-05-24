@@ -34,7 +34,6 @@ public class TabletManager : PopOut
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-
     public void SetData(LevelData data, int index)
     {
         if (changeRoutine != null)
@@ -44,7 +43,6 @@ public class TabletManager : PopOut
 
         changeRoutine = StartCoroutine(AnimateChange(data));
     }
-
 
     IEnumerator AnimateChange(LevelData data)
     {

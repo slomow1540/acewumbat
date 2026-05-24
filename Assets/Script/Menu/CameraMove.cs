@@ -52,14 +52,9 @@ public class CameraMover : MonoBehaviour
         Transform lookTarget = target.parent;
 
         // hitung rotasi final sekali
-        Vector3 dir =
-            (lookTarget.position - targetPos).normalized;
+        Vector3 dir = (lookTarget.position - targetPos).normalized;
 
-        Quaternion targetRot =
-            Quaternion.LookRotation(
-                dir,
-                Vector3.up
-            );
+        Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
 
         float time = 0f;
 
@@ -67,27 +62,13 @@ public class CameraMover : MonoBehaviour
         {
             time += Time.deltaTime;
 
-            float t =
-                Mathf.Clamp01(
-                    time / moveDuration
-                );
+            float t = Mathf.Clamp01(time / moveDuration);
 
-            float eased =
-                easeCurve.Evaluate(t);
+            float eased = easeCurve.Evaluate(t);
 
-            transform.position =
-                Vector3.Lerp(
-                    startPos,
-                    targetPos,
-                    eased
-                );
+            transform.position = Vector3.Lerp(startPos, targetPos, eased);
 
-            transform.rotation =
-                Quaternion.Slerp(
-                    startRot,
-                    targetRot,
-                    eased
-                );
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, eased);
 
             yield return null;
         }

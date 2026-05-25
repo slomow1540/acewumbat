@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 namespace Util
 {
     public static class ProgressManager

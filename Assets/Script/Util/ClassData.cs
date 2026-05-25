@@ -12,8 +12,8 @@ namespace Util
         public Sprite previewImage;
     }
 
-    [CreateAssetMenu(menuName = "Game/Plane")]
-    public class PlaneData : ScriptableObject
+    [System.Serializable]
+    public class PlaneData
     {
         public string planeName;
         public int price;

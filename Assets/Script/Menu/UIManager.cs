@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Managers")]
     public MenuManager menuManager;
+    public HangarManager hangarManager;
     public MissionManager missionManager;
     public SettingManager settingManager;
     public CreditManager creditManager;
@@ -129,8 +130,10 @@ public class UIManager : MonoBehaviour
         Confirm();
     }
 
-    // Show
-    void OpenHangar() => Debug.Log("Hangar");
+    void OpenHangar()
+    {
+        hangarManager.Show();
+    }
 
     void OpenMission() => missionManager.ShowAll();
 
@@ -147,7 +150,10 @@ public class UIManager : MonoBehaviour
     void QuitGame() => Application.Quit();
 
     // Hide
-    void CloseHangar() { }
+    void CloseHangar()
+    {
+        hangarManager.Hide();
+    }
 
     void CloseMission() => missionManager.HideAll();
 

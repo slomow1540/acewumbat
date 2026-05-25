@@ -3,77 +3,163 @@ using UnityEngine;
 
 public class CameraMover : MonoBehaviour
 {
-    public Transform[] points;
-    private Transform currentTarget;
+    [Header("Menu Camera")]
+    public Transform[] menuPoints;
 
     public float moveDuration = 1.5f;
-    public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    public AnimationCurve easeCurve =
+        AnimationCurve.EaseInOut(
+            0, 0, 1, 1
+        );
 
     private Coroutine currentMove;
-    private int currentIndex = 0;
 
     private AudioManager audioManager;
+
     public AudioClip moveSound;
+
+    public enum CameraMode
+    {
+        Menu,
+        Hangar
+    }
+
+    private CameraMode mode =
+        CameraMode.Menu;
 
     void Start()
     {
-        audioManager = AudioManager.Instance;
+        audioManager =
+            AudioManager.Instance;
     }
 
+    public void SetMenuMode()
+    {
+        mode =
+            CameraMode.Menu;
+    }
+
+    public void SetHangarMode()
+    {
+        mode =
+            CameraMode.Hangar;
+    }
+
+    // =================
+    // MENU
+    // =================
     public void MoveTo(int index)
     {
-        if (index < 0 || index >= points.Length)
+        if (mode != CameraMode.Menu)
             return;
 
-        if (currentIndex == index)
-            return;
-
-        currentIndex = index;
-
-        if (currentMove != null)
-            StopCoroutine(currentMove);
-
-        if (audioManager != null && moveSound != null)
+        if (index < 0 ||
+            index >= menuPoints.Length)
         {
-            audioManager.Play(moveSound);
+            return;
         }
 
-        currentMove = StartCoroutine(MoveRoutine(points[index]));
+        Move(menuPoints[index]);
     }
 
-    IEnumerator MoveRoutine(Transform target)
+    // =================
+    // HANGAR
+    // =================
+    public void MoveToTransform(
+        Transform target
+    )
     {
-        Vector3 startPos = transform.position;
-        Quaternion startRot = transform.rotation;
+        if (mode != CameraMode.Hangar)
+            return;
 
-        Vector3 targetPos = target.position;
+        if (target == null)
+            return;
 
-        // target yang dilihat (pesawat)
-        Transform lookTarget = target.parent;
+        Move(target);
+    }
 
-        // hitung rotasi final sekali
-        Vector3 dir =
-            (lookTarget.position - targetPos).normalized;
-
-        Quaternion targetRot =
-            Quaternion.LookRotation(
-                dir,
-                Vector3.up
+    void Move(Transform target)
+    {
+        if (currentMove != null)
+        {
+            StopCoroutine(
+                currentMove
             );
+        }
+
+        if (audioManager != null &&
+            moveSound != null)
+        {
+            audioManager.Play(
+                moveSound
+            );
+        }
+
+        currentMove =
+            StartCoroutine(
+                MoveRoutine(target)
+            );
+    }
+
+    IEnumerator MoveRoutine(
+        Transform target
+    )
+    {
+        Vector3 startPos =
+            transform.position;
+
+        Quaternion startRot =
+            transform.rotation;
+
+        Vector3 targetPos =
+            target.position;
+
+        Quaternion targetRot;
+
+        // ===== MENU =====
+        if (mode ==
+            CameraMode.Menu)
+        {
+            targetRot =
+                target.rotation;
+        }
+        // ===== HANGAR =====
+        else
+        {
+            Transform lookTarget =
+                target.parent;
+
+            Vector3 dir =
+                (
+                    lookTarget.position
+                    - targetPos
+                ).normalized;
+
+            targetRot =
+                Quaternion.LookRotation(
+                    dir,
+                    Vector3.up
+                );
+        }
 
         float time = 0f;
 
         while (time < moveDuration)
         {
-            time += Time.deltaTime;
+            time +=
+                Time.deltaTime;
 
             float t =
                 Mathf.Clamp01(
-                    time / moveDuration
+                    time /
+                    moveDuration
                 );
 
             float eased =
-                easeCurve.Evaluate(t);
+                easeCurve.Evaluate(
+                    t
+                );
 
             transform.position =
                 Vector3.Lerp(
@@ -92,8 +178,11 @@ public class CameraMover : MonoBehaviour
             yield return null;
         }
 
-        transform.position = targetPos;
-        transform.rotation = targetRot;
+        transform.position =
+            targetPos;
+
+        transform.rotation =
+            targetRot;
 
         currentMove = null;
     }

@@ -16,6 +16,17 @@ public class HangarSlot : MonoBehaviour
     Vector3 basePos;
     Vector3 hiddenPos;
 
+    public Transform LookTarget
+    {
+        get
+        {
+            if (spawnedPlane != null)
+                return spawnedPlane.transform;
+
+            return planePoint;
+        }
+    }
+
     public void RefreshPosition()
     {
         basePos = transform.localPosition;
@@ -33,17 +44,29 @@ public class HangarSlot : MonoBehaviour
         {
             spawnedPlane = Instantiate(
                 data.prefab,
-                planePoint.position,
-                planePoint.rotation,
                 planePoint
             );
+
+            spawnedPlane.transform.localPosition =
+                Vector3.zero;
+
+            spawnedPlane.transform.localRotation =
+                Quaternion.identity;
+
+            spawnedPlane.transform.localScale =
+                Vector3.one;
         }
     }
 
     public void Show(float delay = 0f)
     {
         StopAllCoroutines();
-        StartCoroutine(AnimateShow(delay));
+
+        gameObject.SetActive(true);
+
+        StartCoroutine(
+            AnimateShow(delay)
+        );
     }
 
     public void Hide(float delay = 0f)
@@ -52,7 +75,10 @@ public class HangarSlot : MonoBehaviour
             return;
 
         StopAllCoroutines();
-        StartCoroutine(AnimateHide(delay));
+
+        StartCoroutine(
+            AnimateHide(delay)
+        );
     }
 
     IEnumerator AnimateHide(float delay)
@@ -105,5 +131,33 @@ public class HangarSlot : MonoBehaviour
         }
 
         transform.localPosition = basePos;
+    }
+
+
+    public void ShowInstant()
+    {
+        StopAllCoroutines();
+
+        transform.localScale =
+            Vector3.one;
+
+        CanvasGroup cg =
+            GetComponent<CanvasGroup>();
+
+        if (cg != null)
+            cg.alpha = 1f;
+    }
+
+    public void HideInstant()
+    {
+        StopAllCoroutines();
+
+        transform.localScale = Vector3.zero;
+
+        CanvasGroup cg =
+            GetComponent<CanvasGroup>();
+
+        if (cg != null)
+            cg.alpha = 0f;
     }
 }

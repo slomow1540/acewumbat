@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -97,13 +98,47 @@ public class UIManager : MonoBehaviour
 
     public void ResetMenu()
     {
+        if (currentIndex == 0)
+        {
+            StartCoroutine(
+                ResetMenuRoutine()
+            );
+
+            return;
+        }
+
         state = MenuState.Menu;
 
-        menuExitActions[currentIndex]?.Invoke();
+        menuExitActions[currentIndex]
+            ?.Invoke();
 
-        menuManager.Reset(currentIndex);
+        gameManager.ApplyMenu(
+            GameManager.MenuType.Idle
+        );
 
-        gameManager.ApplyMenu(GameManager.MenuType.Idle);
+        menuManager.Reset(
+            currentIndex
+        );
+    }
+
+    IEnumerator ResetMenuRoutine()
+    {
+        state =
+            MenuState.Confirm;
+
+        menuExitActions[currentIndex]
+            ?.Invoke();
+
+        yield return new WaitForSeconds(
+            2.5f
+        );
+
+        state =
+            MenuState.Menu;
+
+        menuManager.Reset(
+            currentIndex
+        );
     }
 
     public void SetIndexFromMouse(int i)

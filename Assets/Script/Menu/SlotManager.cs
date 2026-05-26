@@ -69,8 +69,6 @@ public class SlotManager : MonoBehaviour
 
     public void ExitHangar()
     {
-        cameraMover.SetMenuMode();
-
         StartCoroutine(
             ExitRoutine()
         );
@@ -132,38 +130,56 @@ public class SlotManager : MonoBehaviour
         canControl = false;
         isTransitioning = true;
 
-        cameraMover.MoveTo(0);
+        cameraMover.SetMenuMode();
+
+        cameraMover.MoveTo(1);
 
         yield return new WaitForSeconds(
             cameraMover.moveDuration
         );
 
-        yield return new WaitForSeconds(0.2f);
-
-        for (int i = 0; i < 9; i++)
-        {
-            if (slots[i].plane != null)
-            {
-                slots[i].Hide(i * 0.03f);
-            }
-        }
-
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(
+            0.15f
+        );
 
         for (int i = 9; i < slots.Length; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide((i - 9) * 0.03f);
+                slots[i].Hide(
+                    (i - 9) * 0.03f
+                );
             }
         }
 
-        yield return new WaitForSeconds(0.55f);
+        yield return new WaitForSeconds(
+            0.22f
+        );
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (slots[i].plane != null)
+            {
+                slots[i].Hide(
+                    i * 0.03f
+                );
+            }
+        }
+
+        yield return new WaitForSeconds(
+            0.65f
+        );
 
         currentCycle = 0;
         currentIndex = 0;
 
         RenderCycle();
+
+        cameraMover.MoveTo(0);
+
+        yield return new WaitForSeconds(
+            cameraMover.moveDuration
+        );
 
         isTransitioning = false;
     }

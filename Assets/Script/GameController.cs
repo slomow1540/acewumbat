@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using Util;
 
 /// <summary>
 /// Manages game state, entity tracking, win/lose conditions, mission time, triggers, and music
@@ -336,7 +337,7 @@ public class GameController : MonoBehaviour
         {
             mainMenuButton = mainMenuT.GetComponent<Button>();
             mainMenuButton.onClick.AddListener(GoToMainMenu);
-        } 
+        }
         else
             Debug.LogWarning("[GameController] 'main menu' not found inside spawned plane.");
 
@@ -880,7 +881,6 @@ public class GameController : MonoBehaviour
     /// Shows result UI with sequence: background fade (black) -> result text fade -> stat text fade -> show buttons
     /// </summary>
     /// 
-    /// howard (add point to global variable)
     private IEnumerator ShowResultSequence(bool isVictory)
     {
         ImprovedPlaneController pc = playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
@@ -901,6 +901,10 @@ public class GameController : MonoBehaviour
             string timeString = trackMissionTime ? $"\nTime: {GetFormattedMissionTime()}" : "";
             statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
         }
+
+        ProgressManager.AddCurrency(
+    PointObtained
+);
 
         // Ensure buttons hidden before fade
         if (restartButton != null)

@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
@@ -100,45 +100,31 @@ public class UIManager : MonoBehaviour
     {
         if (currentIndex == 0)
         {
-            StartCoroutine(
-                ResetMenuRoutine()
-            );
+            StartCoroutine(ResetMenuRoutine());
 
             return;
         }
 
         state = MenuState.Menu;
 
-        menuExitActions[currentIndex]
-            ?.Invoke();
+        menuExitActions[currentIndex]?.Invoke();
 
-        gameManager.ApplyMenu(
-            GameManager.MenuType.Idle
-        );
+        gameManager.ApplyMenu(GameManager.MenuType.Idle);
 
-        menuManager.Reset(
-            currentIndex
-        );
+        menuManager.Reset(currentIndex);
     }
 
     IEnumerator ResetMenuRoutine()
     {
-        state =
-            MenuState.Confirm;
+        state = MenuState.Confirm;
 
-        menuExitActions[currentIndex]
-            ?.Invoke();
+        menuExitActions[currentIndex]?.Invoke();
 
-        yield return new WaitForSeconds(
-            2.5f
-        );
+        yield return new WaitForSeconds(2.5f);
 
-        state =
-            MenuState.Menu;
+        state = MenuState.Menu;
 
-        menuManager.Reset(
-            currentIndex
-        );
+        menuManager.Reset(currentIndex);
     }
 
     public void SetIndexFromMouse(int i)

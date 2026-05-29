@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
         UI,
         Music,
         Narrator,
-        Ambience
+        Ambience,
     }
 
     [System.Serializable]
@@ -25,16 +25,14 @@ public class AudioManager : MonoBehaviour
 
         [Header("Pitch")]
         public bool randomPitch = false;
-        public Vector2 pitchRange =
-            new Vector2(0.95f, 1.05f);
+        public Vector2 pitchRange = new Vector2(0.95f, 1.05f);
 
         [Header("Queue")]
         public bool useQueue = true;
         public int maxQueueSize = 3;
 
         [HideInInspector]
-        public Queue<AudioClip> queue =
-            new Queue<AudioClip>();
+        public Queue<AudioClip> queue = new Queue<AudioClip>();
 
         [HideInInspector]
         public bool isPlaying = false;
@@ -59,31 +57,20 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(
-        AudioClip clip,
-        AudioChannel type =
-            AudioChannel.SFX
-    )
+    public void Play(AudioClip clip, AudioChannel type = AudioChannel.SFX)
     {
         if (clip == null)
             return;
 
-        Channel channel =
-            GetChannel(type);
+        Channel channel = GetChannel(type);
 
         if (!channel.useQueue)
         {
-            PlayImmediate(
-                channel,
-                clip
-            );
+            PlayImmediate(channel, clip);
             return;
         }
 
-        if (
-            channel.queue.Count >=
-            channel.maxQueueSize
-        )
+        if (channel.queue.Count >= channel.maxQueueSize)
         {
             channel.queue.Dequeue();
         }
@@ -92,33 +79,21 @@ public class AudioManager : MonoBehaviour
 
         if (!channel.isPlaying)
         {
-            StartCoroutine(
-                PlayQueue(channel)
-            );
+            StartCoroutine(PlayQueue(channel));
         }
     }
 
-    IEnumerator PlayQueue(
-        Channel channel
-    )
+    IEnumerator PlayQueue(Channel channel)
     {
         channel.isPlaying = true;
 
-        while (
-            channel.queue.Count > 0
-        )
+        while (channel.queue.Count > 0)
         {
-            AudioClip clip =
-                channel.queue.Dequeue();
+            AudioClip clip = channel.queue.Dequeue();
 
-            PlayImmediate(
-                channel,
-                clip
-            );
+            PlayImmediate(channel, clip);
 
-            while (
-                channel.source.isPlaying
-            )
+            while (channel.source.isPlaying)
             {
                 yield return null;
             }
@@ -127,35 +102,23 @@ public class AudioManager : MonoBehaviour
         channel.isPlaying = false;
     }
 
-    void PlayImmediate(
-        Channel channel,
-        AudioClip clip
-    )
+    void PlayImmediate(Channel channel, AudioClip clip)
     {
         if (channel.randomPitch)
         {
-            channel.source.pitch =
-                Random.Range(
-                    channel.pitchRange.x,
-                    channel.pitchRange.y
-                );
+            channel.source.pitch = Random.Range(channel.pitchRange.x, channel.pitchRange.y);
         }
         else
         {
             channel.source.pitch = 1f;
         }
 
-        channel.source.volume =
-            channel.volume;
+        channel.source.volume = channel.volume;
 
-        channel.source.PlayOneShot(
-            clip
-        );
+        channel.source.PlayOneShot(clip);
     }
 
-    Channel GetChannel(
-        AudioChannel type
-    )
+    Channel GetChannel(AudioChannel type)
     {
         switch (type)
         {
@@ -176,12 +139,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Stop(
-        AudioChannel type
-    )
+    public void Stop(AudioChannel type)
     {
-        Channel channel =
-            GetChannel(type);
+        Channel channel = GetChannel(type);
 
         channel.queue.Clear();
 
@@ -199,18 +159,12 @@ public class AudioManager : MonoBehaviour
         Stop(AudioChannel.Ambience);
     }
 
-    public void SetVolume(
-        AudioChannel type,
-        float volume
-    )
+    public void SetVolume(AudioChannel type, float volume)
     {
-        Channel channel =
-            GetChannel(type);
+        Channel channel = GetChannel(type);
 
-        channel.volume =
-            Mathf.Clamp01(volume);
+        channel.volume = Mathf.Clamp01(volume);
 
-        channel.source.volume =
-            channel.volume;
+        channel.source.volume = channel.volume;
     }
 }

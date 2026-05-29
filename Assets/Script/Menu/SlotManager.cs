@@ -45,14 +45,12 @@ public class SlotManager : MonoBehaviour
         if (isTransitioning)
             return;
 
-        if (Input.GetKeyDown(KeyCode.D) ||
-            Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             Next();
         }
 
-        if (Input.GetKeyDown(KeyCode.A) ||
-            Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             Previous();
         }
@@ -62,16 +60,12 @@ public class SlotManager : MonoBehaviour
     {
         cameraMover.SetHangarMode();
 
-        StartCoroutine(
-            EnterRoutine()
-        );
+        StartCoroutine(EnterRoutine());
     }
 
     public void ExitHangar()
     {
-        StartCoroutine(
-            ExitRoutine()
-        );
+        StartCoroutine(ExitRoutine());
     }
 
     IEnumerator EnterRoutine()
@@ -94,9 +88,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    (i - 9) * 0.04f
-                );
+                slots[i].Show((i - 9) * 0.04f);
             }
         }
 
@@ -106,9 +98,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    i * 0.04f
-                );
+                slots[i].Show(i * 0.04f);
             }
         }
 
@@ -118,9 +108,7 @@ public class SlotManager : MonoBehaviour
 
         MoveTo(currentIndex);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
         canControl = true;
     }
@@ -134,41 +122,29 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveTo(1);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
-        yield return new WaitForSeconds(
-            0.15f
-        );
+        yield return new WaitForSeconds(0.15f);
 
         for (int i = 9; i < slots.Length; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    (i - 9) * 0.03f
-                );
+                slots[i].Hide((i - 9) * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.22f
-        );
+        yield return new WaitForSeconds(0.22f);
 
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    i * 0.03f
-                );
+                slots[i].Hide(i * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.65f
-        );
+        yield return new WaitForSeconds(0.65f);
 
         currentCycle = 0;
         currentIndex = 0;
@@ -177,9 +153,7 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveTo(0);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
         isTransitioning = false;
     }
@@ -348,18 +322,9 @@ public class SlotManager : MonoBehaviour
 
             currentCycle = targetCycle;
 
-            currentIndex =
-                Mathf.Clamp(
-                    GetVisibleCount(
-                        currentCycle
-                    ) - 1,
-                    0,
-                    cycleSize - 1
-                );
+            currentIndex = Mathf.Clamp(GetVisibleCount(currentCycle) - 1, 0, cycleSize - 1);
 
-            StartCoroutine(
-                ChangeCycle(currentCycle)
-            );
+            StartCoroutine(ChangeCycle(currentCycle));
 
             return;
         }
@@ -376,26 +341,19 @@ public class SlotManager : MonoBehaviour
 
     void MoveTo(int index)
     {
-        int realIndex =
-            currentCycle * cycleSize + index;
+        int realIndex = currentCycle * cycleSize + index;
 
         if (realIndex >= planes.Length)
             return;
 
-        PlaneData plane =
-            planes[realIndex];
+        PlaneData plane = planes[realIndex];
 
         if (plane == null)
             return;
 
-        cameraMover.MoveToTransform(
-            slots[index].cameraPoint
-        );
+        cameraMover.MoveToTransform(slots[index].cameraPoint);
 
-        Debug.Log(
-            "Selected Plane: " +
-            plane.planeName
-        );
+        Debug.Log("Selected Plane: " + plane.planeName);
     }
 
     IEnumerator ChangeCycle(int newCycle)
@@ -407,79 +365,53 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    (i - 9) * 0.03f
-                );
+                slots[i].Hide((i - 9) * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.22f
-        );
+        yield return new WaitForSeconds(0.22f);
 
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    i * 0.03f
-                );
+                slots[i].Hide(i * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.55f
-        );
+        yield return new WaitForSeconds(0.55f);
 
         currentCycle = newCycle;
 
         RenderCycle();
 
-        int visible =
-            GetVisibleCount(
-                currentCycle
-            );
+        int visible = GetVisibleCount(currentCycle);
 
-        currentIndex =
-            Mathf.Clamp(
-                currentIndex,
-                0,
-                visible - 1
-            );
+        currentIndex = Mathf.Clamp(currentIndex, 0, visible - 1);
 
         for (int i = 9; i < slots.Length; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    (i - 9) * 0.03f
-                );
+                slots[i].Show((i - 9) * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.22f
-        );
+        yield return new WaitForSeconds(0.22f);
 
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    i * 0.03f
-                );
+                slots[i].Show(i * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.75f
-        );
+        yield return new WaitForSeconds(0.75f);
 
         MoveTo(currentIndex);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
         isTransitioning = false;
         canControl = true;
@@ -487,12 +419,8 @@ public class SlotManager : MonoBehaviour
 
     int GetLastValidSlot()
     {
-        int visibleCount =
-            GetVisibleCount(currentCycle);
+        int visibleCount = GetVisibleCount(currentCycle);
 
-        return Mathf.Max(
-            0,
-            visibleCount - 1
-        );
+        return Mathf.Max(0, visibleCount - 1);
     }
 }

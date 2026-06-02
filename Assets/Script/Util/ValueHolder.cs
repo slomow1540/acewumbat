@@ -9,6 +9,8 @@ public class ValueHolder : MonoBehaviour
 
     public int Points;
 
+    public string SpecialWeaponName;
+
     void Awake()
     {
         if (Instance == null)

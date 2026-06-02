@@ -14242,6 +14242,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4711107143741071134}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6073534668269551437}
   m_SourcePrefab: {fileID: 100100000, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
 --- !u!1 &8448142032054405415 stripped
 GameObject:
@@ -14629,6 +14632,45 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6073534668269551437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448142032054405415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3392ac511a8c054429fdb4f5fe7d3e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialAbility
+  chosenAbility: 
+  currentCooldown: 0
+  firePoints:
+  - {fileID: 6778934340806187437}
+  airburstMissilePrefab: {fileID: 2137459680999894693, guid: 03668713a08d9f44b93a5d59f3914b76, type: 3}
+  airburstMissileDamage: 80
+  airburstTarget: {fileID: 0}
+  boostForce: 160000
+  boostDuration: 0.5
+  manuverDuration: 6
+  manuverRevertTime: 3
+  regenTotalHP: 50
+  regenDuration: 10
+  activateSound: {fileID: 0}
+  readySound: {fileID: 0}
+  activateVolume: 0.8
+  readyVolume: 0.5
+  onAbilityActivated:
+    m_PersistentCalls:
+      m_Calls: []
+  onAbilityCooldownComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  onCooldownChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  abilityKey: 99
 --- !u!4 &9112476151360918429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}

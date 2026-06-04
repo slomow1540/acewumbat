@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -88,22 +89,56 @@ public class UIManager : MonoBehaviour
     {
         state = MenuState.Confirm;
 
-        menuManager.Confirm(currentIndex);
+        menuManager.HideMenuWithSound(currentIndex);
 
         gameManager.ApplyMenu((GameManager.MenuType)(currentIndex + 1));
 
         menuActions[currentIndex]?.Invoke();
+
+        if (currentIndex == 0)
+        {
+            StartCoroutine(ShowBackAfterHangarEnter());
+        }
+        else
+        {
+            menuManager.ShowBack();
+        }
+    }
+
+    IEnumerator ShowBackAfterHangarEnter()
+    {
+        yield return new WaitForSeconds(hangarManager.enterDuration);
+        menuManager.ShowBack();
     }
 
     public void ResetMenu()
     {
-        state = MenuState.Menu;
+        StartCoroutine(ResetMenuRoutine());
+    }
 
+    IEnumerator ResetMenuRoutine()
+    {
+        state = MenuState.Confirm;
+
+        menuManager.HideBack();
         menuExitActions[currentIndex]?.Invoke();
 
-        menuManager.Reset(currentIndex);
+        if (currentIndex == 0)
+        {
+            yield return new WaitForSeconds(hangarManager.exitDuration);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.4f);
+        }
 
         gameManager.ApplyMenu(GameManager.MenuType.Idle);
+
+        yield return new WaitForSeconds(gameManager.cameraMover.moveDuration);
+
+        state = MenuState.Menu;
+
+        menuManager.Reset(currentIndex);
     }
 
     public void SetIndexFromMouse(int i)

@@ -42,19 +42,13 @@ public class HangarSlot : MonoBehaviour
 
         if (data != null && data.prefab != null)
         {
-            spawnedPlane = Instantiate(
-                data.prefab,
-                planePoint
-            );
+            spawnedPlane = Instantiate(data.prefab, planePoint);
 
-            spawnedPlane.transform.localPosition =
-                Vector3.zero;
+            spawnedPlane.transform.localPosition = Vector3.zero;
 
-            spawnedPlane.transform.localRotation =
-                Quaternion.identity;
+            spawnedPlane.transform.localRotation = Quaternion.identity;
 
-            spawnedPlane.transform.localScale =
-                Vector3.one;
+            spawnedPlane.transform.localScale = Vector3.one;
         }
     }
 
@@ -64,9 +58,7 @@ public class HangarSlot : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        StartCoroutine(
-            AnimateShow(delay)
-        );
+        StartCoroutine(AnimateShow(delay));
     }
 
     public void Hide(float delay = 0f)
@@ -76,9 +68,7 @@ public class HangarSlot : MonoBehaviour
 
         StopAllCoroutines();
 
-        StartCoroutine(
-            AnimateHide(delay)
-        );
+        StartCoroutine(AnimateHide(delay));
     }
 
     IEnumerator AnimateHide(float delay)
@@ -133,16 +123,13 @@ public class HangarSlot : MonoBehaviour
         transform.localPosition = basePos;
     }
 
-
     public void ShowInstant()
     {
         StopAllCoroutines();
 
-        transform.localScale =
-            Vector3.one;
+        transform.localScale = Vector3.one;
 
-        CanvasGroup cg =
-            GetComponent<CanvasGroup>();
+        CanvasGroup cg = GetComponent<CanvasGroup>();
 
         if (cg != null)
             cg.alpha = 1f;
@@ -154,8 +141,7 @@ public class HangarSlot : MonoBehaviour
 
         transform.localScale = Vector3.zero;
 
-        CanvasGroup cg =
-            GetComponent<CanvasGroup>();
+        CanvasGroup cg = GetComponent<CanvasGroup>();
 
         if (cg != null)
             cg.alpha = 0f;

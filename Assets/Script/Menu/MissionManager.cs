@@ -146,7 +146,6 @@ public class MissionManager : MonoBehaviour
 
         if (currentIndex < topIndex)
             targetTop = currentIndex;
-
         else if (currentIndex > topIndex + visibleCount - 1)
             targetTop = currentIndex - (visibleCount - 1);
 
@@ -204,11 +203,14 @@ public class MissionManager : MonoBehaviour
         Vector2 localMousePos;
         RectTransform viewport = content.parent as RectTransform;
 
-        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            viewport,
-            Input.mousePosition,
-            null,
-            out localMousePos))
+        if (
+            !RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                viewport,
+                Input.mousePosition,
+                null,
+                out localMousePos
+            )
+        )
             return;
 
         float height = viewport.rect.height;
@@ -241,9 +243,11 @@ public class MissionManager : MonoBehaviour
 
     public void SetIndexFromMouse(int i)
     {
-        if (!isUsingMouse) return;
+        if (!isUsingMouse)
+            return;
 
-        if (currentIndex == i) return;
+        if (currentIndex == i)
+            return;
 
         currentIndex = i;
 

@@ -8,10 +8,7 @@ public class CameraMover : MonoBehaviour
 
     public float moveDuration = 1.5f;
 
-    public AnimationCurve easeCurve =
-        AnimationCurve.EaseInOut(
-            0, 0, 1, 1
-        );
+    public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Coroutine currentMove;
 
@@ -22,28 +19,24 @@ public class CameraMover : MonoBehaviour
     public enum CameraMode
     {
         Menu,
-        Hangar
+        Hangar,
     }
 
-    private CameraMode mode =
-        CameraMode.Menu;
+    private CameraMode mode = CameraMode.Menu;
 
     void Start()
     {
-        audioManager =
-            AudioManager.Instance;
+        audioManager = AudioManager.Instance;
     }
 
     public void SetMenuMode()
     {
-        mode =
-            CameraMode.Menu;
+        mode = CameraMode.Menu;
     }
 
     public void SetHangarMode()
     {
-        mode =
-            CameraMode.Hangar;
+        mode = CameraMode.Hangar;
     }
 
     // =================
@@ -54,8 +47,7 @@ public class CameraMover : MonoBehaviour
         if (mode != CameraMode.Menu)
             return;
 
-        if (index < 0 ||
-            index >= menuPoints.Length)
+        if (index < 0 || index >= menuPoints.Length)
         {
             return;
         }
@@ -66,9 +58,7 @@ public class CameraMover : MonoBehaviour
     // =================
     // HANGAR
     // =================
-    public void MoveToTransform(
-        Transform target
-    )
+    public void MoveToTransform(Transform target)
     {
         if (mode != CameraMode.Hangar)
             return;
@@ -83,106 +73,65 @@ public class CameraMover : MonoBehaviour
     {
         if (currentMove != null)
         {
-            StopCoroutine(
-                currentMove
-            );
+            StopCoroutine(currentMove);
         }
 
-        if (audioManager != null &&
-            moveSound != null)
+        if (audioManager != null && moveSound != null)
         {
             audioManager.Play(
-                moveSound
+                moveSound,
+                AudioManager.AudioChannel.Camera
             );
         }
 
-        currentMove =
-            StartCoroutine(
-                MoveRoutine(target)
-            );
+        currentMove = StartCoroutine(MoveRoutine(target));
     }
 
-    IEnumerator MoveRoutine(
-        Transform target
-    )
+    IEnumerator MoveRoutine(Transform target)
     {
-        Vector3 startPos =
-            transform.position;
+        Vector3 startPos = transform.position;
 
-        Quaternion startRot =
-            transform.rotation;
+        Quaternion startRot = transform.rotation;
 
-        Vector3 targetPos =
-            target.position;
+        Vector3 targetPos = target.position;
 
         Quaternion targetRot;
 
         // ===== MENU =====
-        if (mode ==
-            CameraMode.Menu)
+        if (mode == CameraMode.Menu)
         {
-            targetRot =
-                target.rotation;
+            targetRot = target.rotation;
         }
         // ===== HANGAR =====
         else
         {
-            Transform lookTarget =
-                target.parent;
+            Transform lookTarget = target.parent;
 
-            Vector3 dir =
-                (
-                    lookTarget.position
-                    - targetPos
-                ).normalized;
+            Vector3 dir = (lookTarget.position - targetPos).normalized;
 
-            targetRot =
-                Quaternion.LookRotation(
-                    dir,
-                    Vector3.up
-                );
+            targetRot = Quaternion.LookRotation(dir, Vector3.up);
         }
 
         float time = 0f;
 
         while (time < moveDuration)
         {
-            time +=
-                Time.deltaTime;
+            time += Time.deltaTime;
 
-            float t =
-                Mathf.Clamp01(
-                    time /
-                    moveDuration
-                );
+            float t = Mathf.Clamp01(time / moveDuration);
 
-            float eased =
-                easeCurve.Evaluate(
-                    t
-                );
+            float eased = easeCurve.Evaluate(t);
 
-            transform.position =
-                Vector3.Lerp(
-                    startPos,
-                    targetPos,
-                    eased
-                );
+            transform.position = Vector3.Lerp(startPos, targetPos, eased);
 
-            transform.rotation =
-                Quaternion.Slerp(
-                    startRot,
-                    targetRot,
-                    eased
-                );
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, eased);
 
             yield return null;
         }
 
-        transform.position =
-            targetPos;
+        transform.position = targetPos;
 
-        transform.rotation =
-            targetRot;
+        transform.rotation = targetRot;
 
         currentMove = null;
     }

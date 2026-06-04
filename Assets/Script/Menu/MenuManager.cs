@@ -68,7 +68,17 @@ public class MenuManager : MonoBehaviour
         return index;
     }
 
-    public void Confirm(int index)
+    public void HideMenu()
+    {
+        audioManager.Play(confirmSound);
+
+        for (int i = 0; i < items.Length; i++)
+            items[i].Hide(i * 0.05f);
+
+        pointer.Hide(0.05f);
+    }
+
+    public void HideMenuWithSound(int index)
     {
         audioManager.Play(confirmSound);
         audioManager.Play(items[index].confirmSound, AudioManager.AudioChannel.Narrator);
@@ -79,14 +89,21 @@ public class MenuManager : MonoBehaviour
             items[i].Hide(i * 0.05f);
 
         pointer.Hide(0.05f);
+    }
+
+    public void ShowBack()
+    {
         backButton.Show();
+    }
+
+    public void HideBack()
+    {
+        backButton.Hide();
+        audioManager.Play(confirmSound);
     }
 
     public void Reset(int index)
     {
-        audioManager.Play(confirmSound);
-        backButton.Hide();
-
         for (int i = 0; i < items.Length; i++)
             items[i].Show(i * 0.05f);
 

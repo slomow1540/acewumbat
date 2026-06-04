@@ -41,14 +41,17 @@ public class GameManager : MonoBehaviour
         switch (type)
         {
             case MenuType.Idle:
+                cameraMover.SetMenuMode();
                 cameraMover.MoveTo(0);
                 break;
 
             case MenuType.Hangar:
+                cameraMover.SetMenuMode();
                 cameraMover.MoveTo(1);
                 break;
 
             case MenuType.Mission:
+                cameraMover.SetMenuMode();
                 cameraMover.MoveTo(2);
                 skyboxController.ApplyPreset(0);
                 lightingController.ApplyLighting(LightingController.TimeOfDay.Morning);
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case MenuType.Survival:
+                cameraMover.SetMenuMode();
                 cameraMover.MoveTo(3);
                 skyboxController.ApplyPreset(1);
                 lightingController.ApplyLighting(LightingController.TimeOfDay.Night);
@@ -66,6 +70,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case MenuType.Credits:
+                cameraMover.SetMenuMode();
                 cameraMover.MoveTo(4);
                 skyboxController.ApplyPreset(2);
                 lightingController.ApplyLighting(LightingController.TimeOfDay.Sunset);

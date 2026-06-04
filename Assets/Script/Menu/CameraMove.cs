@@ -78,7 +78,10 @@ public class CameraMover : MonoBehaviour
 
         if (audioManager != null && moveSound != null)
         {
-            audioManager.Play(moveSound);
+            audioManager.Play(
+                moveSound,
+                AudioManager.AudioChannel.Camera
+            );
         }
 
         currentMove = StartCoroutine(MoveRoutine(target));

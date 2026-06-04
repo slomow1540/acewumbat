@@ -89,38 +89,52 @@ public class UIManager : MonoBehaviour
     {
         state = MenuState.Confirm;
 
-        menuManager.Confirm(currentIndex);
+        menuManager.HideMenuWithSound(currentIndex);
 
         gameManager.ApplyMenu((GameManager.MenuType)(currentIndex + 1));
 
         menuActions[currentIndex]?.Invoke();
+
+        if (currentIndex == 0)
+        {
+            StartCoroutine(ShowBackAfterHangarEnter());
+        }
+        else
+        {
+            menuManager.ShowBack();
+        }
+    }
+
+    IEnumerator ShowBackAfterHangarEnter()
+    {
+        yield return new WaitForSeconds(hangarManager.enterDuration);
+        menuManager.ShowBack();
     }
 
     public void ResetMenu()
     {
-        if (currentIndex == 0)
-        {
-            StartCoroutine(ResetMenuRoutine());
-
-            return;
-        }
-
-        state = MenuState.Menu;
-
-        menuExitActions[currentIndex]?.Invoke();
-
-        gameManager.ApplyMenu(GameManager.MenuType.Idle);
-
-        menuManager.Reset(currentIndex);
+        StartCoroutine(ResetMenuRoutine());
     }
 
     IEnumerator ResetMenuRoutine()
     {
         state = MenuState.Confirm;
 
+        menuManager.HideBack();
         menuExitActions[currentIndex]?.Invoke();
 
-        yield return new WaitForSeconds(2.5f);
+        if (currentIndex == 0)
+        {
+            yield return new WaitForSeconds(hangarManager.exitDuration);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.4f);
+        }
+
+        gameManager.ApplyMenu(GameManager.MenuType.Idle);
+
+        yield return new WaitForSeconds(gameManager.cameraMover.moveDuration);
 
         state = MenuState.Menu;
 

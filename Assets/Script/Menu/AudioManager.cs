@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
         UI,
         Music,
         Narrator,
-        Ambience,
+        Camera
     }
 
     [System.Serializable]
@@ -43,7 +43,7 @@ public class AudioManager : MonoBehaviour
     public Channel ui;
     public Channel music;
     public Channel narrator;
-    public Channel ambience;
+    public Channel camera;
 
     void Awake()
     {
@@ -131,8 +131,8 @@ public class AudioManager : MonoBehaviour
             case AudioChannel.Narrator:
                 return narrator;
 
-            case AudioChannel.Ambience:
-                return ambience;
+            case AudioChannel.Camera:
+                return camera;
 
             default:
                 return sfx;
@@ -156,7 +156,7 @@ public class AudioManager : MonoBehaviour
         Stop(AudioChannel.UI);
         Stop(AudioChannel.Music);
         Stop(AudioChannel.Narrator);
-        Stop(AudioChannel.Ambience);
+        Stop(AudioChannel.Camera);
     }
 
     public void SetVolume(AudioChannel type, float volume)

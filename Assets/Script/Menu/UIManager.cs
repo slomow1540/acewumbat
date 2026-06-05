@@ -132,9 +132,17 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f);
         }
 
-        gameManager.ApplyMenu(GameManager.MenuType.Idle);
+        bool usesCamera =
+            currentIndex != 3 &&
+            currentIndex != 5;
 
-        yield return new WaitForSeconds(gameManager.cameraMover.moveDuration);
+        if (usesCamera)
+        {
+            gameManager.ApplyMenu(GameManager.MenuType.Idle);
+            yield return new WaitForSeconds(
+                gameManager.cameraMover.moveDuration
+            );
+        }
 
         state = MenuState.Menu;
 

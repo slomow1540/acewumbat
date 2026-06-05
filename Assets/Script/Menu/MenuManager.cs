@@ -48,8 +48,8 @@ public class MenuManager : MonoBehaviour
     {
         index = (index - 1 + items.Length) % items.Length;
 
-        audioManager.Play(switchSound);
-        audioManager.Play(items[index].selectSound);
+        audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
+        audioManager.Play(items[index].selectSound, AudioManager.AudioChannel.Narrator);
 
         pointer.Follow(GetRect(index));
 
@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour
     {
         index = (index + 1) % items.Length;
 
-        audioManager.Play(switchSound);
+        audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
         audioManager.Play(items[index].selectSound, AudioManager.AudioChannel.Narrator);
 
         pointer.Follow(GetRect(index));
@@ -70,7 +70,7 @@ public class MenuManager : MonoBehaviour
 
     public void HideMenu()
     {
-        audioManager.Play(confirmSound);
+        audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
 
         for (int i = 0; i < items.Length; i++)
             items[i].Hide(i * 0.05f);
@@ -80,7 +80,7 @@ public class MenuManager : MonoBehaviour
 
     public void HideMenuWithSound(int index)
     {
-        audioManager.Play(confirmSound);
+        audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
         audioManager.Play(items[index].confirmSound, AudioManager.AudioChannel.Narrator);
 
         items[index].Confirm();
@@ -99,7 +99,7 @@ public class MenuManager : MonoBehaviour
     public void HideBack()
     {
         backButton.Hide();
-        audioManager.Play(confirmSound);
+        audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
     }
 
     public void Reset(int index)

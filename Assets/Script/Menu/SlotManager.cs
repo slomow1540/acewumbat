@@ -30,7 +30,8 @@ public class SlotManager : MonoBehaviour
     private bool canControl;
 
     private AudioManager audioManager;
-    public AudioClip hangarSound;
+    public AudioClip oneFloor;
+    public AudioClip twoFloor;
 
     void Start()
     {
@@ -386,6 +387,7 @@ public class SlotManager : MonoBehaviour
         currentCycle = newCycle;
 
         RenderCycle();
+        PlayFloorSound();
 
         int visible = GetVisibleCount(currentCycle);
 
@@ -419,6 +421,26 @@ public class SlotManager : MonoBehaviour
         canControl = true;
     }
 
+    void PlayFloorSound()
+    {
+        int visibleCount =
+            GetVisibleCount(
+                currentCycle
+            );
+
+        AudioClip clip =
+            visibleCount <= 9
+            ? oneFloor
+            : twoFloor;
+
+        if (clip != null)
+        {
+            audioManager.Play(
+                clip
+            );
+        }
+    }
+
     public IEnumerator EnterSlots()
     {
         canControl = false;
@@ -427,9 +449,7 @@ public class SlotManager : MonoBehaviour
 
         RenderCycle();
 
-        audioManager.Play(
-            hangarSound
-        );
+        PlayFloorSound();
 
         GameManager.Instance.cameraMover.SetHangarMode();
 
@@ -468,9 +488,7 @@ public class SlotManager : MonoBehaviour
         yield return new WaitForSeconds(cameraMover.moveDuration);
 
 
-        audioManager.Play(
-            hangarSound
-        );
+        PlayFloorSound();
 
         // Baru hide slot setelah camera sudah di initial hangar
         for (int i = 9; i < slots.Length; i++)

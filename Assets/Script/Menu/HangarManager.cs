@@ -5,9 +5,26 @@ public class HangarManager : MonoBehaviour
 {
     public SlotManager slotManager;
 
+    public SlideIn[] arrowButtons;
 
     public float enterDuration = 3.5f;
     public float exitDuration = 2.2f;
+
+    [Header("Bars")]
+    public StatusBar thrustBar;
+    public StatusBar maneuverBar;
+    public StatusBar healthBar;
+
+    public StatusBar gunDamageBar;
+    public StatusBar fireRateBar;
+
+    public StatusBar missileDamageBar;
+    public StatusBar missileRangeBar;
+
+    [Header("Numbers")]
+    public CountUp gunAmmo;
+    public CountUp missileAmmo;
+    public CountUp price;
 
     public void Show()
     {
@@ -26,13 +43,31 @@ public class HangarManager : MonoBehaviour
         );
 
         yield return slotManager.EnterSlots();
+
+
+        for (int i = 0; i < arrowButtons.Length; i++)
+        {
+            arrowButtons[i].Show();
+        }
+    }
+
+    public void Previous()
+    {
+        slotManager.Previous();
+    }
+
+    public void Next()
+    {
+        slotManager.Next();
     }
 
     IEnumerator ExitRoutine()
     {
-        yield return slotManager.ExitRoutine();
+        for (int i = 0; i < arrowButtons.Length; i++)
+        {
+            arrowButtons[i].Hide();
+        }
 
-        // Setelah pesawat selesai hide & camera sudah di initial hangar,
-        // GameManager akan gerak ke Idle — ditunggu UIManager
+        yield return slotManager.ExitRoutine();
     }
 }

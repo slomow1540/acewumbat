@@ -71,7 +71,7 @@ public class SettingManager : MonoBehaviour
 
     public void Show()
     {
-        audioManager.Play(enterSound);
+        audioManager.Play(enterSound, AudioManager.AudioChannel.UI);
         SelectTab(0);
         settingsHologram.Show();
         overlay.FadeTo(0.7f);
@@ -85,7 +85,7 @@ public class SettingManager : MonoBehaviour
     {
         if (play)
         {
-            audioManager.Play(enterSound);
+            audioManager.Play(enterSound, AudioManager.AudioChannel.UI);
             settingsHologram.Hide();
         }
         else

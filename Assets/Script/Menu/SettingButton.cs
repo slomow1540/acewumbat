@@ -18,7 +18,7 @@ public class SettingButton : GeneralUI
     public void OnClick()
     {
         audioManager = AudioManager.Instance;
-        audioManager.Play(manager.clickSound);
+        audioManager.Play(manager.clickSound, AudioManager.AudioChannel.UI);
         manager.SelectTab(index);
     }
 

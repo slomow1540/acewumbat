@@ -6,7 +6,7 @@ public class HangarManager : MonoBehaviour
     public SlotManager slotManager;
 
     public SlideIn[] arrowButtons;
-    public SlideIn[] arrowButtons;
+    public SlideIn[] overlay;
 
     public float enterDuration = 3.5f;
     public float exitDuration = 2.2f;
@@ -57,16 +57,11 @@ public class HangarManager : MonoBehaviour
         {
             arrowButtons[i].Show();
         }
-    }
 
-    public void Previous()
-    {
-        slotManager.Previous();
-    }
-
-    public void Next()
-    {
-        slotManager.Next();
+        for (int i = 0; i < overlay.Length; i++)
+        {
+            overlay[i].Show();
+        }
     }
 
     IEnumerator ExitRoutine()
@@ -74,6 +69,11 @@ public class HangarManager : MonoBehaviour
         for (int i = 0; i < arrowButtons.Length; i++)
         {
             arrowButtons[i].Hide();
+        }
+
+        for (int i = 0; i < overlay.Length; i++)
+        {
+            overlay[i].Show();
         }
 
         yield return slotManager.ExitRoutine();

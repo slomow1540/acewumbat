@@ -292,9 +292,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    (i - 9) * 0.04f
-                );
+                slots[i].Show((i - 9) * 0.04f);
             }
         }
 
@@ -304,9 +302,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    i * 0.04f
-                );
+                slots[i].Show(i * 0.04f);
             }
         }
 
@@ -314,9 +310,7 @@ public class SlotManager : MonoBehaviour
 
         MoveTo(0);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
         EnableControl();
     }
@@ -327,29 +321,21 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    (i - 9) * 0.03f
-                );
+                slots[i].Hide((i - 9) * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.22f
-        );
+        yield return new WaitForSeconds(0.22f);
 
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    i * 0.03f
-                );
+                slots[i].Hide(i * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.65f
-        );
+        yield return new WaitForSeconds(0.65f);
 
         currentCycle = 0;
         currentIndex = 0;
@@ -423,21 +409,13 @@ public class SlotManager : MonoBehaviour
 
     void PlayFloorSound()
     {
-        int visibleCount =
-            GetVisibleCount(
-                currentCycle
-            );
+        int visibleCount = GetVisibleCount(currentCycle);
 
-        AudioClip clip =
-            visibleCount <= 9
-            ? oneFloor
-            : twoFloor;
+        AudioClip clip = visibleCount <= 9 ? oneFloor : twoFloor;
 
         if (clip != null)
         {
-            audioManager.Play(
-                clip
-            );
+            audioManager.Play(clip);
         }
     }
 
@@ -487,7 +465,6 @@ public class SlotManager : MonoBehaviour
 
         yield return new WaitForSeconds(cameraMover.moveDuration);
 
-
         PlayFloorSound();
 
         // Baru hide slot setelah camera sudah di initial hangar
@@ -530,8 +507,6 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveTo(1);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
     }
 }

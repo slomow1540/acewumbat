@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Util;
@@ -28,6 +29,8 @@ public class SlotManager : MonoBehaviour
     const float floorOffset = 0.0308f;
 
     private bool canControl;
+
+    public Action<PlaneData> onPlaneChanged;
 
     private AudioManager audioManager;
     public AudioClip oneFloor;
@@ -271,6 +274,8 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveToTransform(slots[index].cameraPoint);
 
+        onPlaneChanged?.Invoke(plane);
+
         Debug.Log("Selected Plane: " + plane.planeName);
     }
 
@@ -508,5 +513,17 @@ public class SlotManager : MonoBehaviour
         cameraMover.MoveTo(1);
 
         yield return new WaitForSeconds(cameraMover.moveDuration);
+    }
+
+    public PlaneData GetCurrentPlane()
+    {
+        int realIndex = currentCycle * cycleSize + currentIndex;
+
+        if (realIndex < 0 || realIndex >= planes.Length)
+        {
+            return null;
+        }
+
+        return planes[realIndex];
     }
 }

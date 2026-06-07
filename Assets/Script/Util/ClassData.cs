@@ -18,14 +18,10 @@ namespace Util
         [Header("Info")]
         public string planeName;
 
-        [TextArea]
-        public string description;
-
         [Header("Economy")]
         public int price;
 
         [Header("Preview")]
-        public Sprite previewImage;
         public GameObject prefab;
 
         [Header("Flight Stats")]
@@ -65,35 +61,24 @@ namespace Util
 
         public int missileAmmoCount;
 
-        public string GetRole()
+        public string GetType()
         {
-            float mobilityScore =
-                thrust +
-                maneuverability;
+            float mobilityScore = thrust + maneuverability;
 
-            float gunScore =
-                gunDamage +
-                gunFireRate +
-                aimAssistRange;
+            float gunScore = gunDamage + gunFireRate + aimAssistRange;
 
-            float missileScore =
-                missileDamage +
-                missileRange +
-                missileManeuverability;
+            float missileScore = missileDamage + missileRange + missileManeuverability;
 
-            float durabilityScore =
-                health;
+            float durabilityScore = health;
 
             // Tanky aircraft
-            if (durabilityScore >= 80 &&
-                missileAmmoCount >= 6)
+            if (durabilityScore >= 80 && missileAmmoCount >= 6)
             {
                 return "HEAVY FIGHTER";
             }
 
             // Fast missile hunter
-            if (mobilityScore >= 160 &&
-                missileScore > gunScore)
+            if (mobilityScore >= 160 && missileScore > gunScore)
             {
                 return "INTERCEPTOR";
             }
@@ -111,8 +96,7 @@ namespace Util
             }
 
             // High agility close combat
-            if (maneuverability >= 85 &&
-                gunFireRate >= 70)
+            if (maneuverability >= 85 && gunFireRate >= 70)
             {
                 return "DOGFIGHTER";
             }

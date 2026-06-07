@@ -609,6 +609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 27673890}
+  - component: {fileID: 27673891}
   m_Layer: 5
   m_Name: Aim Bar
   m_TagString: Untagged
@@ -638,6 +639,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &27673891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27673889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 1334788931}
+  fill: {fileID: 121477047}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &51336564
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,6 +817,7 @@ GameObject:
   - component: {fileID: 64665796}
   - component: {fileID: 64665798}
   - component: {fileID: 64665797}
+  - component: {fileID: 64665799}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -926,6 +944,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64665795}
   m_CullTransparentMesh: 1
+--- !u!114 &64665799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64665795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 64665797}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &65872591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2104,6 +2138,160 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122128364}
   m_CullTransparentMesh: 1
+--- !u!1 &129086539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 129086540}
+  - component: {fileID: 129086543}
+  - component: {fileID: 129086542}
+  - component: {fileID: 129086541}
+  m_Layer: 5
+  m_Name: Price
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &129086540
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129086539}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1696328993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -17.5}
+  m_SizeDelta: {x: 0, y: -55}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &129086541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129086539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 129086542}
+  prefix: 'CR '
+  suffix: 
+  duration: 0.35
+--- !u!114 &129086542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129086539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: CR  9.500
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
+  m_sharedMaterial: {fileID: -2962246858991115109, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281479730
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 30
+  m_fontSizeBase: 30
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &129086543
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129086539}
+  m_CullTransparentMesh: 1
 --- !u!1 &132489612
 GameObject:
   m_ObjectHideFlags: 0
@@ -2623,6 +2811,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 193657999}
+  - component: {fileID: 193658000}
   m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
@@ -2652,6 +2841,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -180}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &193658000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193657998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 1728653395}
+  fill: {fileID: 1294288364}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &198197892
 GameObject:
   m_ObjectHideFlags: 0
@@ -5550,6 +5755,7 @@ GameObject:
   - component: {fileID: 365365255}
   - component: {fileID: 365365257}
   - component: {fileID: 365365256}
+  - component: {fileID: 365365258}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -5676,6 +5882,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 365365254}
   m_CullTransparentMesh: 1
+--- !u!114 &365365258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365365254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 365365256}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &368081027
 GameObject:
   m_ObjectHideFlags: 0
@@ -6550,6 +6772,7 @@ GameObject:
   - component: {fileID: 439015056}
   - component: {fileID: 439015058}
   - component: {fileID: 439015057}
+  - component: {fileID: 439015059}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -6676,6 +6899,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439015055}
   m_CullTransparentMesh: 1
+--- !u!114 &439015059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439015055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 439015057}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &458478791
 GameObject:
   m_ObjectHideFlags: 0
@@ -7231,6 +7470,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 483213816}
+  - component: {fileID: 483213817}
   m_Layer: 5
   m_Name: Target
   m_TagString: Untagged
@@ -7259,6 +7499,22 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &483213817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483213815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 1246664559}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &487721511
 GameObject:
   m_ObjectHideFlags: 0
@@ -7297,7 +7553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.07918}
+  m_AnchoredPosition: {x: 8.5, y: -159.06075}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -8612,6 +8868,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 573617401}
+  - component: {fileID: 573617402}
   m_Layer: 5
   m_Name: Thrust Bar
   m_TagString: Untagged
@@ -8641,6 +8898,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &573617402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573617400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 365365256}
+  fill: {fileID: 1580046734}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &577936443
 GameObject:
   m_ObjectHideFlags: 0
@@ -11324,6 +11597,158 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763560984}
   m_CullTransparentMesh: 1
+--- !u!1 &774275853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 774275854}
+  - component: {fileID: 774275856}
+  - component: {fileID: 774275855}
+  - component: {fileID: 774275857}
+  m_Layer: 5
+  m_Name: Equiped
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &774275854
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774275853}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1276155244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -450}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &774275855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774275853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: EQUIPED
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
+  m_sharedMaterial: {fileID: -2962246858991115109, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281479730
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &774275856
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774275853}
+  m_CullTransparentMesh: 1
+--- !u!114 &774275857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774275853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31793a1e3e50444fae0d7649a70588d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlideIn
+  animSpeed: 6
+  offset: {x: 0, y: -200}
 --- !u!1 &779149742
 GameObject:
   m_ObjectHideFlags: 0
@@ -12478,6 +12903,7 @@ GameObject:
   - component: {fileID: 871691789}
   - component: {fileID: 871691791}
   - component: {fileID: 871691790}
+  - component: {fileID: 871691792}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -12604,6 +13030,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 871691788}
   m_CullTransparentMesh: 1
+--- !u!114 &871691792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 871691788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 871691790}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &877132269
 GameObject:
   m_ObjectHideFlags: 0
@@ -12964,6 +13406,7 @@ GameObject:
   - component: {fileID: 888735900}
   - component: {fileID: 888735902}
   - component: {fileID: 888735901}
+  - component: {fileID: 888735903}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -13090,6 +13533,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888735899}
   m_CullTransparentMesh: 1
+--- !u!114 &888735903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888735899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 888735901}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &899233291
 GameObject:
   m_ObjectHideFlags: 0
@@ -13099,8 +13558,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 899233292}
+  - component: {fileID: 899233293}
   m_Layer: 5
-  m_Name: Gun DMG  Bar
+  m_Name: Gun DMG Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13128,6 +13588,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &899233293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899233291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 759268999}
+  fill: {fileID: 488037168}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &902343270
 GameObject:
   m_ObjectHideFlags: 0
@@ -14073,7 +14549,7 @@ GameObject:
   - component: {fileID: 971701473}
   - component: {fileID: 971701472}
   m_Layer: 5
-  m_Name: Own
+  m_Name: Equip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14440,6 +14916,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1026755225}
+  - component: {fileID: 1026755226}
   m_Layer: 5
   m_Name: Msl DMG Bar
   m_TagString: Untagged
@@ -14469,6 +14946,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -180}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1026755226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026755224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 888735901}
+  fill: {fileID: 2127772000}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &1027546006
 GameObject:
   m_ObjectHideFlags: 0
@@ -15468,6 +15961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1124652347}
+  - component: {fileID: 1124652348}
   m_Layer: 5
   m_Name: Maneuver Bar
   m_TagString: Untagged
@@ -15497,6 +15991,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1124652348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124652346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 64665797}
+  fill: {fileID: 2130460679}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &1136875862
 GameObject:
   m_ObjectHideFlags: 0
@@ -16085,6 +16595,7 @@ GameObject:
   - component: {fileID: 1166219117}
   - component: {fileID: 1166219116}
   - component: {fileID: 1166219115}
+  - component: {fileID: 1166219118}
   m_Layer: 5
   m_Name: Point
   m_TagString: Untagged
@@ -16225,6 +16736,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1166219113}
   m_CullTransparentMesh: 1
+--- !u!114 &1166219118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166219113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 1166219116}
+  prefix: 'CR  '
+  suffix: 
+  duration: 0.35
 --- !u!1 &1169404411
 GameObject:
   m_ObjectHideFlags: 0
@@ -17429,6 +17956,7 @@ RectTransform:
   m_Children:
   - {fileID: 1696328993}
   - {fileID: 971701471}
+  - {fileID: 774275854}
   m_Father: {fileID: 1940310183}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -18163,6 +18691,7 @@ GameObject:
   - component: {fileID: 1334788930}
   - component: {fileID: 1334788932}
   - component: {fileID: 1334788931}
+  - component: {fileID: 1334788933}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -18289,6 +18818,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334788929}
   m_CullTransparentMesh: 1
+--- !u!114 &1334788933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334788929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 1334788931}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &1337212375
 GameObject:
   m_ObjectHideFlags: 0
@@ -18298,8 +18843,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1337212376}
+  - component: {fileID: 1337212377}
   m_Layer: 5
-  m_Name: Fire Rate Bar
+  m_Name: Msl Range Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18327,6 +18873,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -260}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1337212377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337212375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 439015057}
+  fill: {fileID: 1924751203}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &1339082793
 GameObject:
   m_ObjectHideFlags: 0
@@ -18525,18 +19087,28 @@ MonoBehaviour:
   - {fileID: 971701472}
   - {fileID: 1044215208}
   - {fileID: 215468677}
+  - {fileID: 774275857}
   enterDuration: 3.5
   exitDuration: 2.2
-  thrustBar: {fileID: 0}
-  maneuverBar: {fileID: 0}
-  healthBar: {fileID: 0}
-  gunDamageBar: {fileID: 0}
-  fireRateBar: {fileID: 0}
-  missileDamageBar: {fileID: 0}
-  missileRangeBar: {fileID: 0}
-  gunAmmo: {fileID: 0}
-  missileAmmo: {fileID: 0}
-  price: {fileID: 0}
+  planeName: {fileID: 926476637}
+  type: {fileID: 577936445}
+  thrustBar: {fileID: 573617402}
+  maneuverBar: {fileID: 1124652348}
+  healthBar: {fileID: 193658000}
+  fireRateBar: {fileID: 1587199972}
+  missileTurnBar: {fileID: 2042776636}
+  gunDamageBar: {fileID: 899233293}
+  aimAssistBar: {fileID: 27673891}
+  missileDamageBar: {fileID: 1026755226}
+  missileRangeBar: {fileID: 1337212377}
+  gunAmmo: {fileID: 1951072879}
+  missileAmmo: {fileID: 1429093429}
+  missileLockTime: {fileID: 483213817}
+  price: {fileID: 129086541}
+  purchaseButton: {fileID: 1696328994}
+  equipButton: {fileID: 971701472}
+  equippedText: {fileID: 774275857}
+  currentCR: {fileID: 1166219118}
 --- !u!1 &1352246315
 GameObject:
   m_ObjectHideFlags: 0
@@ -19125,6 +19697,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1429093428}
+  - component: {fileID: 1429093429}
   m_Layer: 5
   m_Name: MIssile
   m_TagString: Untagged
@@ -19153,6 +19726,22 @@ RectTransform:
   m_AnchoredPosition: {x: -50, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1429093429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429093427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 1625696262}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &1430193577
 GameObject:
   m_ObjectHideFlags: 0
@@ -19485,9 +20074,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HangarManager
   planes:
   - planeName: 
-    description: 
     price: 0
-    previewImage: {fileID: 0}
     prefab: {fileID: 0}
     thrust: 0
     maneuverability: 0
@@ -19502,315 +20089,7 @@ MonoBehaviour:
     missileManeuverability: 0
     missileAmmoCount: 0
   - planeName: 
-    description: 
     price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
-    prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    description: 
-    price: 0
-    previewImage: {fileID: 0}
     prefab: {fileID: 0}
     thrust: 0
     maneuverability: 0
@@ -21646,6 +21925,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1587199971}
+  - component: {fileID: 1587199972}
   m_Layer: 5
   m_Name: Fire Rate Bar
   m_TagString: Untagged
@@ -21675,6 +21955,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -260}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1587199972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587199970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 871691790}
+  fill: {fileID: 1593514860}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &1593514858
 GameObject:
   m_ObjectHideFlags: 0
@@ -22927,6 +23223,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1815031297}
+  - {fileID: 129086540}
   m_Father: {fileID: 1276155244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -23359,6 +23656,7 @@ GameObject:
   - component: {fileID: 1728653394}
   - component: {fileID: 1728653396}
   - component: {fileID: 1728653395}
+  - component: {fileID: 1728653397}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -23485,6 +23783,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1728653393}
   m_CullTransparentMesh: 1
+--- !u!114 &1728653397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1728653393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 871691790}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &1733089894
 GameObject:
   m_ObjectHideFlags: 0
@@ -25149,8 +25463,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 19.999992}
+  m_SizeDelta: {x: -75, y: -60.000015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1815031298
 MonoBehaviour:
@@ -25172,10 +25486,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PURCHASE - CR  9.500
+  m_text: PURCHASE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
+  m_sharedMaterial: {fileID: -2962246858991115109, guid: 41a58c7d69f1848c4a7d7d22c1218b52, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -25199,13 +25513,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -25643,6 +25957,7 @@ GameObject:
   - component: {fileID: 1842672816}
   - component: {fileID: 1842672818}
   - component: {fileID: 1842672817}
+  - component: {fileID: 1842672819}
   m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
@@ -25769,6 +26084,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842672815}
   m_CullTransparentMesh: 1
+--- !u!114 &1842672819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842672815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 1842672817}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &1846554716
 GameObject:
   m_ObjectHideFlags: 0
@@ -26622,6 +26953,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1951072878}
+  - component: {fileID: 1951072879}
   m_Layer: 5
   m_Name: Bullet
   m_TagString: Untagged
@@ -26650,6 +26982,22 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1951072879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951072877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0312c8f562325574ebeee03c9013a88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counting
+  text: {fileID: 597298586}
+  prefix: 
+  suffix: 
+  duration: 0.35
 --- !u!1 &1954609476
 GameObject:
   m_ObjectHideFlags: 0
@@ -27507,6 +27855,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2042776635}
+  - component: {fileID: 2042776636}
   m_Layer: 5
   m_Name: Missile Turn Bar
   m_TagString: Untagged
@@ -27536,6 +27885,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -340}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2042776636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042776634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f04ee1d4eb4018bc0024246cdc991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusBar
+  valueText: {fileID: 1842672817}
+  fill: {fileID: 1432789100}
+  duration: 0.5
+  maxValue: 100
 --- !u!1 &2053921276
 GameObject:
   m_ObjectHideFlags: 0
@@ -29012,8 +29377,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000583
-  m_Size: 0.7368759
+  m_Value: 1.0000004
+  m_Size: 0.736868
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

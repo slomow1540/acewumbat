@@ -45,16 +45,20 @@ public class HangarManager : MonoBehaviour
     public Counting currentCR;
 
     PlaneData currentPlane;
+    int currentPlaneIndex;
     bool canShowActionUI;
+    Coroutine updateRoutine;
 
     void Start()
     {
-        slotManager.onPlaneChanged += UpdatePlaneUI;
+        slotManager.onPlaneChanged += OnPlaneChanged;
+        slotManager.onPlaneReady += UpdatePlaneUI;
     }
 
     void OnDestroy()
     {
-        slotManager.onPlaneChanged -= UpdatePlaneUI;
+        slotManager.onPlaneChanged -= OnPlaneChanged;
+        slotManager.onPlaneReady -= UpdatePlaneUI;
     }
 
     public void Show()
@@ -81,12 +85,7 @@ public class HangarManager : MonoBehaviour
     {
         canShowActionUI = false;
 
-        ShowUIObjects(true);
-
         HideActionUI();
-
-        // update CR saat buka hangar
-        currentCR.SetValue(ProgressManager.GetCurrency());
 
         yield return new WaitForSeconds(GameManager.Instance.cameraMover.moveDuration);
 
@@ -98,13 +97,19 @@ public class HangarManager : MonoBehaviour
         for (int i = 0; i < overlay.Length; i++)
             overlay[i].Show();
 
+        // Semua UI sudah muncul, baru isi data
+        currentCR.SetValue(ProgressManager.GetCurrency());
+
         canShowActionUI = true;
 
-        RefreshButtonState();
+        ApplyPlaneUI();
     }
+
 
     IEnumerator ExitRoutine()
     {
+        canShowActionUI = false;
+
         for (int i = 0; i < arrowButtons.Length; i++)
             arrowButtons[i].Hide();
 
@@ -113,77 +118,178 @@ public class HangarManager : MonoBehaviour
 
         yield return slotManager.ExitRoutine();
 
-        // Nonaktifkan UI setelah exit
-        ShowUIObjects(false);
-
         ResetUI();
     }
 
-    void ShowUIObjects(bool active)
+
+    void OnPlaneChanged(PlaneData plane, int index)
     {
-        purchaseButton.gameObject.SetActive(active);
-        equipButton.gameObject.SetActive(active);
-        equippedText.gameObject.SetActive(active);
-
-        thrustBar.gameObject.SetActive(active);
-        maneuverBar.gameObject.SetActive(active);
-        healthBar.gameObject.SetActive(active);
-        fireRateBar.gameObject.SetActive(active);
-        missileTurnBar.gameObject.SetActive(active);
-
-        gunDamageBar.gameObject.SetActive(active);
-        aimAssistBar.gameObject.SetActive(active);
-        missileDamageBar.gameObject.SetActive(active);
-        missileRangeBar.gameObject.SetActive(active);
-
-        gunAmmo.gameObject.SetActive(active);
-        missileAmmo.gameObject.SetActive(active);
-        missileLockTime.gameObject.SetActive(active);
-        price.gameObject.SetActive(active);
+        // Simpan data saja, belum apply UI
+        currentPlane = plane;
+        currentPlaneIndex = index;
     }
 
-    void UpdatePlaneUI(PlaneData plane)
+    void UpdatePlaneUI(
+        PlaneData plane,
+        int index
+    )
     {
         if (plane == null)
             return;
 
         currentPlane = plane;
+        currentPlaneIndex = index;
 
-        // Info
-        planeName.text = plane.planeName;
+        if (!canShowActionUI)
+            return;
 
-        type.text = plane.GetType();
+        if (updateRoutine != null)
+        {
+            StopCoroutine(updateRoutine);
+        }
 
-        // LEFT
-        thrustBar.SetValue(plane.thrust);
+        updateRoutine =
+            StartCoroutine(
+                DelayedApplyUI()
+            );
+    }
 
-        maneuverBar.SetValue(plane.maneuverability);
+    IEnumerator DelayedApplyUI()
+    {
+        yield return new WaitForSeconds(
+            slotManager.cameraMover.moveDuration
+        );
 
-        healthBar.SetValue(plane.health);
+        yield return new WaitForSeconds(
+            0.2f
+        );
 
-        fireRateBar.SetValue(plane.gunFireRate);
+        ApplyPlaneUI();
+    }
 
-        missileTurnBar.SetValue(plane.missileManeuverability);
 
-        // RIGHT
-        gunDamageBar.SetValue(plane.gunDamage);
+    public void OnPurchase()
+    {
+        if (currentPlane == null)
+            return;
 
-        aimAssistBar.SetValue(plane.aimAssistRange);
+        bool success = ProgressManager.BuyPlane(currentPlaneIndex, currentPlane.price);
 
-        missileDamageBar.SetValue(plane.missileDamage);
+        if (!success)
+            return;
 
-        missileRangeBar.SetValue(plane.missileRange);
-
-        // COUNT
-        gunAmmo.SetValue(plane.gunAmmoCount);
-
-        missileAmmo.SetValue(plane.missileAmmoCount);
-
-        missileLockTime.SetValue(Mathf.RoundToInt(plane.missileLockTime * 10f));
-
-        price.SetValue(plane.price);
-
+        currentCR.SetValue(ProgressManager.GetCurrency());
+        ProgressManager.EquipPlane(currentPlaneIndex);
         RefreshButtonState();
+    }
+
+    public void OnEquip()
+    {
+        if (currentPlane == null)
+            return;
+
+        ProgressManager.EquipPlane(currentPlaneIndex);
+        RefreshButtonState();
+    }
+
+
+    void RefreshButtonState()
+    {
+        if (!canShowActionUI)
+        {
+            HideActionUI();
+            return;
+        }
+
+        bool owned = ProgressManager.IsOwned(currentPlaneIndex);
+        bool equipped = ProgressManager.IsEquipped(currentPlaneIndex);
+
+        HideActionUI();
+
+        if (!owned)
+        {
+            purchaseButton.Show();
+            var button = purchaseButton.GetComponent<UnityEngine.UI.Button>();
+            button.interactable = ProgressManager.HasCurrency(currentPlane.price);
+            return;
+        }
+
+        if (!equipped)
+        {
+            equipButton.Show();
+            return;
+        }
+
+        equippedText.Show();
+    }
+
+    void ApplyPlaneUI()
+    {
+        if (currentPlane == null)
+            return;
+
+        // penting: aktifkan UI dulu
+        RefreshButtonState();
+
+        planeName.text =
+            currentPlane.planeName;
+
+        type.text =
+            currentPlane.GetType();
+
+        thrustBar.SetValue(
+            currentPlane.thrust
+        );
+
+        maneuverBar.SetValue(
+            currentPlane.maneuverability
+        );
+
+        healthBar.SetValue(
+            currentPlane.health
+        );
+
+        fireRateBar.SetValue(
+            currentPlane.gunFireRate
+        );
+
+        missileTurnBar.SetValue(
+            currentPlane.missileManeuverability
+        );
+
+        gunDamageBar.SetValue(
+            currentPlane.gunDamage
+        );
+
+        aimAssistBar.SetValue(
+            currentPlane.aimAssistRange
+        );
+
+        missileDamageBar.SetValue(
+            currentPlane.missileDamage
+        );
+
+        missileRangeBar.SetValue(
+            currentPlane.missileRange
+        );
+
+        gunAmmo.SetValue(
+            currentPlane.gunAmmoCount
+        );
+
+        missileAmmo.SetValue(
+            currentPlane.missileAmmoCount
+        );
+
+        missileLockTime.SetValue(
+            Mathf.RoundToInt(
+                currentPlane.missileLockTime * 10f
+            )
+        );
+
+        price.SetValue(
+            currentPlane.price
+        );
     }
 
     void ResetUI()
@@ -208,90 +314,6 @@ public class HangarManager : MonoBehaviour
         price.ResetCount();
 
         currentCR.ResetCount();
-    }
-
-    void BuyPlane()
-    {
-        bool success = ProgressManager.BuyPlane(currentPlane);
-
-        if (!success)
-            return;
-
-        currentCR.SetValue(ProgressManager.GetCurrency());
-
-        EquipPlane();
-    }
-
-    public void OnPurchase()
-    {
-        if (currentPlane == null)
-            return;
-
-        bool success = ProgressManager.BuyPlane(currentPlane);
-
-        if (!success)
-            return;
-
-        currentCR.SetValue(ProgressManager.GetCurrency());
-
-        // auto equip
-        ProgressManager.EquipPlane(currentPlane.planeName);
-
-        RefreshButtonState();
-    }
-
-    public void OnEquip()
-    {
-        if (currentPlane == null)
-            return;
-
-        ProgressManager.EquipPlane(currentPlane.planeName);
-
-        RefreshButtonState();
-    }
-
-    void EquipPlane()
-    {
-        ProgressManager.EquipPlane(currentPlane.planeName);
-
-        RefreshButtonState();
-    }
-
-    void RefreshButtonState()
-    {
-        if (!canShowActionUI)
-        {
-            HideActionUI();
-            return;
-        }
-
-        bool owned = ProgressManager.IsOwned(currentPlane.planeName);
-
-        bool equipped = ProgressManager.IsEquipped(currentPlane.planeName);
-
-        HideActionUI();
-
-        // belum punya
-        if (!owned)
-        {
-            purchaseButton.Show();
-
-            UnityEngine.UI.Button button = purchaseButton.GetComponent<UnityEngine.UI.Button>();
-
-            button.interactable = ProgressManager.HasCurrency(currentPlane.price);
-
-            return;
-        }
-
-        // punya tapi belum equip
-        if (!equipped)
-        {
-            equipButton.Show();
-            return;
-        }
-
-        // sedang dipakai
-        equippedText.Show();
     }
 
     void HideActionUI()

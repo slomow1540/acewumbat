@@ -1,4 +1,5 @@
 using UnityEngine;
+using Util;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        ProgressManager.Initialize();
         skyboxController.ApplyPreset(0);
         lightingController.ApplyLighting(LightingController.TimeOfDay.Morning);
         planeAnim.SetState(PlaneAnim.PlaneState.Idle);

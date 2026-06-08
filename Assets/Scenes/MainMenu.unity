@@ -7553,7 +7553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06075}
+  m_AnchoredPosition: {x: 8.5, y: -159.06058}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -20073,36 +20073,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HangarManager
   planes:
-  - planeName: 
+  - planeName: F5
     price: 0
     prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
-    aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
-  - planeName: 
-    price: 0
+    thrust: 29.6
+    maneuverability: 63.6
+    health: 25.3
+    gunDamage: 63
+    gunFireRate: 38.9
+    gunAmmoCount: 43
+    aimAssistRange: 51.2
+    missileLockTime: 1.9
+    missileRange: 66
+    missileDamage: 21
+    missileManeuverability: 61.1
+    missileAmmoCount: 34
+  - planeName: G34
+    price: 350
     prefab: {fileID: 0}
-    thrust: 0
-    maneuverability: 0
-    health: 0
-    gunDamage: 0
-    gunFireRate: 0
-    gunAmmoCount: 0
+    thrust: 80.9
+    maneuverability: 27.2
+    health: 62.3
+    gunDamage: 53.1
+    gunFireRate: 58.6
+    gunAmmoCount: 23
     aimAssistRange: 0
-    missileLockTime: 0
-    missileRange: 0
-    missileDamage: 0
-    missileManeuverability: 0
-    missileAmmoCount: 0
+    missileLockTime: 1.9
+    missileRange: 11.7
+    missileDamage: 23.5
+    missileManeuverability: 61.1
+    missileAmmoCount: 45
   slotPrefab: {fileID: 9131758468676489524, guid: c9324b61153524969ad4dc684d7a75b6, type: 3}
   slotParent: {fileID: 1850605667}
   cameraMover: {fileID: 1986532801}
@@ -29377,8 +29377,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.736868
+  m_Value: 1
+  m_Size: 0.73686516
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

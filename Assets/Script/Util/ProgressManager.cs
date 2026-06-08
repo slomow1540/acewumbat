@@ -99,43 +99,33 @@ namespace Util
         // ======================
         // PLANE OWNERSHIP
         // ======================
-
-        const string equippedPlaneKey = "equipped_plane";
-
-        static string GetOwnedKey(string planeName)
+        static string GetOwnedKey(int planeIndex)
         {
-            return "owned_plane_" + planeName;
+            return "owned_plane_" + planeIndex;
         }
 
-        public static bool IsOwned(string planeName)
+        public static bool IsOwned(int planeIndex)
         {
-            return PlayerPrefs.GetInt(GetOwnedKey(planeName), 0) == 1;
+            return PlayerPrefs.GetInt(GetOwnedKey(planeIndex), 0) == 1;
         }
 
-        public static void UnlockPlane(string planeName)
+        public static void UnlockPlane(int planeIndex)
         {
-            PlayerPrefs.SetInt(GetOwnedKey(planeName), 1);
-
+            PlayerPrefs.SetInt(GetOwnedKey(planeIndex), 1);
             PlayerPrefs.Save();
         }
 
-        public static bool BuyPlane(PlaneData plane)
+        public static bool BuyPlane(int planeIndex, int price)
         {
-            if (plane == null)
-                return false;
-
-            if (IsOwned(plane.planeName))
-            {
+            if (IsOwned(planeIndex))
                 return true;
-            }
 
-            bool success = SpendCurrency(plane.price);
+            bool success = SpendCurrency(price);
 
             if (!success)
                 return false;
 
-            UnlockPlane(plane.planeName);
-
+            UnlockPlane(planeIndex);
             return true;
         }
 
@@ -143,27 +133,27 @@ namespace Util
         // EQUIPPED PLANE
         // ======================
 
-        public static void EquipPlane(string planeName)
+        const string equippedPlaneKey = "equipped_plane";
+
+        public static void EquipPlane(int planeIndex)
         {
-            if (!IsOwned(planeName))
-            {
+            if (!IsOwned(planeIndex))
                 return;
-            }
 
-            PlayerPrefs.SetString(equippedPlaneKey, planeName);
-
+            PlayerPrefs.SetInt(equippedPlaneKey, planeIndex);
             PlayerPrefs.Save();
         }
 
-        public static string GetEquippedPlane()
+        public static int GetEquippedPlane()
         {
-            return PlayerPrefs.GetString(equippedPlaneKey, "");
+            return PlayerPrefs.GetInt(equippedPlaneKey, 0);
         }
 
-        public static bool IsEquipped(string planeName)
+        public static bool IsEquipped(int planeIndex)
         {
-            return GetEquippedPlane() == planeName;
+            return GetEquippedPlane() == planeIndex;
         }
+
 
         // ======================
         // FIRST TIME SETUP
@@ -171,21 +161,18 @@ namespace Util
 
         const string initializedKey = "player_initialized";
 
-        public static void Initialize(string starterPlane, int starterCurrency)
+        public static void Initialize()
         {
             bool initialized = PlayerPrefs.GetInt(initializedKey, 0) == 1;
 
             if (initialized)
                 return;
 
-            SetCurrency(starterCurrency);
-
-            UnlockPlane(starterPlane);
-
-            EquipPlane(starterPlane);
+            SetCurrency(0);
+            UnlockPlane(0);
+            EquipPlane(0);
 
             PlayerPrefs.SetInt(initializedKey, 1);
-
             PlayerPrefs.Save();
         }
     }

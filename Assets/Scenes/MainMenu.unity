@@ -7513,7 +7513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Counting
   text: {fileID: 1246664559}
   prefix: 
-  suffix: 
+  suffix: s
   duration: 0.35
 --- !u!1 &487721511
 GameObject:
@@ -7553,7 +7553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06058}
+  m_AnchoredPosition: {x: 8.5, y: -159.06255}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -29377,8 +29377,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.73686516
+  m_Value: 1.0000062
+  m_Size: 0.7368899
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

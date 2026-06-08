@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
         UI,
         Music,
         Narrator,
-        Camera
+        Camera,
     }
 
     [System.Serializable]

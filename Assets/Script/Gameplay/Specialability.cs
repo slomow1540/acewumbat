@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
-using System.Collections;
 
 /// <summary>
 /// Special Ability System for player aircraft.
@@ -24,36 +24,44 @@ public class SpecialAbility : MonoBehaviour
     [Header("Airburst Settings")]
     [Tooltip("Missile prefab to launch for Airburst ability")]
     public GameObject airburstMissilePrefab;
+
     [Tooltip("Damage the Airburst missile deals")]
     public float airburstMissileDamage = 80f;
+
     [Tooltip("Target to fire the Airburst missile at (uses TargetingSystem if null)")]
     public GameObject airburstTarget;
 
     [Header("Boost Settings")]
     [Tooltip("Force applied forward during Boost")]
     public float boostForce = 160000f;
+
     [Tooltip("Duration of the boost force application (seconds)")]
     public float boostDuration = 0.3f;
 
     [Header("Manuver Settings")]
     [Tooltip("Duration of the manuver buff (seconds)")]
     public float manuverDuration = 6f;
+
     [Tooltip("How long the stats take to gradually revert after manuver ends (seconds)")]
     public float manuverRevertTime = 3f;
 
     [Header("Regen Settings")]
     [Tooltip("Total HP recovered over the regen duration")]
     public float regenTotalHP = 50f;
+
     [Tooltip("Duration over which regen ticks (seconds)")]
     public float regenDuration = 10f;
 
     [Header("Audio")]
     [Tooltip("Sound played when ability activates")]
     public AudioClip activateSound;
+
     [Tooltip("Sound played when ability finishes cooling down (ready again)")]
     public AudioClip readySound;
+
     [Range(0f, 1f)]
     public float activateVolume = 0.8f;
+
     [Range(0f, 1f)]
     public float readyVolume = 0.5f;
 
@@ -94,12 +102,18 @@ public class SpecialAbility : MonoBehaviour
     {
         switch (ability.ToLower())
         {
-            case "manuver":  return 30f;
-            case "regen":    return 60f;
-            case "airburst": return 40f;
-            case "boost":    return 12f;
+            case "manuver":
+                return 30f;
+            case "regen":
+                return 60f;
+            case "airburst":
+                return 40f;
+            case "boost":
+                return 12f;
             default:
-                Debug.LogWarning($"[SpecialAbility] Unknown ability '{ability}', defaulting cooldown to 30s.");
+                Debug.LogWarning(
+                    $"[SpecialAbility] Unknown ability '{ability}', defaulting cooldown to 30s."
+                );
                 return 30f;
         }
     }
@@ -108,20 +122,20 @@ public class SpecialAbility : MonoBehaviour
 
     private void Awake()
     {
-        rb              = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         planeController = GetComponent<ImprovedPlaneController>();
-        health          = GetComponent<Health>();
+        health = GetComponent<Health>();
         targetingSystem = GetComponent<TargetingSystem>();
 
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.spatialBlend = 0f;
-        audioSource.playOnAwake  = false;
+        audioSource.playOnAwake = false;
 
         // Default fire point if none assigned
         if (firePoints == null || firePoints.Length == 0)
         {
             GameObject fp = new GameObject("AbilityFirePoint");
-            fp.transform.parent        = transform;
+            fp.transform.parent = transform;
             fp.transform.localPosition = Vector3.forward * 3f;
             fp.transform.localRotation = Quaternion.identity;
             firePoints = new Transform[] { fp.transform };
@@ -142,7 +156,9 @@ public class SpecialAbility : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("[SpecialAbility] GameValues object has no ValueHolder component!");
+                Debug.LogWarning(
+                    "[SpecialAbility] GameValues object has no ValueHolder component!"
+                );
             }
         }
         else
@@ -183,7 +199,9 @@ public class SpecialAbility : MonoBehaviour
     {
         if (isOnCooldown)
         {
-            Debug.Log($"[SpecialAbility] '{chosenAbility}' still on cooldown: {currentCooldown:F1}s remaining.");
+            Debug.Log(
+                $"[SpecialAbility] '{chosenAbility}' still on cooldown: {currentCooldown:F1}s remaining."
+            );
             return;
         }
 
@@ -207,12 +225,22 @@ public class SpecialAbility : MonoBehaviour
 
         switch (chosenAbility.ToLower())
         {
-            case "manuver":  StartCoroutine(ManuverRoutine());  break;
-            case "regen":    StartCoroutine(RegenRoutine());    break;
-            case "airburst": ActivateAirburst();                break;
-            case "boost":    StartCoroutine(BoostRoutine());    break;
+            case "manuver":
+                StartCoroutine(ManuverRoutine());
+                break;
+            case "regen":
+                StartCoroutine(RegenRoutine());
+                break;
+            case "airburst":
+                ActivateAirburst();
+                break;
+            case "boost":
+                StartCoroutine(BoostRoutine());
+                break;
             default:
-                Debug.LogWarning($"[SpecialAbility] No implementation for ability '{chosenAbility}'.");
+                Debug.LogWarning(
+                    $"[SpecialAbility] No implementation for ability '{chosenAbility}'."
+                );
                 break;
         }
 
@@ -221,9 +249,9 @@ public class SpecialAbility : MonoBehaviour
 
     private void StartCooldown()
     {
-        maxCooldown     = GetCooldownForAbility(chosenAbility);
+        maxCooldown = GetCooldownForAbility(chosenAbility);
         currentCooldown = maxCooldown;
-        isOnCooldown    = true;
+        isOnCooldown = true;
         onCooldownChanged?.Invoke(1f);
     }
 
@@ -250,22 +278,22 @@ public class SpecialAbility : MonoBehaviour
         abilityActive = true;
 
         // Cache originals
-        orig_thrustAcceleration  = planeController.thrustAcceleration;
-        orig_maxThrust           = planeController.maxThrust;
-        orig_rollResponsiveness  = planeController.rollResponsiveness;
+        orig_thrustAcceleration = planeController.thrustAcceleration;
+        orig_maxThrust = planeController.maxThrust;
+        orig_rollResponsiveness = planeController.rollResponsiveness;
         orig_pitchResponsiveness = planeController.pitchResponsiveness;
-        orig_yawResponsiveness   = planeController.yawResponsiveness;
-        orig_maxAngularVelocity  = planeController.maxAngularVelocity;
-        orig_maxGForce           = planeController.maxGForce;
+        orig_yawResponsiveness = planeController.yawResponsiveness;
+        orig_maxAngularVelocity = planeController.maxAngularVelocity;
+        orig_maxGForce = planeController.maxGForce;
 
         // Apply buff instantly
-        planeController.thrustAcceleration  = orig_thrustAcceleration  * 2f;
-        planeController.maxThrust           = orig_maxThrust           * 3f;
-        planeController.rollResponsiveness  = orig_rollResponsiveness  * 2.5f;
+        planeController.thrustAcceleration = orig_thrustAcceleration * 2f;
+        planeController.maxThrust = orig_maxThrust * 3f;
+        planeController.rollResponsiveness = orig_rollResponsiveness * 2.5f;
         planeController.pitchResponsiveness = orig_pitchResponsiveness * 2.5f;
-        planeController.yawResponsiveness   = orig_yawResponsiveness   * 2.5f;
-        planeController.maxAngularVelocity  = orig_maxAngularVelocity  * 2f;
-        planeController.maxGForce           = orig_maxGForce           * 1.5f;
+        planeController.yawResponsiveness = orig_yawResponsiveness * 2.5f;
+        planeController.maxAngularVelocity = orig_maxAngularVelocity * 2f;
+        planeController.maxGForce = orig_maxGForce * 1.5f;
 
         Debug.Log("[SpecialAbility] Manuver: stats boosted.");
 
@@ -279,25 +307,45 @@ public class SpecialAbility : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / manuverRevertTime; // 0 → 1
 
-            planeController.thrustAcceleration  = Mathf.Lerp(orig_thrustAcceleration  * 2f,   orig_thrustAcceleration,  t);
-            planeController.maxThrust           = Mathf.Lerp(orig_maxThrust           * 3f,   orig_maxThrust,           t);
-            planeController.rollResponsiveness  = Mathf.Lerp(orig_rollResponsiveness  * 2.5f, orig_rollResponsiveness,  t);
-            planeController.pitchResponsiveness = Mathf.Lerp(orig_pitchResponsiveness * 2.5f, orig_pitchResponsiveness, t);
-            planeController.yawResponsiveness   = Mathf.Lerp(orig_yawResponsiveness   * 2.5f, orig_yawResponsiveness,  t);
-            planeController.maxAngularVelocity  = Mathf.Lerp(orig_maxAngularVelocity  * 2f,   orig_maxAngularVelocity,  t);
-            planeController.maxGForce           = Mathf.Lerp(orig_maxGForce           * 1.5f, orig_maxGForce,           t);
+            planeController.thrustAcceleration = Mathf.Lerp(
+                orig_thrustAcceleration * 2f,
+                orig_thrustAcceleration,
+                t
+            );
+            planeController.maxThrust = Mathf.Lerp(orig_maxThrust * 3f, orig_maxThrust, t);
+            planeController.rollResponsiveness = Mathf.Lerp(
+                orig_rollResponsiveness * 2.5f,
+                orig_rollResponsiveness,
+                t
+            );
+            planeController.pitchResponsiveness = Mathf.Lerp(
+                orig_pitchResponsiveness * 2.5f,
+                orig_pitchResponsiveness,
+                t
+            );
+            planeController.yawResponsiveness = Mathf.Lerp(
+                orig_yawResponsiveness * 2.5f,
+                orig_yawResponsiveness,
+                t
+            );
+            planeController.maxAngularVelocity = Mathf.Lerp(
+                orig_maxAngularVelocity * 2f,
+                orig_maxAngularVelocity,
+                t
+            );
+            planeController.maxGForce = Mathf.Lerp(orig_maxGForce * 1.5f, orig_maxGForce, t);
 
             yield return null;
         }
 
         // Snap to exact originals at the end (avoids floating point drift)
-        planeController.thrustAcceleration  = orig_thrustAcceleration;
-        planeController.maxThrust           = orig_maxThrust;
-        planeController.rollResponsiveness  = orig_rollResponsiveness;
+        planeController.thrustAcceleration = orig_thrustAcceleration;
+        planeController.maxThrust = orig_maxThrust;
+        planeController.rollResponsiveness = orig_rollResponsiveness;
         planeController.pitchResponsiveness = orig_pitchResponsiveness;
-        planeController.yawResponsiveness   = orig_yawResponsiveness;
-        planeController.maxAngularVelocity  = orig_maxAngularVelocity;
-        planeController.maxGForce           = orig_maxGForce;
+        planeController.yawResponsiveness = orig_yawResponsiveness;
+        planeController.maxAngularVelocity = orig_maxAngularVelocity;
+        planeController.maxGForce = orig_maxGForce;
 
         Debug.Log("[SpecialAbility] Manuver: stats fully reverted.");
         abilityActive = false;
@@ -363,7 +411,9 @@ public class SpecialAbility : MonoBehaviour
             Debug.LogWarning("[SpecialAbility] Airburst missile prefab has no Missile component.");
         }
 
-        Debug.Log($"[SpecialAbility] Airburst fired! Target: {(target != null ? target.name : "none")}");
+        Debug.Log(
+            $"[SpecialAbility] Airburst fired! Target: {(target != null ? target.name : "none")}"
+        );
     }
 
     // ── BOOST ─────────────────────────────────────────────────────────────────
@@ -399,7 +449,8 @@ public class SpecialAbility : MonoBehaviour
     public bool IsReady() => !isOnCooldown && !abilityActive;
 
     /// <summary>Returns cooldown progress as 0 (ready) → 1 (just used).</summary>
-    public float GetCooldownNormalized() => maxCooldown > 0f ? Mathf.Clamp01(currentCooldown / maxCooldown) : 0f;
+    public float GetCooldownNormalized() =>
+        maxCooldown > 0f ? Mathf.Clamp01(currentCooldown / maxCooldown) : 0f;
 
     /// <summary>Returns true while a timed ability (manuver/regen/boost) is still running.</summary>
     public bool IsAbilityActive() => abilityActive;

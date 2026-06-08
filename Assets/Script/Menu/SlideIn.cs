@@ -30,6 +30,9 @@ public class SlideIn : MonoBehaviour
 
     public void Hide()
     {
+        if (!gameObject.activeSelf)
+            return;
+
         StopAllCoroutines();
         StartCoroutine(AnimateExit());
     }

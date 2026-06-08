@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Util;
@@ -28,6 +29,9 @@ public class SlotManager : MonoBehaviour
     const float floorOffset = 0.0308f;
 
     private bool canControl;
+
+    public Action<PlaneData, int> onPlaneChanged;
+    public Action<PlaneData, int> onPlaneReady;
 
     private AudioManager audioManager;
     public AudioClip oneFloor;
@@ -202,24 +206,26 @@ public class SlotManager : MonoBehaviour
         currentIndex++;
 
         int visibleCount = GetVisibleCount(currentCycle);
+        int totalCycles = Mathf.CeilToInt((float)planes.Length / cycleSize);
 
         if (currentIndex >= visibleCount)
         {
-            int targetCycle = currentCycle + 1;
+            if (totalCycles <= 1)
+            {
+                currentIndex = 0;
+                MoveTo(currentIndex);
+                NotifyPlaneReady(currentIndex);
+                return;
+            }
 
-            int totalCycles = Mathf.CeilToInt((float)planes.Length / cycleSize);
-
-            if (targetCycle >= totalCycles)
-                targetCycle = 0;
-
+            int targetCycle = (currentCycle + 1) % totalCycles;
             currentIndex = 0;
-
             StartCoroutine(ChangeCycle(targetCycle));
-
             return;
         }
 
         MoveTo(currentIndex);
+        NotifyPlaneReady(currentIndex);
     }
 
     public void Previous()
@@ -229,25 +235,27 @@ public class SlotManager : MonoBehaviour
 
         currentIndex--;
 
+        int totalCycles = Mathf.CeilToInt((float)planes.Length / cycleSize);
+
         if (currentIndex < 0)
         {
-            int targetCycle = currentCycle - 1;
-
-            if (targetCycle < 0)
+            if (totalCycles <= 1)
             {
-                targetCycle = Mathf.CeilToInt((float)planes.Length / cycleSize) - 1;
+                currentIndex = GetVisibleCount(0) - 1;
+                MoveTo(currentIndex);
+                NotifyPlaneReady(currentIndex);
+                return;
             }
 
+            int targetCycle = (currentCycle - 1 + totalCycles) % totalCycles;
             currentCycle = targetCycle;
-
             currentIndex = Mathf.Clamp(GetVisibleCount(currentCycle) - 1, 0, cycleSize - 1);
-
             StartCoroutine(ChangeCycle(currentCycle));
-
             return;
         }
 
         MoveTo(currentIndex);
+        NotifyPlaneReady(currentIndex);
     }
 
     int GetVisibleCount(int cycle)
@@ -271,8 +279,26 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveToTransform(slots[index].cameraPoint);
 
+        onPlaneChanged?.Invoke(plane, realIndex);
+
         Debug.Log("Selected Plane: " + plane.planeName);
     }
+
+    void NotifyPlaneReady(int index)
+    {
+        int realIndex = currentCycle * cycleSize + index;
+
+        if (realIndex >= planes.Length)
+            return;
+
+        PlaneData plane = planes[realIndex];
+
+        if (plane == null)
+            return;
+
+        onPlaneReady?.Invoke(plane, realIndex);
+    }
+
 
     public IEnumerator ShowSlots()
     {
@@ -292,9 +318,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    (i - 9) * 0.04f
-                );
+                slots[i].Show((i - 9) * 0.04f);
             }
         }
 
@@ -304,9 +328,7 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Show(
-                    i * 0.04f
-                );
+                slots[i].Show(i * 0.04f);
             }
         }
 
@@ -314,9 +336,7 @@ public class SlotManager : MonoBehaviour
 
         MoveTo(0);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
 
         EnableControl();
     }
@@ -327,29 +347,21 @@ public class SlotManager : MonoBehaviour
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    (i - 9) * 0.03f
-                );
+                slots[i].Hide((i - 9) * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.22f
-        );
+        yield return new WaitForSeconds(0.22f);
 
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
             {
-                slots[i].Hide(
-                    i * 0.03f
-                );
+                slots[i].Hide(i * 0.03f);
             }
         }
 
-        yield return new WaitForSeconds(
-            0.65f
-        );
+        yield return new WaitForSeconds(0.65f);
 
         currentCycle = 0;
         currentIndex = 0;
@@ -393,12 +405,12 @@ public class SlotManager : MonoBehaviour
 
         currentIndex = Mathf.Clamp(currentIndex, 0, visible - 1);
 
+
+
         for (int i = 9; i < slots.Length; i++)
         {
             if (slots[i].plane != null)
-            {
                 slots[i].Show((i - 9) * 0.03f);
-            }
         }
 
         yield return new WaitForSeconds(0.22f);
@@ -406,9 +418,7 @@ public class SlotManager : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             if (slots[i].plane != null)
-            {
                 slots[i].Show(i * 0.03f);
-            }
         }
 
         yield return new WaitForSeconds(0.75f);
@@ -417,27 +427,21 @@ public class SlotManager : MonoBehaviour
 
         yield return new WaitForSeconds(cameraMover.moveDuration);
 
+        NotifyPlaneReady(currentIndex);
+
         isTransitioning = false;
         canControl = true;
     }
 
     void PlayFloorSound()
     {
-        int visibleCount =
-            GetVisibleCount(
-                currentCycle
-            );
+        int visibleCount = GetVisibleCount(currentCycle);
 
-        AudioClip clip =
-            visibleCount <= 9
-            ? oneFloor
-            : twoFloor;
+        AudioClip clip = visibleCount <= 9 ? oneFloor : twoFloor;
 
         if (clip != null)
         {
-            audioManager.Play(
-                clip
-            );
+            audioManager.Play(clip);
         }
     }
 
@@ -473,6 +477,8 @@ public class SlotManager : MonoBehaviour
 
         yield return new WaitForSeconds(cameraMover.moveDuration);
 
+        NotifyPlaneReady(0);
+
         canControl = true;
     }
 
@@ -486,7 +492,6 @@ public class SlotManager : MonoBehaviour
         cameraMover.MoveTo(1);
 
         yield return new WaitForSeconds(cameraMover.moveDuration);
-
 
         PlayFloorSound();
 
@@ -530,8 +535,18 @@ public class SlotManager : MonoBehaviour
 
         cameraMover.MoveTo(1);
 
-        yield return new WaitForSeconds(
-            cameraMover.moveDuration
-        );
+        yield return new WaitForSeconds(cameraMover.moveDuration);
+    }
+
+    public PlaneData GetCurrentPlane()
+    {
+        int realIndex = currentCycle * cycleSize + currentIndex;
+
+        if (realIndex < 0 || realIndex >= planes.Length)
+        {
+            return null;
+        }
+
+        return planes[realIndex];
     }
 }

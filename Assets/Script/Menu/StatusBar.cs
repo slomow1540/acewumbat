@@ -1,40 +1,35 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatusBar
-    : MonoBehaviour
+public class StatusBar : MonoBehaviour
 {
-    public Slider slider;
+    [Header("UI")]
+    public TMP_Text valueText;
+    public Image fill;
 
-    public float duration =
-        0.5f;
+    [Header("Setting")]
+    public float duration = 0.5f;
+    public float maxValue = 100f;
 
     Coroutine routine;
 
-    public void SetValue(
-        float target
-    )
+    float currentValue;
+
+    public void SetValue(float target)
     {
         if (routine != null)
         {
-            StopCoroutine(
-                routine
-            );
+            StopCoroutine(routine);
         }
 
-        routine =
-            StartCoroutine(
-                Animate(target)
-            );
+        routine = StartCoroutine(Animate(target));
     }
 
-    IEnumerator Animate(
-        float target
-    )
+    IEnumerator Animate(float target)
     {
-        float start =
-            slider.value;
+        float start = currentValue;
 
         float time = 0f;
 
@@ -42,29 +37,32 @@ public class StatusBar
         {
             time += Time.deltaTime;
 
-            float t =
-                Mathf.SmoothStep(
-                    0,
-                    1,
-                    time / duration
-                );
+            float t = Mathf.SmoothStep(0, 1, time / duration);
 
-            slider.value =
-                Mathf.Lerp(
-                    start,
-                    target,
-                    t
-                );
+            float value = Mathf.Lerp(start, target, t);
+
+            // Fill image
+            fill.fillAmount = value / maxValue;
+
+            // Number count up
+            valueText.text = Mathf.RoundToInt(value).ToString();
 
             yield return null;
         }
 
-        slider.value =
-            target;
+        currentValue = target;
+
+        fill.fillAmount = target / maxValue;
+
+        valueText.text = Mathf.RoundToInt(target).ToString();
     }
 
     public void ResetBar()
     {
-        slider.value = 0;
+        currentValue = 0;
+
+        fill.fillAmount = 0f;
+
+        valueText.text = "0";
     }
 }

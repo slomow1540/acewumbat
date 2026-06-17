@@ -14648,7 +14648,7 @@ MonoBehaviour:
   currentCooldown: 0
   firePoints:
   - {fileID: 6778934340806187437}
-  airburstMissilePrefab: {fileID: 2137459680999894693, guid: 03668713a08d9f44b93a5d59f3914b76, type: 3}
+  airburstMissilePrefab: {fileID: 2137459680999894693, guid: af75898428467174fba0f30c618cad63, type: 3}
   airburstMissileDamage: 80
   airburstTarget: {fileID: 0}
   boostForce: 160000

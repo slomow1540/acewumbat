@@ -12,6 +12,7 @@ public class PlaneHUD : MonoBehaviour
     public PlaneWeaponSystem weaponSystem;
     public MissileLauncher missileLauncher;
     public TargetingSystem targetingSystem;
+    public SpecialAbility SpecialAbility;
 
     [Header("Health UI")]
     public TextMeshProUGUI healthText;
@@ -27,6 +28,9 @@ public class PlaneHUD : MonoBehaviour
     public TextMeshProUGUI targetInfoText;
     public GameObject targetIndicator;
     public Image targetHealthBar;
+
+    [Header("Misc UI")]
+    public TextMeshProUGUI SpecialAbilityText;
 
     [Header("Lock Indicator (On Target)")]
     [Tooltip("Lock indicator that appears on the target")]
@@ -87,6 +91,7 @@ public class PlaneHUD : MonoBehaviour
         UpdateWeaponUI();
         UpdateMissileUI();
         UpdateTargetUI();
+        UpdateSpecialAbilityUI();
     }
 
     private void UpdateHealthUI()
@@ -163,6 +168,22 @@ public class PlaneHUD : MonoBehaviour
             else
                 missileBar.color = Color.red;
         }*/
+    }
+
+    private void UpdateSpecialAbilityUI()
+    {
+        if (SpecialAbility == null || SpecialAbilityText == null) return;
+
+        if (SpecialAbility.IsReady())
+        {
+            SpecialAbilityText.text = "[SPL READY]";
+            SpecialAbilityText.color = Color.green;
+        }
+        else
+        {
+            SpecialAbilityText.text = "[SPL WAIT]";
+            SpecialAbilityText.color = Color.red;
+        }
     }
 
     private void UpdateTargetUI()

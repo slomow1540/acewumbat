@@ -843,7 +843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ValueHolder
   SelectedPlane: {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
   Points: 0
-  SpecialWeaponName: Airburst
+  SpecialWeaponName: Boost
 --- !u!4 &339402005
 Transform:
   m_ObjectHideFlags: 0

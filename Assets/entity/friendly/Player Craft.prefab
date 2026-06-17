@@ -44,6 +44,7 @@ RectTransform:
   - {fileID: 8606760114473581727}
   - {fileID: 5754657004944366708}
   - {fileID: 2720517948870973999}
+  - {fileID: 3713432988518644995}
   - {fileID: 3119639015881096039}
   - {fileID: 7027297594901577003}
   - {fileID: 6092176494618250623}
@@ -138,6 +139,7 @@ MonoBehaviour:
   weaponSystem: {fileID: 2265854262047508880}
   missileLauncher: {fileID: 7076526213177783238}
   targetingSystem: {fileID: 76922591308590417}
+  SpecialAbility: {fileID: 6073534668269551437}
   healthText: {fileID: 3724332972260129205}
   healthBar: {fileID: 7030578452965695008}
   ammoText: {fileID: 6663176597556638797}
@@ -145,6 +147,7 @@ MonoBehaviour:
   targetInfoText: {fileID: 5097241243669810031}
   targetIndicator: {fileID: 3920967385204501873}
   targetHealthBar: {fileID: 4159436723118401192}
+  SpecialAbilityText: {fileID: 78001062513335881}
   lockIndicator: {fileID: 8343937614621726091}
   lockCenterIcon: {fileID: 9188651561158952894}
   lockingColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -5744,6 +5747,143 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1915970458976714664
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3713432988518644995}
+  - component: {fileID: 5495074339771729248}
+  - component: {fileID: 78001062513335881}
+  m_Layer: 5
+  m_Name: Special text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3713432988518644995
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915970458976714664}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8297982467924050076}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 850, y: 10}
+  m_SizeDelta: {x: 250, y: 25}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5495074339771729248
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915970458976714664}
+  m_CullTransparentMesh: 1
+--- !u!114 &78001062513335881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915970458976714664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: '[SPL WAIT]'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 3694985068
+  m_fontColor: {r: 0.42352942, g: 1, b: 0.23529412, a: 0.8627451}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &3181403784684219733
 GameObject:
   m_ObjectHideFlags: 0
@@ -14648,16 +14788,32 @@ MonoBehaviour:
   currentCooldown: 0
   firePoints:
   - {fileID: 6778934340806187437}
-  airburstMissilePrefab: {fileID: 2137459680999894693, guid: af75898428467174fba0f30c618cad63, type: 3}
-  airburstMissileDamage: 80
-  airburstTarget: {fileID: 0}
-  boostForce: 160000
-  boostDuration: 0.5
-  manuverDuration: 6
-  manuverRevertTime: 3
-  regenTotalHP: 50
-  regenDuration: 10
-  activateSound: {fileID: 0}
+  manuverConfig:
+    cooldown: 30
+    duration: 6
+    revertTime: 3
+    controlResponsivenessMultiplier: 2.5
+    maxAngularVelocityMultiplier: 2
+    maxGForceMultiplier: 1.5
+    activateSound: {fileID: 0}
+  boostConfig:
+    cooldown: 12
+    duration: 3
+    revertTime: 1.5
+    maxThrustMultiplier: 5
+    thrustAccelerationMultiplier: 5
+    activateSound: {fileID: 0}
+  regenConfig:
+    cooldown: 60
+    totalHP: 50
+    duration: 10
+    activateSound: {fileID: 0}
+  airburstConfig:
+    cooldown: 40
+    missilePrefab: {fileID: 2137459680999894693, guid: af75898428467174fba0f30c618cad63, type: 3}
+    missileDamage: 300
+    overrideTarget: {fileID: 0}
+    activateSound: {fileID: 0}
   readySound: {fileID: 0}
   activateVolume: 0.8
   readyVolume: 0.5

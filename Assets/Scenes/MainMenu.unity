@@ -7553,7 +7553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06255}
+  m_AnchoredPosition: {x: 8.5, y: -159.0624}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -17385,6 +17385,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202312606}
   m_CullTransparentMesh: 1
+--- !u!1 &1208846681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1208846683}
+  - component: {fileID: 1208846682}
+  m_Layer: 0
+  m_Name: '!ValuesHolder'
+  m_TagString: GameValues
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1208846682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208846681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7b38d4077264cd4db3fee87b83158c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ValueHolder
+  SelectedPlane: {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+  Points: 0
+  SpecialWeaponName: Airburst
+--- !u!4 &1208846683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208846681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1219275402
 GameObject:
   m_ObjectHideFlags: 0
@@ -29377,8 +29424,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000062
-  m_Size: 0.7368899
+  m_Value: 1.0000054
+  m_Size: 0.73689
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -30324,3 +30371,4 @@ SceneRoots:
   - {fileID: 1626499241}
   - {fileID: 490809596}
   - {fileID: 2028488489}
+  - {fileID: 1208846683}

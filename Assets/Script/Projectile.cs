@@ -34,9 +34,24 @@ public class Projectile : MonoBehaviour
     [Tooltip("Explosion visual effect prefab (only used if isExplosive is true; falls back to impactEffectPrefab if left empty)")]
     public GameObject explosionPrefab;
 
+    [Header("Proximity Detonation")]
+    [Tooltip("If true, the projectile will explode when a target enters its proximity radius")]
+    public bool useProximityDetonation = false;
+    [Tooltip("Radius within which targets trigger detonation")]
+    public float proximityRadius = 3f;
+    [Tooltip("Tags to track for proximity detonation — cached once on spawn (e.g. 'Player', 'Enemy')")]
+    public string[] proximityTargetTags = { "Player" };
+    [Tooltip("How often (in seconds) to check cached target distances")]
+    public float proximityCheckInterval = 0.05f;
+    [Tooltip("Arm delay in seconds — projectile won't proximity-detonate until this time has passed (prevents self-detonation on launch)")]
+    public float proximityArmDelay = 0.15f;
+
     private Rigidbody rb;
     private bool hasHit = false;
     private string ownertag;
+    private float proximityTimer = 0f;
+    private float armTimer = 0f;
+    private Transform[] cachedProximityTargets;
 
     private void Awake()
     {
@@ -58,6 +73,24 @@ public class Projectile : MonoBehaviour
 
         // Auto-destroy after lifetime
         Destroy(gameObject, lifetime);
+
+        // Cache all proximity targets by tag once on spawn
+        if (useProximityDetonation && proximityTargetTags != null && proximityTargetTags.Length > 0)
+        {
+            var targets = new System.Collections.Generic.List<Transform>();
+            foreach (string tag in proximityTargetTags)
+            {
+                if (string.IsNullOrEmpty(tag)) continue;
+                foreach (GameObject go in GameObject.FindGameObjectsWithTag(tag))
+                {
+                    // Skip owner and allies
+                    if (go == owner) continue;
+                    if (go.tag == ownertag) continue;
+                    targets.Add(go.transform);
+                }
+            }
+            cachedProximityTargets = targets.ToArray();
+        }
     }
 
     private void FixedUpdate()
@@ -72,6 +105,59 @@ public class Projectile : MonoBehaviour
         if (rb.linearVelocity.magnitude > 0.1f)
         {
             transform.forward = rb.linearVelocity.normalized;
+        }
+    }
+
+    private void Update()
+    {
+        if (!useProximityDetonation || hasHit) return;
+
+        // Count up the arm delay before we start checking proximity
+        if (armTimer < proximityArmDelay)
+        {
+            armTimer += Time.deltaTime;
+            return;
+        }
+
+        // Throttle the distance checks for performance
+        proximityTimer += Time.deltaTime;
+        if (proximityTimer < proximityCheckInterval) return;
+        proximityTimer = 0f;
+
+        if (cachedProximityTargets == null) return;
+
+        foreach (Transform target in cachedProximityTargets)
+        {
+            // Target may have been destroyed since spawn
+            if (target == null) continue;
+
+            float distance = Vector3.Distance(transform.position, target.position);
+            if (distance > proximityRadius) continue;
+
+            // Only detonate if the target still has a Health component
+            Health targetHealth = target.GetComponent<Health>();
+            if (targetHealth == null) continue;
+
+            if (hasHit) return;
+            hasHit = true;
+
+            if (isExplosive)
+            {
+                Explode(transform.position);
+            }
+            else
+            {
+                // Non-explosive proximity detonation: damage the triggering target directly
+                targetHealth.TakeDamage(damage, owner);
+
+                if (impactEffectPrefab != null)
+                {
+                    Instantiate(impactEffectPrefab, transform.position, Quaternion.identity);
+                }
+
+                Destroy(gameObject);
+            }
+            return;
         }
     }
 
@@ -188,5 +274,16 @@ public class Projectile : MonoBehaviour
 
         if (customSpeed > 0)
             speed = customSpeed;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (useProximityDetonation)
+        {
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+            Gizmos.DrawSphere(transform.position, proximityRadius);
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.8f);
+            Gizmos.DrawWireSphere(transform.position, proximityRadius);
+        }
     }
 }

@@ -272,13 +272,13 @@ public class UIManager : MonoBehaviour
     }
 
     void HandleVerticalMenu(
-    ref int index,
-    int count,
-    Action<int> onMoveUp,
-    Action<int> onMoveDown,
-    Action onConfirm,
-    Action onCancel = null
-)
+        ref int index,
+        int count,
+        Action<int> onMoveUp,
+        Action<int> onMoveDown,
+        Action onConfirm,
+        Action onCancel = null
+    )
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {

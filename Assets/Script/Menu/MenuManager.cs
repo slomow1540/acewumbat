@@ -88,28 +88,18 @@ public class MenuManager : MonoBehaviour
         quitPointer.Hide(0f);
     }
 
-    public int MoveUp(int index)
+    public void MoveUp(int index)
     {
-        index = (index - 1 + mainItems.Length) % mainItems.Length;
-
         audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
         audioManager.Play(mainItems[index].selectSound, AudioManager.AudioChannel.Narrator);
-
         mainPointer.Follow(GetRect(index));
-
-        return index;
     }
 
-    public int MoveDown(int index)
+    public void MoveDown(int index)
     {
-        index = (index + 1) % mainItems.Length;
-
         audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
         audioManager.Play(mainItems[index].selectSound, AudioManager.AudioChannel.Narrator);
-
         mainPointer.Follow(GetRect(index));
-
-        return index;
     }
 
     public void HideMenu()
@@ -167,6 +157,13 @@ public class MenuManager : MonoBehaviour
         audioManager.Play(quitItems[index].selectSound, AudioManager.AudioChannel.Narrator);
 
         quitPointer.Follow(GetRect(index, true));
+    }
+
+    public void ConfirmQuit(int index)
+    {
+        audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
+        audioManager.Play(quitItems[index].confirmSound, AudioManager.AudioChannel.Narrator);
+        quitItems[index].Confirm();
     }
 
     RectTransform GetRect(int i, bool isQuit = false)

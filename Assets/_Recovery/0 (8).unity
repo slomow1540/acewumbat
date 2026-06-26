@@ -2919,7 +2919,7 @@ MonoBehaviour:
   index: 5
   manager: {fileID: 2025565463}
   selectSound: {fileID: 8300000, guid: 66ee7e0d52ac2b14a9895db914b381fa, type: 3}
-  confirmSound: {fileID: 0}
+  confirmSound: {fileID: 8300000, guid: b358bc3717304754d9417c4ee7e50403, type: 3}
 --- !u!1 &183436034
 GameObject:
   m_ObjectHideFlags: 0
@@ -7747,7 +7747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06062}
+  m_AnchoredPosition: {x: 8.5, y: -159.06061}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -18411,7 +18411,7 @@ GameObject:
   - component: {fileID: 1294159760}
   - component: {fileID: 1294159759}
   - component: {fileID: 1294159758}
-  - component: {fileID: 1294159757}
+  - component: {fileID: 1294159761}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -18419,23 +18419,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1294159757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294159756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2cc3fe92776a4e5494d30e43840aaad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuItemAnim
-  isBlinking: 0
-  index: 2
-  manager: {fileID: 2025565463}
-  selectSound: {fileID: 8300000, guid: 628e10caf8de89f4caa3dc970557bcbd, type: 3}
-  confirmSound: {fileID: 8300000, guid: 6de2c3e85e796b544a5aa99e2c943f29, type: 3}
 --- !u!114 &1294159758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18555,6 +18538,19 @@ RectTransform:
   m_AnchoredPosition: {x: 70, y: -69}
   m_SizeDelta: {x: 560, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1294159761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294159756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce664c5fe5bc204c8c4e3f9cd14020e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GeneralUI
+  isBlinking: 0
 --- !u!1 &1294288362
 GameObject:
   m_ObjectHideFlags: 0
@@ -20478,7 +20474,7 @@ MonoBehaviour:
   - {fileID: 162118275}
   mainPointer: {fileID: 325922223}
   quitPanel: {fileID: 1406697782}
-  label: {fileID: 1294159757}
+  label: {fileID: 1294159761}
   quitItems:
   - {fileID: 12885345}
   - {fileID: 1683096348}

@@ -75,7 +75,13 @@ public class UIManager : MonoBehaviour
 
     void HandleInput()
     {
-        HandleVerticalMenu(ref currentIndex, 6, i => menuManager.SetIndex(i), Confirm);
+        HandleVerticalMenu(
+            ref currentIndex,
+            6,
+            i => menuManager.MoveUp(i),
+            i => menuManager.MoveDown(i),
+            Confirm
+        );
     }
 
     void HandleQuit()
@@ -83,6 +89,7 @@ public class UIManager : MonoBehaviour
         HandleVerticalMenu(
             ref quitIndex,
             2,
+            i => menuManager.SetQuitIndex(i),
             i => menuManager.SetQuitIndex(i),
             ConfirmQuit,
             CloseQuit
@@ -111,6 +118,8 @@ public class UIManager : MonoBehaviour
 
     void ConfirmQuit()
     {
+        menuManager.ConfirmQuit(quitIndex);
+
         if (quitIndex == 0)
         {
             Application.Quit();
@@ -139,6 +148,13 @@ public class UIManager : MonoBehaviour
         menuManager.HideBack();
         menuExitActions[currentIndex]?.Invoke();
 
+        if (currentIndex == 5)
+        {
+            state = MenuState.Menu;
+            menuManager.Reset(currentIndex);
+            yield break;
+        }
+
         if (currentIndex == 0)
         {
             yield return new WaitForSeconds(hangarManager.exitDuration);
@@ -148,7 +164,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f);
         }
 
-        bool usesCamera = currentIndex != 3 && currentIndex != 5;
+        bool usesCamera = currentIndex != 3;
 
         if (usesCamera)
         {
@@ -157,7 +173,6 @@ public class UIManager : MonoBehaviour
         }
 
         state = MenuState.Menu;
-
         menuManager.Reset(currentIndex);
     }
 
@@ -251,40 +266,36 @@ public class UIManager : MonoBehaviour
     void CloseQuit()
     {
         menuManager.HideQuit();
-
         state = MenuState.Menu;
-
-        menuManager.SetIndex(currentIndex);
+        menuManager.Reset(currentIndex);
+        menuManager.HideBack();
     }
 
     void HandleVerticalMenu(
-        ref int index,
-        int count,
-        Action<int> onChanged,
-        Action onConfirm,
-        Action onCancel = null
-    )
+    ref int index,
+    int count,
+    Action<int> onMoveUp,
+    Action<int> onMoveDown,
+    Action onConfirm,
+    Action onCancel = null
+)
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             index = (index - 1 + count) % count;
-            onChanged?.Invoke(index);
+            onMoveUp?.Invoke(index);
         }
 
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             index = (index + 1) % count;
-            onChanged?.Invoke(index);
+            onMoveDown?.Invoke(index);
         }
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-        {
             onConfirm?.Invoke();
-        }
 
         if (onCancel != null && Input.GetKeyDown(KeyCode.Escape))
-        {
             onCancel.Invoke();
-        }
     }
 }

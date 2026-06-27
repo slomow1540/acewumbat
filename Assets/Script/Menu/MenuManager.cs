@@ -5,8 +5,19 @@ public class MenuManager : MonoBehaviour
     public GameObject pressAnyKeyText;
     public GameObject menuPanel;
 
-    public MenuItemAnim[] items;
-    public Pointer pointer;
+    public MenuItemAnim[] mainItems;
+    public Pointer mainPointer;
+
+    [Header("Quit")]
+    public GameObject quitPanel;
+    public GeneralUI label;
+
+    public MenuItemAnim[] quitItems;
+    public Pointer quitPointer;
+
+    int quitIndex;
+    bool quitMode;
+
     public BackButton backButton;
 
     private AudioManager audioManager;
@@ -22,7 +33,9 @@ public class MenuManager : MonoBehaviour
 
         pressAnyKeyText.SetActive(true);
         menuPanel.SetActive(false);
-        pointer.isBlinking = true;
+        quitPanel.SetActive(false);
+        mainPointer.isBlinking = true;
+        quitPointer.isBlinking = true;
     }
 
     public void StartMenu()
@@ -37,58 +50,79 @@ public class MenuManager : MonoBehaviour
     {
         menuPanel.SetActive(true);
 
-        for (int i = 0; i < items.Length; i++)
-            items[i].Show(i * 0.1f);
+        for (int i = 0; i < mainItems.Length; i++)
+            mainItems[i].Show(i * 0.1f);
 
-        pointer.Show(0.2f);
-        pointer.Follow(GetRect(0));
+        mainPointer.Show(0.2f);
+        mainPointer.Follow(GetRect(0));
     }
 
-    public int MoveUp(int index)
+    public void ShowQuit()
     {
-        index = (index - 1 + items.Length) % items.Length;
+        quitMode = true;
 
-        audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
-        audioManager.Play(items[index].selectSound, AudioManager.AudioChannel.Narrator);
+        quitPanel.SetActive(true);
 
-        pointer.Follow(GetRect(index));
+        label.Show();
+        for (int i = 0; i < quitItems.Length; i++)
+        {
+            quitItems[i].Show(i * 0.05f);
+        }
 
-        return index;
+        quitIndex = 0;
+
+        quitPointer.Show(0f);
+        quitPointer.Follow(GetRect(0, true));
     }
 
-    public int MoveDown(int index)
+    public void HideQuit()
     {
-        index = (index + 1) % items.Length;
+        quitMode = false;
 
+        label.Hide();
+        for (int i = 0; i < quitItems.Length; i++)
+        {
+            quitItems[i].Hide(i * 0.05f);
+        }
+
+        quitPointer.Hide(0f);
+    }
+
+    public void MoveUp(int index)
+    {
         audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
-        audioManager.Play(items[index].selectSound, AudioManager.AudioChannel.Narrator);
+        audioManager.Play(mainItems[index].selectSound, AudioManager.AudioChannel.Narrator);
+        mainPointer.Follow(GetRect(index));
+    }
 
-        pointer.Follow(GetRect(index));
-
-        return index;
+    public void MoveDown(int index)
+    {
+        audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
+        audioManager.Play(mainItems[index].selectSound, AudioManager.AudioChannel.Narrator);
+        mainPointer.Follow(GetRect(index));
     }
 
     public void HideMenu()
     {
         audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
 
-        for (int i = 0; i < items.Length; i++)
-            items[i].Hide(i * 0.05f);
+        for (int i = 0; i < mainItems.Length; i++)
+            mainItems[i].Hide(i * 0.05f);
 
-        pointer.Hide(0.05f);
+        mainPointer.Hide(0.05f);
     }
 
     public void HideMenuWithSound(int index)
     {
         audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
-        audioManager.Play(items[index].confirmSound, AudioManager.AudioChannel.Narrator);
+        audioManager.Play(mainItems[index].confirmSound, AudioManager.AudioChannel.Narrator);
 
-        items[index].Confirm();
+        mainItems[index].Confirm();
 
-        for (int i = 0; i < items.Length; i++)
-            items[i].Hide(i * 0.05f);
+        for (int i = 0; i < mainItems.Length; i++)
+            mainItems[i].Hide(i * 0.05f);
 
-        pointer.Hide(0.05f);
+        mainPointer.Hide(0.05f);
     }
 
     public void ShowBack()
@@ -104,20 +138,36 @@ public class MenuManager : MonoBehaviour
 
     public void Reset(int index)
     {
-        for (int i = 0; i < items.Length; i++)
-            items[i].Show(i * 0.05f);
+        for (int i = 0; i < mainItems.Length; i++)
+            mainItems[i].Show(i * 0.05f);
 
-        pointer.Show(0.1f);
-        pointer.Follow(GetRect(index));
+        mainPointer.Show(0.1f);
+        mainPointer.Follow(GetRect(index));
     }
 
     public void SetIndex(int index)
     {
-        pointer.Follow(GetRect(index));
+        mainPointer.Follow(GetRect(index));
     }
 
-    RectTransform GetRect(int i)
+    public void SetQuitIndex(int index)
     {
-        return items[i].GetComponent<RectTransform>();
+        audioManager.Play(switchSound, AudioManager.AudioChannel.UI);
+
+        audioManager.Play(quitItems[index].selectSound, AudioManager.AudioChannel.Narrator);
+
+        quitPointer.Follow(GetRect(index, true));
+    }
+
+    public void ConfirmQuit(int index)
+    {
+        audioManager.Play(confirmSound, AudioManager.AudioChannel.UI);
+        audioManager.Play(quitItems[index].confirmSound, AudioManager.AudioChannel.Narrator);
+        quitItems[index].Confirm();
+    }
+
+    RectTransform GetRect(int i, bool isQuit = false)
+    {
+        return (isQuit ? quitItems : mainItems)[i].GetComponent<RectTransform>();
     }
 }

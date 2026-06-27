@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
         Idle,
         Menu,
         Confirm,
+        Quit,
     }
 
     public MenuState state = MenuState.Idle;
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
     public GameManager gameManager;
 
     private int currentIndex = 0;
+    private int quitIndex;
     private Action[] menuActions;
     private Action[] menuExitActions;
 
@@ -34,7 +36,7 @@ public class UIManager : MonoBehaviour
             OpenSurvival,
             OpenSettings,
             OpenCredits,
-            QuitGame,
+            OpenQuit,
         };
 
         menuExitActions = new Action[]
@@ -44,7 +46,7 @@ public class UIManager : MonoBehaviour
             CloseSurvival,
             CloseSettings,
             CloseCredits,
-            null,
+            CloseQuit,
         };
         menuManager.Init();
     }
@@ -65,24 +67,33 @@ public class UIManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
                 ResetMenu();
         }
+        else if (state == MenuState.Quit)
+        {
+            HandleQuit();
+        }
     }
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            currentIndex = menuManager.MoveUp(currentIndex);
-        }
+        HandleVerticalMenu(
+            ref currentIndex,
+            6,
+            i => menuManager.MoveUp(i),
+            i => menuManager.MoveDown(i),
+            Confirm
+        );
+    }
 
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            currentIndex = menuManager.MoveDown(currentIndex);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-        {
-            Confirm();
-        }
+    void HandleQuit()
+    {
+        HandleVerticalMenu(
+            ref quitIndex,
+            2,
+            i => menuManager.SetQuitIndex(i),
+            i => menuManager.SetQuitIndex(i),
+            ConfirmQuit,
+            CloseQuit
+        );
     }
 
     void Confirm()
@@ -105,6 +116,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    void ConfirmQuit()
+    {
+        menuManager.ConfirmQuit(quitIndex);
+
+        if (quitIndex == 0)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            CloseQuit();
+        }
+    }
+
     IEnumerator ShowBackAfterHangarEnter()
     {
         yield return new WaitForSeconds(hangarManager.enterDuration);
@@ -123,6 +148,13 @@ public class UIManager : MonoBehaviour
         menuManager.HideBack();
         menuExitActions[currentIndex]?.Invoke();
 
+        if (currentIndex == 5)
+        {
+            state = MenuState.Menu;
+            menuManager.Reset(currentIndex);
+            yield break;
+        }
+
         if (currentIndex == 0)
         {
             yield return new WaitForSeconds(hangarManager.exitDuration);
@@ -132,7 +164,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f);
         }
 
-        bool usesCamera = currentIndex != 3 && currentIndex != 5;
+        bool usesCamera = currentIndex != 3;
 
         if (usesCamera)
         {
@@ -141,32 +173,47 @@ public class UIManager : MonoBehaviour
         }
 
         state = MenuState.Menu;
-
         menuManager.Reset(currentIndex);
     }
 
     public void SetIndexFromMouse(int i)
     {
-        if (state != MenuState.Menu)
-            return;
-
-        if (currentIndex != i)
+        if (state == MenuState.Menu)
         {
-            currentIndex = i;
-            menuManager.SetIndex(currentIndex);
+            if (currentIndex != i)
+            {
+                currentIndex = i;
+                menuManager.SetIndex(i);
+            }
+        }
+        else if (state == MenuState.Quit)
+        {
+            if (quitIndex != i)
+            {
+                quitIndex = i;
+                menuManager.SetQuitIndex(i);
+            }
         }
     }
 
     public void SelectFromMouse(int i)
     {
-        if (state != MenuState.Menu)
-            return;
+        if (state == MenuState.Menu)
+        {
+            currentIndex = i;
 
-        currentIndex = i;
+            menuManager.SetIndex(i);
 
-        menuManager.SetIndex(currentIndex);
+            Confirm();
+        }
+        else if (state == MenuState.Quit)
+        {
+            quitIndex = i;
 
-        Confirm();
+            menuManager.SetQuitIndex(i);
+
+            ConfirmQuit();
+        }
     }
 
     void OpenHangar()
@@ -186,7 +233,14 @@ public class UIManager : MonoBehaviour
         creditManager.UpdateText();
     }
 
-    void QuitGame() => Application.Quit();
+    void OpenQuit()
+    {
+        quitIndex = 0;
+
+        menuManager.ShowQuit();
+
+        state = MenuState.Quit;
+    }
 
     // Hide
     void CloseHangar()
@@ -207,5 +261,41 @@ public class UIManager : MonoBehaviour
     {
         creditManager.Hide();
         creditManager.ResetPos();
+    }
+
+    void CloseQuit()
+    {
+        menuManager.HideQuit();
+        state = MenuState.Menu;
+        menuManager.Reset(currentIndex);
+        menuManager.HideBack();
+    }
+
+    void HandleVerticalMenu(
+        ref int index,
+        int count,
+        Action<int> onMoveUp,
+        Action<int> onMoveDown,
+        Action onConfirm,
+        Action onCancel = null
+    )
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            index = (index - 1 + count) % count;
+            onMoveUp?.Invoke(index);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            index = (index + 1) % count;
+            onMoveDown?.Invoke(index);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+            onConfirm?.Invoke();
+
+        if (onCancel != null && Input.GetKeyDown(KeyCode.Escape))
+            onCancel.Invoke();
     }
 }

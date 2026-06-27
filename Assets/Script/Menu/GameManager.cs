@@ -61,11 +61,11 @@ public class GameManager : MonoBehaviour
                 break;
 
             case MenuType.Survival:
-                cameraMover.SetMenuMode();
-                cameraMover.MoveTo(3);
-                skyboxController.ApplyPreset(1);
-                lightingController.ApplyLighting(LightingController.TimeOfDay.Night);
-                planeAnim.SetState(PlaneAnim.PlaneState.Survival);
+                // cameraMover.SetMenuMode();
+                // cameraMover.MoveTo(3);
+                // skyboxController.ApplyPreset(1);
+                // lightingController.ApplyLighting(LightingController.TimeOfDay.Night);
+                // planeAnim.SetState(PlaneAnim.PlaneState.Survival);
                 break;
 
             case MenuType.Settings:

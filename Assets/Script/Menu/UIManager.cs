@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public MenuManager menuManager;
     public HangarManager hangarManager;
     public MissionManager missionManager;
+    public ManualManager manualManager;
     public SettingManager settingManager;
     public CreditManager creditManager;
     public GameManager gameManager;
@@ -33,7 +34,7 @@ public class UIManager : MonoBehaviour
         {
             OpenHangar,
             OpenMission,
-            OpenSurvival,
+            OpenManual,
             OpenSettings,
             OpenCredits,
             OpenQuit,
@@ -43,7 +44,7 @@ public class UIManager : MonoBehaviour
         {
             CloseHangar,
             CloseMission,
-            CloseSurvival,
+            CloseManual,
             CloseSettings,
             CloseCredits,
             CloseQuit,
@@ -164,7 +165,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f);
         }
 
-        bool usesCamera = currentIndex != 3;
+        bool usesCamera = currentIndex != 2 && currentIndex != 3;
 
         if (usesCamera)
         {
@@ -223,7 +224,7 @@ public class UIManager : MonoBehaviour
 
     void OpenMission() => missionManager.ShowAll();
 
-    void OpenSurvival() => Debug.Log("Survival");
+    void OpenManual() => manualManager.Show();
 
     void OpenSettings() => settingManager.Show();
 
@@ -250,7 +251,7 @@ public class UIManager : MonoBehaviour
 
     void CloseMission() => missionManager.HideAll();
 
-    void CloseSurvival() { }
+    void CloseManual() => manualManager.Hide();
 
     void CloseSettings()
     {

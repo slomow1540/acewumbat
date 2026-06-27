@@ -301,7 +301,7 @@ MonoBehaviour:
   parentObject: {fileID: 0}
   damageMultiplier: 1
   explodeOnDeath: 1
-  explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
+  explosionPrefab: {fileID: 1742013225946848, guid: fdea56501a7aa4f40a8e2f518a0cc994, type: 3}
   destroyDelay: 2
   instantDeathChance: 0.3
   deathSound: {fileID: 0}

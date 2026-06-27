@@ -211,7 +211,7 @@ MonoBehaviour:
   parentObject: {fileID: 0}
   damageMultiplier: 1
   explodeOnDeath: 1
-  explosionPrefab: {fileID: 1742013225946848, guid: b3d8264aa7d2d824a8a503e45291ddf4, type: 3}
+  explosionPrefab: {fileID: 1742013225946848, guid: fdea56501a7aa4f40a8e2f518a0cc994, type: 3}
   destroyDelay: 2
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
@@ -258,8 +258,8 @@ MonoBehaviour:
   maxMissileRange: 1500
   gunFiringFOV: 10
   missileLockFOV: 80
-  closeRangeAccuracy: 0.75
-  longRangeAccuracy: 0.3
+  closeRangeAccuracy: 0.85
+  longRangeAccuracy: 0.45
   closeRange: 300
   leadAccuracy: 0.8
   missileLockTime: 2

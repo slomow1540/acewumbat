@@ -20,22 +20,28 @@ public class SlideIn : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show()
+    public void Show(float delay = 0f)
     {
         gameObject.SetActive(true);
 
         StopAllCoroutines();
-        StartCoroutine(AnimateEnter());
+        StartCoroutine(AnimateEnter(delay));
     }
 
-    public void Hide()
+    public void Hide(float delay = 0f)
     {
+        if (!gameObject.activeSelf)
+            return;
+
         StopAllCoroutines();
-        StartCoroutine(AnimateExit());
+        StartCoroutine(AnimateExit(delay));
     }
 
-    IEnumerator AnimateEnter()
+    IEnumerator AnimateEnter(float delay)
     {
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
         Vector2 startPos = targetPos + offset;
 
         rect.anchoredPosition = startPos;
@@ -55,8 +61,11 @@ public class SlideIn : MonoBehaviour
         rect.anchoredPosition = targetPos;
     }
 
-    IEnumerator AnimateExit()
+    IEnumerator AnimateExit(float delay)
     {
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
         Vector2 startPos = rect.anchoredPosition;
         Vector2 endPos = targetPos + offset;
 

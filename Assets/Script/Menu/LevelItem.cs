@@ -1,6 +1,6 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
 
 public class LevelItem : ListItem, IPointerEnterHandler, IPointerClickHandler
 {
@@ -11,7 +11,6 @@ public class LevelItem : ListItem, IPointerEnterHandler, IPointerClickHandler
     [Header("Optional Visual")]
     public float selectedAlpha = 1f;
     public float normalAlpha = 0.5f;
-
 
     void Awake()
     {
@@ -26,7 +25,6 @@ public class LevelItem : ListItem, IPointerEnterHandler, IPointerClickHandler
             Vector3.one,
             Time.deltaTime * 10f
         );
-
     }
 
     public void OnPointerEnter(PointerEventData eventData)

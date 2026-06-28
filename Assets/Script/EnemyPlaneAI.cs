@@ -12,10 +12,6 @@ public class EnemyPlaneAI : MonoBehaviour
     public string targetTag = "Player";
     [Tooltip("Current target")]
     public GameObject currentTarget;
-    [Tooltip("Detection range")]
-    public float detectionRange = 2000f;
-    [Tooltip("How often to check for targets (seconds)")]
-    public float targetUpdateRate = 1f;
 
     [Header("Flight Settings")]
     [Tooltip("Reference to AI input interface")]
@@ -136,10 +132,10 @@ public class EnemyPlaneAI : MonoBehaviour
     private void Update()
     {
         // Update target periodically
-        if (Time.time >= nextTargetUpdateTime)
+        if (currentTarget == null || !IsTargetAlive(currentTarget))
         {
+            currentTarget = null;
             FindTarget();
-            nextTargetUpdateTime = Time.time + targetUpdateRate;
         }
 
         // Check for incoming missiles periodically
@@ -194,14 +190,10 @@ public class EnemyPlaneAI : MonoBehaviour
 
         foreach (GameObject target in potentialTargets)
         {
-            // Check if target is alive
-            Health targetHealth = target.GetComponent<Health>();
-            if (targetHealth != null && !targetHealth.IsAlive())
-                continue;
+            if (!IsTargetAlive(target)) continue;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
-
-            if (distance <= detectionRange && distance < closestDistance)
+            if (distance < closestDistance)
             {
                 closestDistance = distance;
                 closestTarget = target;
@@ -209,6 +201,13 @@ public class EnemyPlaneAI : MonoBehaviour
         }
 
         currentTarget = closestTarget;
+    }
+
+    private bool IsTargetAlive(GameObject target)
+    {
+        if (target == null) return false;
+        Health h = target.GetComponent<Health>();
+        return h == null || h.IsAlive();
     }
 
     private void CheckForIncomingMissiles()
@@ -718,11 +717,6 @@ public class EnemyPlaneAI : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // Draw detection range
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        // Draw desired direction
         if (Application.isPlaying)
         {
             Gizmos.color = Color.cyan;

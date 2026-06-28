@@ -62,6 +62,9 @@ public class GeneralUI : MonoBehaviour
         isShowing = true;
         isHiding = false;
 
+        alpha = 0f;
+        SetAlpha(0f);
+
         offsetPos = basePos + new Vector2(offsetX, 0);
         rect.anchoredPosition = offsetPos;
 

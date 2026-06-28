@@ -523,13 +523,19 @@ MonoBehaviour:
   mouseSmoothing: 0.7
   maxMouseInputMagnitude: 1.5
   invertMouseY: 0
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  altitudeRaycastDistance: 20000
   thrustText: {fileID: 0}
   gForceText: {fileID: 0}
   speedText: {fileID: 0}
+  altitudeText: {fileID: 0}
   trail: {fileID: 0}
   trail2: {fileID: 0}
   thrust: 50
   currentGForce: 0
+  currentAltitude: 0
 --- !u!114 &5913416048584218741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +566,8 @@ MonoBehaviour:
   instantDeathChance: 0.3
   deathSound: {fileID: 0}
   healthEffects: []
+  planeModelObject: {fileID: 0}
+  damageEmitters: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -569,6 +577,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!114 &2661712258565685929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,7 +592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   targetTag: Enemy
   currentTarget: {fileID: 0}
-  detectionRange: 1000
+  detectionRange: 1500
   targetUpdateRate: 1
   useGuns: 1
   useMissiles: 1
@@ -606,6 +615,21 @@ MonoBehaviour:
   missileLockTime: 4
   currentLockProgress: 0
   requireLineOfSight: 1
+  isTurret: 0
+  azimuth:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
+  elevation:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
 --- !u!114 &3836809967699384308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -620,7 +644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPlaneAI
   targetTag: Enemy
   currentTarget: {fileID: 0}
-  detectionRange: 2000
+  detectionRange: 15000
   targetUpdateRate: 1
   aiInput: {fileID: 9068306228317262959}
   cruiseSpeed: 80
@@ -644,6 +668,12 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  enableTerrainScanning: 1
+  baseLookaheadDistance: 200
+  scanRayCount: 5
+  scanSpreadAngle: 30
+  avoidanceMargin: 50
+  showTerrainDebug: 0
 --- !u!114 &9068306228317262959
 MonoBehaviour:
   m_ObjectHideFlags: 0

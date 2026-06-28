@@ -251,13 +251,19 @@ MonoBehaviour:
   mouseSmoothing: 0.7
   maxMouseInputMagnitude: 1.5
   invertMouseY: 0
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  altitudeRaycastDistance: 20000
   thrustText: {fileID: 0}
   gForceText: {fileID: 0}
   speedText: {fileID: 0}
+  altitudeText: {fileID: 0}
   trail: {fileID: 0}
   trail2: {fileID: 0}
   thrust: 50
   currentGForce: 0
+  currentAltitude: 0
 --- !u!114 &7530720505267865308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +305,7 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+  terrainLayerName: Terrain
 --- !u!114 &1091033204620688545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +320,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 800
+  detectionRange: 1000
   targetUpdateRate: 1
   useGuns: 1
   useMissiles: 1
@@ -336,6 +343,21 @@ MonoBehaviour:
   missileLockTime: 4.5
   currentLockProgress: 0
   requireLineOfSight: 1
+  isTurret: 0
+  azimuth:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
+  elevation:
+    target: {fileID: 0}
+    rotationAxis: 1
+    forwardAxis: 2
+    invertForward: 0
+    rotationSpeed: 90
+    inverted: 0
 --- !u!114 &8666426294980299261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,7 +372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPlaneAI
   targetTag: Player
   currentTarget: {fileID: 0}
-  detectionRange: 2000
+  detectionRange: 15000
   targetUpdateRate: 1
   aiInput: {fileID: 5395833819781210270}
   cruiseSpeed: 80
@@ -374,6 +396,12 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  enableTerrainScanning: 1
+  baseLookaheadDistance: 200
+  scanRayCount: 5
+  scanSpreadAngle: 30
+  avoidanceMargin: 50
+  showTerrainDebug: 0
 --- !u!114 &5395833819781210270
 MonoBehaviour:
   m_ObjectHideFlags: 0

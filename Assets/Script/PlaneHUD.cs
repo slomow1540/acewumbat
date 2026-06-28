@@ -12,6 +12,7 @@ public class PlaneHUD : MonoBehaviour
     public PlaneWeaponSystem weaponSystem;
     public MissileLauncher missileLauncher;
     public TargetingSystem targetingSystem;
+    public SpecialAbility SpecialAbility;
 
     [Header("Health UI")]
     public TextMeshProUGUI healthText;
@@ -27,6 +28,9 @@ public class PlaneHUD : MonoBehaviour
     public TextMeshProUGUI targetInfoText;
     public GameObject targetIndicator;
     public Image targetHealthBar;
+
+    [Header("Misc UI")]
+    public TextMeshProUGUI SpecialAbilityText;
 
     [Header("Lock Indicator (On Target)")]
     [Tooltip("Lock indicator that appears on the target")]
@@ -51,11 +55,13 @@ public class PlaneHUD : MonoBehaviour
     private RectTransform lockIndicatorRect;
     private RectTransform offScreenArrowRect;
     private Canvas canvas;
+    private RectTransform canvasRect;
 
     private void Start()
     {
         // Get canvas reference
         canvas = GetComponentInParent<Canvas>();
+        canvasRect = canvas.GetComponent<RectTransform>();
         if (canvas == null)
         {
             Debug.LogError("PlaneHUD must be a child of a Canvas!");
@@ -85,6 +91,7 @@ public class PlaneHUD : MonoBehaviour
         UpdateWeaponUI();
         UpdateMissileUI();
         UpdateTargetUI();
+        UpdateSpecialAbilityUI();
     }
 
     private void UpdateHealthUI()
@@ -161,6 +168,22 @@ public class PlaneHUD : MonoBehaviour
             else
                 missileBar.color = Color.red;
         }*/
+    }
+
+    private void UpdateSpecialAbilityUI()
+    {
+        if (SpecialAbility == null || SpecialAbilityText == null) return;
+
+        if (SpecialAbility.IsReady())
+        {
+            SpecialAbilityText.text = "[SPL READY]";
+            SpecialAbilityText.color = Color.green;
+        }
+        else
+        {
+            SpecialAbilityText.text = "[SPL WAIT]";
+            SpecialAbilityText.color = Color.red;
+        }
     }
 
     private void UpdateTargetUI()
@@ -435,32 +458,16 @@ public class PlaneHUD : MonoBehaviour
 
     private void PositionUIElement(RectTransform rectTransform, Vector3 screenPos)
     {
-        if (rectTransform == null) return;
+        if (rectTransform == null || canvasRect == null) return;
 
-        // Convert screen position to canvas position if using Screen Space - Overlay
-        if (canvas != null)
-        {
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
-            {
-                rectTransform.position = screenPos;
-            }
-            else if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
-            {
-                // Convert screen point to local point in canvas
-                Vector2 localPoint;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    canvas.GetComponent<RectTransform>(),
-                    screenPos,
-                    canvas.worldCamera,
-                    out localPoint
-                );
-                rectTransform.localPosition = localPoint;
-            }
-        }
-        else
-        {
-            // Fallback
-            rectTransform.position = screenPos;
-        }
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos,
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+            out localPoint
+        );
+
+        rectTransform.anchoredPosition = localPoint;
     }
 }

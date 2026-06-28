@@ -15,7 +15,7 @@ public class CreditManager : MonoBehaviour
     [Header("Credit Data")]
     public CreditData[] credits;
 
-    public SlideIn[] creditButtons;
+    public SlideIn[] arrowButtons;
     public SlideIn[] overlay;
 
     [Header("UI Text")]
@@ -88,9 +88,9 @@ public class CreditManager : MonoBehaviour
     public void Show()
     {
         isActive = true;
-        for (int i = 0; i < creditButtons.Length; i++)
+        for (int i = 0; i < arrowButtons.Length; i++)
         {
-            creditButtons[i].Show();
+            arrowButtons[i].Show();
         }
         for (int i = 0; i < overlay.Length; i++)
         {
@@ -101,9 +101,9 @@ public class CreditManager : MonoBehaviour
     public void Hide()
     {
         isActive = false;
-        for (int i = 0; i < creditButtons.Length; i++)
+        for (int i = 0; i < arrowButtons.Length; i++)
         {
-            creditButtons[i].Hide();
+            arrowButtons[i].Hide();
         }
         for (int i = 0; i < overlay.Length; i++)
         {

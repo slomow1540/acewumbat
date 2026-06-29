@@ -15204,7 +15204,7 @@ MonoBehaviour:
   firePoints:
   - {fileID: 6778934340806187437}
   manuverConfig:
-    cooldown: 30
+    cooldown: 15
     duration: 6
     revertTime: 3
     controlResponsivenessMultiplier: 2.5
@@ -15213,7 +15213,7 @@ MonoBehaviour:
     activateSound: {fileID: 0}
     effectObject: {fileID: 8147099322860439028}
   boostConfig:
-    cooldown: 12
+    cooldown: 6
     duration: 3
     revertTime: 1.5
     maxThrustMultiplier: 5
@@ -15221,7 +15221,7 @@ MonoBehaviour:
     activateSound: {fileID: 0}
     effectObject: {fileID: 8147099322860439028}
   regenConfig:
-    cooldown: 30
+    cooldown: 15
     totalHP: 50
     duration: 10
     activateSound: {fileID: 0}

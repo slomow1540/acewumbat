@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafc903c9aaafe747b92ac5ddb09a2df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
-  damage: 25
+  damage: 18
   speed: 500
   lifetime: 5
   owner: {fileID: 0}
@@ -166,6 +166,12 @@ MonoBehaviour:
   explosionRadius: 5
   minDirectHitDamage: 0.5
   explosionPrefab: {fileID: 7633560358295558729, guid: c771d88913a57ad40a85449a8ed3b6f8, type: 3}
+  useProximityDetonation: 0
+  proximityRadius: 3
+  proximityTargetTags:
+  - Player
+  proximityCheckInterval: 0.05
+  proximityArmDelay: 0.15
 --- !u!96 &-7545548818600406234
 TrailRenderer:
   serializedVersion: 4

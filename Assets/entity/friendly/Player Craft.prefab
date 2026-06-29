@@ -14976,8 +14976,8 @@ MonoBehaviour:
   fireRate: 10
   fireKey: 323
   useAmmo: 1
-  currentAmmo: 900
-  maxAmmo: 900
+  currentAmmo: 3000
+  maxAmmo: 3000
   useAimAssist: 1
   aimAssistFOV: 7
   aimAssistStrength: 1
@@ -15032,8 +15032,8 @@ MonoBehaviour:
   targetingSystem: {fileID: 76922591308590417}
   maxLockRange: 1500
   maxLockAngle: 50
-  currentMissiles: 100
-  maxMissiles: 100
+  currentMissiles: 300
+  maxMissiles: 300
   lockingSound: {fileID: 0}
   lockedSound: {fileID: 0}
   launchSound: {fileID: 8300000, guid: 2e69180fc22c30f4091a14f46adade5f, type: 3}
@@ -15221,13 +15221,13 @@ MonoBehaviour:
     activateSound: {fileID: 0}
     effectObject: {fileID: 8147099322860439028}
   regenConfig:
-    cooldown: 60
+    cooldown: 30
     totalHP: 50
     duration: 10
     activateSound: {fileID: 0}
     effectObject: {fileID: 6517381192937688936}
   airburstConfig:
-    cooldown: 40
+    cooldown: 20
     missilePrefab: {fileID: 2137459680999894693, guid: af75898428467174fba0f30c618cad63, type: 3}
     missileDamage: 320
     overrideTarget: {fileID: 0}

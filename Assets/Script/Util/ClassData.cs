@@ -24,6 +24,8 @@ namespace Util
         [Header("Preview")]
         public GameObject prefab;
 
+        public GameObject playerprefab;
+
         [Header("Flight Stats")]
         [Range(0, 100)]
         public float thrust;

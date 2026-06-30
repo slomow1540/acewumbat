@@ -41,8 +41,19 @@ public class HangarManager : MonoBehaviour
     public SlideIn purchaseButton;
     public SlideIn equipButton;
     public SlideIn equippedText;
+    public SlideIn toggleAbility;
 
     public Counting currentCR;
+
+    [Header("Ability Toggle")]
+    public GameObject toggleAbilityButton;
+    private TMP_Text abilityText;
+    private readonly string[] abilityNames = { "Airburst", "Boost", "Manuver", "Regen" };
+    private int abilityIndex;
+
+    [Header("Points Display")]
+    public GameObject Point;
+    private TMP_Text pointText;
 
     PlaneData currentPlane;
     int currentPlaneIndex;
@@ -53,6 +64,18 @@ public class HangarManager : MonoBehaviour
     {
         slotManager.onPlaneChanged += OnPlaneChanged;
         slotManager.onPlaneReady += UpdatePlaneUI;
+
+        if (Point != null)
+            pointText = Point.GetComponent<TMP_Text>();
+
+        if (toggleAbilityButton != null)
+            abilityText = toggleAbilityButton.GetComponentInChildren<TMP_Text>();
+
+        if (ValueHolder.Instance != null && slotManager.planes != null)
+            ValueHolder.Instance.EnsureOwnedArray(slotManager.planes.Length);
+
+        SetAbility(abilityIndex);
+        UpdatePointsUI();
     }
 
     void OnDestroy()
@@ -98,7 +121,7 @@ public class HangarManager : MonoBehaviour
             overlay[i].Show();
 
         // Semua UI sudah muncul, baru isi data
-        currentCR.SetValue(ProgressManager.GetCurrency());
+        UpdatePointsUI();
 
         canShowActionUI = true;
 
@@ -167,19 +190,31 @@ public class HangarManager : MonoBehaviour
         ApplyPlaneUI();
     }
 
+    // ---- Shop actions ----
 
     public void OnPurchase()
     {
+        Debug.Log("test buy");
         if (currentPlane == null)
             return;
 
-        bool success = ProgressManager.BuyPlane(currentPlaneIndex, currentPlane.price);
+        ValueHolder vh = ValueHolder.Instance;
 
-        if (!success)
+        if (vh == null)
             return;
 
-        currentCR.SetValue(ProgressManager.GetCurrency());
-        ProgressManager.EquipPlane(currentPlaneIndex);
+        vh.EnsureOwnedArray(slotManager.planes.Length);
+
+        if (vh.IsOwned(currentPlaneIndex))
+            return;
+
+        if (vh.Points < currentPlane.price)
+            return;
+
+        vh.Points -= currentPlane.price;
+        vh.ownedPlanes[currentPlaneIndex] = true;
+
+        UpdatePointsUI();
         RefreshButtonState();
     }
 
@@ -188,8 +223,48 @@ public class HangarManager : MonoBehaviour
         if (currentPlane == null)
             return;
 
-        ProgressManager.EquipPlane(currentPlaneIndex);
+        ValueHolder vh = ValueHolder.Instance;
+
+        if (vh == null)
+            return;
+
+        vh.equippedPlaneIndex = currentPlaneIndex;
+        vh.SelectedPlane = currentPlane.playerprefab;
+
         RefreshButtonState();
+    }
+
+    // ---- Ability toggle ----
+
+    public void OnToggleAbility()
+    {
+        abilityIndex = (abilityIndex + 1) % abilityNames.Length;
+        SetAbility(abilityIndex);
+    }
+
+    void SetAbility(int index)
+    {
+        string abilityNameValue = abilityNames[index];
+
+        if (abilityText != null)
+            abilityText.text = abilityNameValue;
+
+        if (ValueHolder.Instance != null)
+            ValueHolder.Instance.SpecialWeaponName = abilityNameValue;
+    }
+
+    // ---- Points display ----
+
+    void UpdatePointsUI()
+    {
+        if (ValueHolder.Instance == null)
+            return;
+
+        if (pointText != null)
+            pointText.text = ValueHolder.Instance.Points.ToString();
+
+        if (currentCR != null)
+            currentCR.SetValue(ValueHolder.Instance.Points);
     }
 
 
@@ -201,8 +276,10 @@ public class HangarManager : MonoBehaviour
             return;
         }
 
-        bool owned = ProgressManager.IsOwned(currentPlaneIndex);
-        bool equipped = ProgressManager.IsEquipped(currentPlaneIndex);
+        ValueHolder vh = ValueHolder.Instance;
+
+        bool owned = vh != null && vh.IsOwned(currentPlaneIndex);
+        bool equipped = vh != null && vh.IsEquipped(currentPlaneIndex);
 
         HideActionUI();
 
@@ -210,7 +287,7 @@ public class HangarManager : MonoBehaviour
         {
             purchaseButton.Show();
             var button = purchaseButton.GetComponent<UnityEngine.UI.Button>();
-            button.interactable = ProgressManager.HasCurrency(currentPlane.price);
+            button.interactable = vh != null && vh.Points >= currentPlane.price;
             return;
         }
 
@@ -220,6 +297,7 @@ public class HangarManager : MonoBehaviour
             return;
         }
 
+        toggleAbility.Show();
         equippedText.Show();
     }
 
@@ -321,5 +399,6 @@ public class HangarManager : MonoBehaviour
         purchaseButton?.Hide();
         equipButton?.Hide();
         equippedText?.Hide();
+        toggleAbility?.Hide();
     }
 }

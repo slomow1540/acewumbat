@@ -2257,53 +2257,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a625ea8b460b37438ae492ca5f48d58, type: 3}
---- !u!1 &480227641
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 480227643}
-  - component: {fileID: 480227642}
-  m_Layer: 0
-  m_Name: '!ValuesHolder'
-  m_TagString: GameValues
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &480227642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 480227641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b38d4077264cd4db3fee87b83158c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValueHolder
-  SelectedPlane: {fileID: 8448142032054405415, guid: 552b75ec4897b6b429d6c3664a590250, type: 3}
-  Points: 0
-  SpecialWeaponName: Regen
---- !u!4 &480227643
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 480227641}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &487889582
 GameObject:
   m_ObjectHideFlags: 0
@@ -9435,7 +9388,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1095965536}
-  - {fileID: 480227643}
   - {fileID: 1115043734}
   - {fileID: 1554021915}
   - {fileID: 392441870}

@@ -51,10 +51,19 @@ MonoBehaviour:
   plane:
     planeName: 
     price: 0
-    speed: 0
-    armor: 0
-    handling: 0
     prefab: {fileID: 0}
+    thrust: 0
+    maneuverability: 0
+    health: 0
+    gunDamage: 0
+    gunFireRate: 0
+    gunAmmoCount: 0
+    aimAssistRange: 0
+    missileLockTime: 0
+    missileRange: 0
+    missileDamage: 0
+    missileManeuverability: 0
+    missileAmmoCount: 0
 --- !u!1 &3517805982416004116
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,8 +73,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8257175876459958492}
-  - component: {fileID: 3076580079793697486}
-  - component: {fileID: 8247848819747062959}
   m_Layer: 0
   m_Name: Hangar Plane
   m_TagString: Untagged
@@ -88,63 +95,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7825663579294876259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
---- !u!33 &3076580079793697486
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517805982416004116}
-  m_Mesh: {fileID: 6081231653780672522, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
---- !u!23 &8247848819747062959
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517805982416004116}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: e78a6b9aeb5e42149b2763ad88ef251c, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5585984535598124842
 GameObject:
   m_ObjectHideFlags: 0

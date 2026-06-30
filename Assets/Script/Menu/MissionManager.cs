@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Util;
 
 public class MissionManager : MonoBehaviour
@@ -194,8 +195,7 @@ public class MissionManager : MonoBehaviour
 
         Debug.Log("Start Level: " + levels[currentIndex].title);
 
-        // nanti:
-        // SceneManager.LoadScene(...)
+        SceneManager.LoadScene("Level" + currentIndex);
     }
 
     void HandleMouseScroll()

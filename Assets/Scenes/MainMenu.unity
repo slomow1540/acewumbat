@@ -1946,15 +1946,15 @@ MonoBehaviour:
   - title: desert skirmish
     location: manua desert
     threat: medium
-    previewImage: {fileID: 0}
+    previewImage: {fileID: 21300000, guid: 96087396bb9de7c4780236b33f02070a, type: 3}
   - title: fleet battle
     location: lagane sea
     threat: hard
-    previewImage: {fileID: 0}
+    previewImage: {fileID: 21300000, guid: 54b7ee86d8bed044b855ec10d4ef0368, type: 3}
   - title: carrier
     location: lagoa archipelago
     threat: hard
-    previewImage: {fileID: 0}
+    previewImage: {fileID: 21300000, guid: f04242651a455984d99a10d63e286f16, type: 3}
   itemPrefab: {fileID: -4074503181104883290, guid: 59a56e0d674dd40e6adf767c052aee8b, type: 3}
   content: {fileID: 1966468054}
   pointer: {fileID: 122128366}
@@ -8673,7 +8673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06165}
+  m_AnchoredPosition: {x: 8.5, y: -159.06055}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -8736,7 +8736,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -413.10236}
+  m_AnchoredPosition: {x: 8.5, y: -413.10165}
   m_SizeDelta: {x: 1920, y: 1792.188}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &488037166
@@ -16722,8 +16722,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 104412193}
   m_HandleRect: {fileID: 104412192}
   m_Direction: 2
-  m_Value: 1.0000008
-  m_Size: 0.53899646
+  m_Value: 1
+  m_Size: 0.5389974
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -33340,8 +33340,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000031
-  m_Size: 0.73689
+  m_Value: 1
+  m_Size: 0.7368916
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -1,15 +1,13 @@
-using TMPro;
 using UnityEngine;
+using TMPro;
 
 public class planecontroller : MonoBehaviour
 {
     [Header("Plane Stats")]
     [Tooltip("how much turst acceleraiton")]
     public float turstacceleration = 0.1f;
-
     [Tooltip("max thrust")]
     public float maxthrust = 200f;
-
     [Tooltip("how responsive the plane when manuver(roll,pitch,yaw)")]
     public float responsiveness = 10f;
 
@@ -20,7 +18,10 @@ public class planecontroller : MonoBehaviour
 
     private float responsiveModifier
     {
-        get { return (rb.mass / 10f) * responsiveness; }
+        get
+        {
+            return(rb.mass / 10f) * responsiveness;
+        }
     }
 
     Rigidbody rb;
@@ -38,10 +39,8 @@ public class planecontroller : MonoBehaviour
         pitch = Input.GetAxis("Pitch");
         yaw = Input.GetAxis("Yaw");
 
-        if (Input.GetKey(KeyCode.Space))
-            thrust += turstacceleration;
-        else if (Input.GetKey(KeyCode.LeftControl))
-            thrust -= turstacceleration;
+        if (Input.GetKey(KeyCode.Space)) thrust += turstacceleration;
+        else if(Input.GetKey(KeyCode.LeftControl)) thrust -= turstacceleration;
         thrust = Mathf.Clamp(thrust, 0f, 100f);
     }
 

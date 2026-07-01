@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using Util;
 
 public class HangarManager : MonoBehaviour
 {
@@ -40,7 +41,6 @@ public class HangarManager : MonoBehaviour
     public SlideIn purchaseButton;
     public SlideIn equipButton;
     public SlideIn equippedText;
-
     //public SlideIn toggleAbility;
 
     public Counting currentCR;
@@ -60,11 +60,6 @@ public class HangarManager : MonoBehaviour
     bool canShowActionUI;
     Coroutine updateRoutine;
 
-    void Awake()
-    {
-        ProgressManager.Initialize();
-    }
-
     void Start()
     {
         slotManager.onPlaneChanged += OnPlaneChanged;
@@ -75,6 +70,12 @@ public class HangarManager : MonoBehaviour
 
         if (toggleAbilityButton != null)
             abilityText = toggleAbilityButton.GetComponentInChildren<TMP_Text>();
+
+        if (ValueHolder.Instance != null && slotManager.planes != null)
+            ValueHolder.Instance.EnsureOwnedArray(slotManager.planes.Length);
+
+        SetAbility(abilityIndex);
+        UpdatePointsUI();
     }
 
     void OnDestroy()
@@ -127,6 +128,7 @@ public class HangarManager : MonoBehaviour
         ApplyPlaneUI();
     }
 
+
     IEnumerator ExitRoutine()
     {
         canShowActionUI = false;
@@ -142,6 +144,7 @@ public class HangarManager : MonoBehaviour
         ResetUI();
     }
 
+
     void OnPlaneChanged(PlaneData plane, int index)
     {
         // Simpan data saja, belum apply UI
@@ -149,7 +152,10 @@ public class HangarManager : MonoBehaviour
         currentPlaneIndex = index;
     }
 
-    void UpdatePlaneUI(PlaneData plane, int index)
+    void UpdatePlaneUI(
+        PlaneData plane,
+        int index
+    )
     {
         if (plane == null)
             return;
@@ -165,14 +171,21 @@ public class HangarManager : MonoBehaviour
             StopCoroutine(updateRoutine);
         }
 
-        updateRoutine = StartCoroutine(DelayedApplyUI());
+        updateRoutine =
+            StartCoroutine(
+                DelayedApplyUI()
+            );
     }
 
     IEnumerator DelayedApplyUI()
     {
-        yield return new WaitForSeconds(slotManager.cameraMover.moveDuration);
+        yield return new WaitForSeconds(
+            slotManager.cameraMover.moveDuration
+        );
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(
+            0.2f
+        );
 
         ApplyPlaneUI();
     }
@@ -185,8 +198,21 @@ public class HangarManager : MonoBehaviour
         if (currentPlane == null)
             return;
 
-        if (!ProgressManager.BuyPlane(currentPlaneIndex, currentPlane.price))
+        ValueHolder vh = ValueHolder.Instance;
+
+        if (vh == null)
             return;
+
+        vh.EnsureOwnedArray(slotManager.planes.Length);
+
+        if (vh.IsOwned(currentPlaneIndex))
+            return;
+
+        if (vh.Points < currentPlane.price)
+            return;
+
+        vh.Points -= currentPlane.price;
+        vh.ownedPlanes[currentPlaneIndex] = true;
 
         UpdatePointsUI();
         RefreshButtonState();
@@ -197,23 +223,50 @@ public class HangarManager : MonoBehaviour
         if (currentPlane == null)
             return;
 
-        ProgressManager.EquipPlane(currentPlaneIndex);
+        ValueHolder vh = ValueHolder.Instance;
+
+        if (vh == null)
+            return;
+
+        vh.equippedPlaneIndex = currentPlaneIndex;
+        vh.SelectedPlane = currentPlane.playerprefab;
 
         RefreshButtonState();
+    }
+
+    // ---- Ability toggle ----
+
+    public void OnToggleAbility()
+    {
+        abilityIndex = (abilityIndex + 1) % abilityNames.Length;
+        SetAbility(abilityIndex);
+    }
+
+    void SetAbility(int index)
+    {
+        string abilityNameValue = abilityNames[index];
+
+        if (abilityText != null)
+            abilityText.text = abilityNameValue;
+
+        if (ValueHolder.Instance != null)
+            ValueHolder.Instance.SpecialWeaponName = abilityNameValue;
     }
 
     // ---- Points display ----
 
     void UpdatePointsUI()
     {
-        int currency = ProgressManager.GetCurrency();
+        if (ValueHolder.Instance == null)
+            return;
 
         if (pointText != null)
-            pointText.text = currency.ToString();
+            pointText.text = ValueHolder.Instance.Points.ToString();
 
         if (currentCR != null)
-            currentCR.SetValue(currency);
+            currentCR.SetValue(ValueHolder.Instance.Points);
     }
+
 
     void RefreshButtonState()
     {
@@ -223,8 +276,10 @@ public class HangarManager : MonoBehaviour
             return;
         }
 
-        bool owned = ProgressManager.IsOwned(currentPlaneIndex);
-        bool equipped = ProgressManager.IsEquipped(currentPlaneIndex);
+        ValueHolder vh = ValueHolder.Instance;
+
+        bool owned = vh != null && vh.IsOwned(currentPlaneIndex);
+        bool equipped = vh != null && vh.IsEquipped(currentPlaneIndex);
 
         HideActionUI();
 
@@ -232,7 +287,7 @@ public class HangarManager : MonoBehaviour
         {
             purchaseButton.Show();
             var button = purchaseButton.GetComponent<UnityEngine.UI.Button>();
-            button.interactable = ProgressManager.HasCurrency(currentPlane.price);
+            button.interactable = vh != null && vh.Points >= currentPlane.price;
             return;
         }
 
@@ -254,35 +309,65 @@ public class HangarManager : MonoBehaviour
         // penting: aktifkan UI dulu
         RefreshButtonState();
 
-        planeName.text = currentPlane.planeName;
+        planeName.text =
+            currentPlane.planeName;
 
-        type.text = currentPlane.GetType();
+        type.text =
+            currentPlane.GetType();
 
-        thrustBar.SetValue(currentPlane.thrust);
+        thrustBar.SetValue(
+            currentPlane.thrust
+        );
 
-        maneuverBar.SetValue(currentPlane.maneuverability);
+        maneuverBar.SetValue(
+            currentPlane.maneuverability
+        );
 
-        healthBar.SetValue(currentPlane.health);
+        healthBar.SetValue(
+            currentPlane.health
+        );
 
-        fireRateBar.SetValue(currentPlane.gunFireRate);
+        fireRateBar.SetValue(
+            currentPlane.gunFireRate
+        );
 
-        missileTurnBar.SetValue(currentPlane.missileManeuverability);
+        missileTurnBar.SetValue(
+            currentPlane.missileManeuverability
+        );
 
-        gunDamageBar.SetValue(currentPlane.gunDamage);
+        gunDamageBar.SetValue(
+            currentPlane.gunDamage
+        );
 
-        aimAssistBar.SetValue(currentPlane.aimAssistRange);
+        aimAssistBar.SetValue(
+            currentPlane.aimAssistRange
+        );
 
-        missileDamageBar.SetValue(currentPlane.missileDamage);
+        missileDamageBar.SetValue(
+            currentPlane.missileDamage
+        );
 
-        missileRangeBar.SetValue(currentPlane.missileRange);
+        missileRangeBar.SetValue(
+            currentPlane.missileRange
+        );
 
-        gunAmmo.SetValue(currentPlane.gunAmmoCount);
+        gunAmmo.SetValue(
+            currentPlane.gunAmmoCount
+        );
 
-        missileAmmo.SetValue(currentPlane.missileAmmoCount);
+        missileAmmo.SetValue(
+            currentPlane.missileAmmoCount
+        );
 
-        missileLockTime.SetValue(Mathf.RoundToInt(currentPlane.missileLockTime * 10f));
+        missileLockTime.SetValue(
+            Mathf.RoundToInt(
+                currentPlane.missileLockTime * 10f
+            )
+        );
 
-        price.SetValue(currentPlane.price);
+        price.SetValue(
+            currentPlane.price
+        );
     }
 
     void ResetUI()

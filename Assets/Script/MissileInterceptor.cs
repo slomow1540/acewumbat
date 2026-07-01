@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Missile Interceptor System - Launches counter-missiles to intercept incoming threats
@@ -121,9 +121,7 @@ public class MissileInterceptor : MonoBehaviour
 
         if (launchPoints == null || launchPoints.Length == 0)
         {
-            Debug.LogWarning(
-                "MissileInterceptor: No launch points assigned! Using object position."
-            );
+            Debug.LogWarning("MissileInterceptor: No launch points assigned! Using object position.");
         }
 
         currentInterceptors = maxInterceptors;
@@ -159,8 +157,7 @@ public class MissileInterceptor : MonoBehaviour
         // Check each missile
         foreach (GameObject missileObj in missiles)
         {
-            if (missileObj == null)
-                continue;
+            if (missileObj == null) continue;
 
             // Check if targeting us
             Missile missile = missileObj.GetComponent<Missile>();
@@ -173,15 +170,10 @@ public class MissileInterceptor : MonoBehaviour
                     if (!IsAlreadyTracking(missileObj))
                     {
                         ThreatInfo threat = new ThreatInfo(missileObj);
-                        threat.distanceWhenDetected = Vector3.Distance(
-                            transform.position,
-                            missileObj.transform.position
-                        );
+                        threat.distanceWhenDetected = Vector3.Distance(transform.position, missileObj.transform.position);
                         detectedThreats.Add(threat);
 
-                        Debug.Log(
-                            $"New threat detected: {missileObj.name} at {threat.distanceWhenDetected:F0}m"
-                        );
+                        Debug.Log($"New threat detected: {missileObj.name} at {threat.distanceWhenDetected:F0}m");
                     }
                 }
             }
@@ -196,8 +188,7 @@ public class MissileInterceptor : MonoBehaviour
     /// </summary>
     private bool IsThreatDetectable(GameObject threat)
     {
-        if (threat == null)
-            return false;
+        if (threat == null) return false;
 
         float distance = Vector3.Distance(transform.position, threat.transform.position);
 
@@ -233,13 +224,10 @@ public class MissileInterceptor : MonoBehaviour
     /// </summary>
     private void UpdateThreatLocks()
     {
-        if (detectedThreats.Count == 0)
-            return;
+        if (detectedThreats.Count == 0) return;
 
         // Determine how many threats to lock simultaneously
-        int locksToProcess = allowMultipleLocks
-            ? Mathf.Min(maxSimultaneousLocks, detectedThreats.Count)
-            : 1;
+        int locksToProcess = allowMultipleLocks ? Mathf.Min(maxSimultaneousLocks, detectedThreats.Count) : 1;
 
         // Sort threats by priority
         SortThreatsByPriority();
@@ -261,12 +249,7 @@ public class MissileInterceptor : MonoBehaviour
             threat.lockProgress = Mathf.Clamp01(threat.lockProgress);
 
             // Play locking sound (only for highest priority unengaged threat)
-            if (
-                locksProcessed == 0
-                && threat.lockProgress > 0.1f
-                && threat.lockProgress < 0.95f
-                && lockingSound != null
-            )
+            if (locksProcessed == 0 && threat.lockProgress > 0.1f && threat.lockProgress < 0.95f && lockingSound != null)
             {
                 if (!audioSource.isPlaying)
                 {
@@ -288,50 +271,35 @@ public class MissileInterceptor : MonoBehaviour
         // First, remove any null/destroyed missiles
         detectedThreats.RemoveAll(t => t.missile == null);
 
-        if (detectedThreats.Count == 0)
-            return;
+        if (detectedThreats.Count == 0) return;
 
         if (prioritizeClosest)
         {
             // Sort by distance (closest first)
-            detectedThreats.Sort(
-                (a, b) =>
-                {
-                    // Safety check for null missiles (shouldn't happen after RemoveAll, but be safe)
-                    if (a.missile == null)
-                        return 1;
-                    if (b.missile == null)
-                        return -1;
+            detectedThreats.Sort((a, b) =>
+            {
+                // Safety check for null missiles (shouldn't happen after RemoveAll, but be safe)
+                if (a.missile == null) return 1;
+                if (b.missile == null) return -1;
 
-                    float distA = Vector3.Distance(
-                        transform.position,
-                        a.missile.transform.position
-                    );
-                    float distB = Vector3.Distance(
-                        transform.position,
-                        b.missile.transform.position
-                    );
-                    return distA.CompareTo(distB);
-                }
-            );
+                float distA = Vector3.Distance(transform.position, a.missile.transform.position);
+                float distB = Vector3.Distance(transform.position, b.missile.transform.position);
+                return distA.CompareTo(distB);
+            });
         }
         else if (prioritizeTimeToImpact)
         {
             // Sort by estimated time to impact (shortest first)
-            detectedThreats.Sort(
-                (a, b) =>
-                {
-                    // Safety check for null missiles
-                    if (a.missile == null)
-                        return 1;
-                    if (b.missile == null)
-                        return -1;
+            detectedThreats.Sort((a, b) =>
+            {
+                // Safety check for null missiles
+                if (a.missile == null) return 1;
+                if (b.missile == null) return -1;
 
-                    float timeA = CalculateTimeToImpact(a.missile);
-                    float timeB = CalculateTimeToImpact(b.missile);
-                    return timeA.CompareTo(timeB);
-                }
-            );
+                float timeA = CalculateTimeToImpact(a.missile);
+                float timeB = CalculateTimeToImpact(b.missile);
+                return timeA.CompareTo(timeB);
+            });
         }
     }
 
@@ -340,18 +308,15 @@ public class MissileInterceptor : MonoBehaviour
     /// </summary>
     private float CalculateTimeToImpact(GameObject threat)
     {
-        if (threat == null)
-            return float.MaxValue;
+        if (threat == null) return float.MaxValue;
 
         Rigidbody rb = threat.GetComponent<Rigidbody>();
-        if (rb == null)
-            return float.MaxValue;
+        if (rb == null) return float.MaxValue;
 
         float distance = Vector3.Distance(transform.position, threat.transform.position);
         float speed = rb.linearVelocity.magnitude;
 
-        if (speed < 1f)
-            return float.MaxValue;
+        if (speed < 1f) return float.MaxValue;
 
         return distance / speed;
     }
@@ -361,10 +326,8 @@ public class MissileInterceptor : MonoBehaviour
     /// </summary>
     private void TryEngageThreats()
     {
-        if (currentInterceptors <= 0)
-            return;
-        if (Time.time - lastLaunchTime < launchCooldown)
-            return;
+        if (currentInterceptors <= 0) return;
+        if (Time.time - lastLaunchTime < launchCooldown) return;
 
         // Find locked threats that haven't been engaged yet
         // Use for loop to safely modify collection
@@ -460,9 +423,7 @@ public class MissileInterceptor : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning(
-                    "Interceptor prefab has neither InterceptorMissile nor Missile component!"
-                );
+                Debug.LogWarning("Interceptor prefab has neither InterceptorMissile nor Missile component!");
             }
         }
 
@@ -483,9 +444,7 @@ public class MissileInterceptor : MonoBehaviour
 
         lastLaunchTime = Time.time;
 
-        Debug.Log(
-            $"Launched interceptor at {threat.name}! Remaining: {currentInterceptors}/{maxInterceptors}"
-        );
+        Debug.Log($"Launched interceptor at {threat.name}! Remaining: {currentInterceptors}/{maxInterceptors}");
     }
 
     /// <summary>
@@ -548,8 +507,7 @@ public class MissileInterceptor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!showDebugLines)
-            return;
+        if (!showDebugLines) return;
 
         // Draw detection range
         Gizmos.color = Color.cyan;

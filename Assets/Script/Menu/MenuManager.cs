@@ -170,10 +170,4 @@ public class MenuManager : MonoBehaviour
     {
         return (isQuit ? quitItems : mainItems)[i].GetComponent<RectTransform>();
     }
-
-    public void StartMenuImmediate()
-    {
-        pressAnyKeyText.SetActive(false);
-        ShowMenu();
-    }
 }

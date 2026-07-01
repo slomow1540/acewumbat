@@ -1,55 +1,73 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class ImprovedPlaneController : MonoBehaviour
 {
     [Header("Thrust Settings")]
     [Tooltip("How much thrust acceleration per second")]
     public float thrustAcceleration = 2f;
+
     [Tooltip("Maximum thrust force")]
     public float maxThrust = 2000f;
 
     [Header("Control Responsiveness")]
     [Tooltip("Roll responsiveness (aileron control)")]
     public float rollResponsiveness = 15f;
+
     [Tooltip("Pitch responsiveness (elevator control)")]
     public float pitchResponsiveness = 12f;
+
     [Tooltip("Yaw responsiveness (rudder control)")]
     public float yawResponsiveness = 8f;
+
     [Tooltip("Minimum speed for controls to work effectively")]
     public float minControlSpeed = 20f;
+
     [Tooltip("Maximum angular velocity (degrees per second) for each axis")]
     public float maxAngularVelocity = 180f;
 
     [Header("Aerodynamics")]
     [Tooltip("Lift coefficient - higher = more lift")]
     public float liftCoefficient = 0.2f;
+
     [Tooltip("Drag coefficient - higher = more air resistance")]
     public float dragCoefficient = 0.01f;
+
     [Tooltip("Sideways drag multiplier (prevents sliding)")]
     public float sidewaysDragMultiplier = 5f;
+
     [Tooltip("Forward velocity bias (keeps plane moving forward)")]
     public float forwardVelocityBias = 2f;
+
     [Tooltip("Angular drag for realistic rotation dampening")]
     public float angularDragCoefficient = 2f;
+
     [Tooltip("How much the plane wants to auto-level")]
     public float stabilityFactor = 0.5f;
+
     [Tooltip("Air density factor (affects all aerodynamic forces)")]
     public float airDensity = 1.225f;
 
     [Header("Perceived Speed Settings")]
-    [Tooltip("Multiplier for speedometer display and G-force calculation (doesn't affect actual physics speed)")]
+    [Tooltip(
+        "Multiplier for speedometer display and G-force calculation (doesn't affect actual physics speed)"
+    )]
     public float perceivedSpeedMultiplier = 3f;
 
     [Header("G-Force Limiter")]
     [Tooltip("Maximum G-force the plane can pull")]
     public float maxGForce = 9f;
+
     [Tooltip("How quickly G-force limiting kicks in (0-1)")]
     [Range(0f, 1f)]
     public float gForceLimiterStrength = 0.8f;
-    [Tooltip("How sensitive G-force is to turning (lower = more forgiving, higher = spikes faster)")]
+
+    [Tooltip(
+        "How sensitive G-force is to turning (lower = more forgiving, higher = spikes faster)"
+    )]
     [Range(0.01f, 2f)]
     public float turnGForceMultiplier = 0.5f;
+
     [Tooltip("How much turn rate is reduced when over G-limit (0-1, higher = more reduction)")]
     [Range(0f, 1f)]
     public float turnRateLossOverGLimit = 0.7f;
@@ -57,31 +75,39 @@ public class ImprovedPlaneController : MonoBehaviour
     [Header("High-G Maneuver Mode (Hold 2)")]
     [Tooltip("Control responsiveness multiplier in high-G mode")]
     public float highGModeControlMultiplier = 2.5f;
+
     [Tooltip("Speed loss per second in high-G mode")]
     public float highGModeSpeedLoss = 15f;
+
     [Tooltip("G-force limit increase in high-G mode")]
     public float highGModeLimitBoost = 3f;
 
     [Header("Mouse Control")]
     [Tooltip("Enable mouse aiming")]
     public bool allowMouseControl = false;
+
     [Tooltip("Mouse sensitivity for aiming (higher = more responsive)")]
     public float mouseSensitivity = 1.5f;
+
     [Tooltip("Mouse deadzone to prevent drift (0-1, where 1 is screen center)")]
     [Range(0f, 0.5f)]
     public float mouseDeadzone = 0.1f;
+
     [Tooltip("Smoothing factor for mouse input (0-1, higher = smoother but delayed)")]
     [Range(0f, 0.95f)]
     public float mouseSmoothing = 0.7f;
+
     [Tooltip("Maximum pitch/yaw input magnitude from mouse (0-1)")]
     [Range(0.1f, 2f)]
     public float maxMouseInputMagnitude = 1.5f;
+
     [Tooltip("Invert mouse Y axis (up = pitch down)")]
     public bool invertMouseY = false;
 
     [Header("Altitude Settings")]
     [Tooltip("Layers considered terrain for altitude measurement")]
     public LayerMask terrainLayerMask;
+
     [Tooltip("Maximum distance to search downward for terrain")]
     public float altitudeRaycastDistance = 20000f;
 
@@ -193,7 +219,11 @@ public class ImprovedPlaneController : MonoBehaviour
                 float mouseMagnitude = mouseInput.magnitude;
                 float keyboardInfluence = 1f - Mathf.Clamp01(mouseMagnitude * 0.5f);
 
-                pitch = Mathf.Lerp(mousePitch, keyboardPitch * keyboardInfluence, keyboardInfluence);
+                pitch = Mathf.Lerp(
+                    mousePitch,
+                    keyboardPitch * keyboardInfluence,
+                    keyboardInfluence
+                );
                 yaw = Mathf.Lerp(mouseYaw, keyboardYaw * keyboardInfluence, keyboardInfluence);
                 roll = keyboardRoll; // Roll is best left to keyboard/gamepad
 
@@ -260,7 +290,11 @@ public class ImprovedPlaneController : MonoBehaviour
         }
 
         // Apply smoothing (exponential moving average)
-        smoothedMouseAimPosition = Vector2.Lerp(smoothedMouseAimPosition, input, 1f - mouseSmoothing);
+        smoothedMouseAimPosition = Vector2.Lerp(
+            smoothedMouseAimPosition,
+            input,
+            1f - mouseSmoothing
+        );
 
         // Apply sensitivity
         Vector2 sensitiveInput = smoothedMouseAimPosition * mouseSensitivity;
@@ -321,7 +355,8 @@ public class ImprovedPlaneController : MonoBehaviour
 
     private void ApplyAerodynamics()
     {
-        if (rb.linearVelocity.magnitude < 0.1f) return; // Skip if barely moving
+        if (rb.linearVelocity.magnitude < 0.1f)
+            return; // Skip if barely moving
 
         // Calculate velocity and speed (REAL speed for physics)
         Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
@@ -331,8 +366,18 @@ public class ImprovedPlaneController : MonoBehaviour
         // === DIRECTIONAL DRAG (high drag for sideways/vertical movement) ===
         // This prevents "ice skating" behavior
         float forwardDrag = dragCoefficient * localVelocity.z * localVelocity.z * airDensity;
-        float sidewaysDrag = dragCoefficient * sidewaysDragMultiplier * localVelocity.x * localVelocity.x * airDensity;
-        float verticalDrag = dragCoefficient * sidewaysDragMultiplier * localVelocity.y * localVelocity.y * airDensity;
+        float sidewaysDrag =
+            dragCoefficient
+            * sidewaysDragMultiplier
+            * localVelocity.x
+            * localVelocity.x
+            * airDensity;
+        float verticalDrag =
+            dragCoefficient
+            * sidewaysDragMultiplier
+            * localVelocity.y
+            * localVelocity.y
+            * airDensity;
 
         Vector3 localDrag = new Vector3(
             -Mathf.Sign(localVelocity.x) * sidewaysDrag,
@@ -364,7 +409,8 @@ public class ImprovedPlaneController : MonoBehaviour
         }
 
         // === INDUCED DRAG ===
-        float inducedDrag = Mathf.Abs(angleOfAttack) * dragCoefficient * speedSquared * 2f * airDensity;
+        float inducedDrag =
+            Mathf.Abs(angleOfAttack) * dragCoefficient * speedSquared * 2f * airDensity;
         rb.AddForce(-rb.linearVelocity.normalized * inducedDrag);
 
         // === ANGULAR DRAG ===
@@ -393,7 +439,8 @@ public class ImprovedPlaneController : MonoBehaviour
         // Also include linear acceleration (speed changes) but with less weight
         Vector3 perceivedVelocity = rb.linearVelocity * perceivedSpeedMultiplier;
         Vector3 perceivedLastVelocity = lastVelocity * perceivedSpeedMultiplier;
-        Vector3 linearAcceleration = (perceivedVelocity - perceivedLastVelocity) / Time.fixedDeltaTime;
+        Vector3 linearAcceleration =
+            (perceivedVelocity - perceivedLastVelocity) / Time.fixedDeltaTime;
         float linearGForce = linearAcceleration.magnitude / 9.81f;
 
         // Turning is the primary G-force source (weighted more heavily)
@@ -454,15 +501,31 @@ public class ImprovedPlaneController : MonoBehaviour
         {
             // Reduce maximum turn rate when pulling too many G's
             float gForceExcess = (currentGForce - maxGForce) / maxGForce;
-            turnRateMultiplier = Mathf.Lerp(1f, 1f - turnRateLossOverGLimit, Mathf.Clamp01(gForceExcess));
+            turnRateMultiplier = Mathf.Lerp(
+                1f,
+                1f - turnRateLossOverGLimit,
+                Mathf.Clamp01(gForceExcess)
+            );
             maxAngularVelocityRad *= turnRateMultiplier;
         }
 
         Vector3 localAngularVelocity = transform.InverseTransformDirection(rb.angularVelocity);
 
-        localAngularVelocity.x = Mathf.Clamp(localAngularVelocity.x, -maxAngularVelocityRad, maxAngularVelocityRad);
-        localAngularVelocity.y = Mathf.Clamp(localAngularVelocity.y, -maxAngularVelocityRad, maxAngularVelocityRad);
-        localAngularVelocity.z = Mathf.Clamp(localAngularVelocity.z, -maxAngularVelocityRad, maxAngularVelocityRad);
+        localAngularVelocity.x = Mathf.Clamp(
+            localAngularVelocity.x,
+            -maxAngularVelocityRad,
+            maxAngularVelocityRad
+        );
+        localAngularVelocity.y = Mathf.Clamp(
+            localAngularVelocity.y,
+            -maxAngularVelocityRad,
+            maxAngularVelocityRad
+        );
+        localAngularVelocity.z = Mathf.Clamp(
+            localAngularVelocity.z,
+            -maxAngularVelocityRad,
+            maxAngularVelocityRad
+        );
 
         rb.angularVelocity = transform.TransformDirection(localAngularVelocity);
     }
@@ -471,10 +534,11 @@ public class ImprovedPlaneController : MonoBehaviour
     {
         if (Mathf.Abs(roll) < 0.1f && Mathf.Abs(pitch) < 0.1f)
         {
-            Vector3 predictedUp = Quaternion.AngleAxis(
-                rb.angularVelocity.magnitude * Mathf.Rad2Deg * stabilityFactor / rb.mass,
-                rb.angularVelocity
-            ) * transform.up;
+            Vector3 predictedUp =
+                Quaternion.AngleAxis(
+                    rb.angularVelocity.magnitude * Mathf.Rad2Deg * stabilityFactor / rb.mass,
+                    rb.angularVelocity
+                ) * transform.up;
 
             Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
             rb.AddTorque(torqueVector * stabilityFactor * rb.mass);
@@ -522,7 +586,8 @@ public class ImprovedPlaneController : MonoBehaviour
 
     private void highGtrail()
     {
-        if (trail == null && trail2 == null) return;
+        if (trail == null && trail2 == null)
+            return;
 
         if (isHighGMode == true)
         {
@@ -541,7 +606,15 @@ public class ImprovedPlaneController : MonoBehaviour
     {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
 
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, altitudeRaycastDistance, terrainLayerMask))
+        if (
+            Physics.Raycast(
+                origin,
+                Vector3.down,
+                out RaycastHit hit,
+                altitudeRaycastDistance,
+                terrainLayerMask
+            )
+        )
         {
             currentAltitude = hit.distance;
         }

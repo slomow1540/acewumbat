@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Util;
 
 public class SlotManager : MonoBehaviour
 {
     [Header("Data")]
+    public static PlaneData[] AllPlanes { get; private set; }
     public PlaneData[] planes;
 
     [Header("Prefab")]
@@ -36,6 +36,11 @@ public class SlotManager : MonoBehaviour
     private AudioManager audioManager;
     public AudioClip oneFloor;
     public AudioClip twoFloor;
+
+    void Awake()
+    {
+        AllPlanes = planes;
+    }
 
     void Start()
     {
@@ -299,7 +304,6 @@ public class SlotManager : MonoBehaviour
         onPlaneReady?.Invoke(plane, realIndex);
     }
 
-
     public IEnumerator ShowSlots()
     {
         currentCycle = 0;
@@ -404,8 +408,6 @@ public class SlotManager : MonoBehaviour
         int visible = GetVisibleCount(currentCycle);
 
         currentIndex = Mathf.Clamp(currentIndex, 0, visible - 1);
-
-
 
         for (int i = 9; i < slots.Length; i++)
         {

@@ -10,42 +10,53 @@ public class MissileWarning3D : MonoBehaviour
     [Header("Arrow Settings")]
     [Tooltip("Prefab for warning arrows")]
     public GameObject arrowPrefab;
+
     [Tooltip("Distance from player to place arrows")]
     public float radius = 5f;
+
     [Tooltip("Only show arrows for missiles within this range")]
     public float maxWarningDistance = 1000f;
 
     [Header("Missile Detection")]
     [Tooltip("Tag for enemy missiles")]
     public string missileTag = "EnemyMissile";
+
     [Tooltip("Only warn about missiles targeting this object")]
     public bool onlyShowTargetedMissiles = true;
 
     [Header("Warning Levels")]
     [Tooltip("Distance at which missile is considered dangerous (starts beeping)")]
     public float dangerDistance = 300f;
+
     [Tooltip("Distance at which missile is critical (fast beeping)")]
     public float criticalDistance = 100f;
 
     [Header("Miss Detection")]
     [Tooltip("Remove warning when missile passes this distance behind you")]
     public float missedDistanceBehind = 50f;
+
     [Tooltip("Angle behind you to consider missile as 'missed' (degrees)")]
     public float missedAngle = 120f;
+
     [Tooltip("Remove warning if missile tracking is lost")]
     public bool removeOnTrackingLoss = true;
 
     [Header("Audio")]
     [Tooltip("Beep sound for warnings")]
     public AudioClip beepSound;
+
     [Tooltip("Audio source for beeps")]
     public AudioSource audioSource;
+
     [Tooltip("Normal beep interval (far away)")]
     public float normalBeepInterval = 1f;
+
     [Tooltip("Danger beep interval (getting close)")]
     public float dangerBeepInterval = 0.5f;
+
     [Tooltip("Critical beep interval (very close)")]
     public float criticalBeepInterval = 0.15f;
+
     [Tooltip("Beep volume")]
     [Range(0f, 1f)]
     public float beepVolume = 0.5f;
@@ -53,17 +64,22 @@ public class MissileWarning3D : MonoBehaviour
     [Header("Visual Feedback")]
     [Tooltip("Arrow color when far")]
     public Color normalColor = Color.yellow;
+
     [Tooltip("Arrow color when danger")]
     public Color dangerColor = Color.orange;
+
     [Tooltip("Arrow color when critical")]
     public Color criticalColor = Color.red;
+
     [Tooltip("Pulse arrows when critical")]
     public bool pulseWhenCritical = true;
+
     [Tooltip("Pulse speed")]
     public float pulseSpeed = 5f;
 
     // Private tracking
-    private Dictionary<GameObject, ArrowData> activeWarnings = new Dictionary<GameObject, ArrowData>();
+    private Dictionary<GameObject, ArrowData> activeWarnings =
+        new Dictionary<GameObject, ArrowData>();
     private float nextBeepTime = 0f;
     private GameObject closestMissile = null;
 
@@ -109,7 +125,8 @@ public class MissileWarning3D : MonoBehaviour
 
         foreach (GameObject missile in missiles)
         {
-            if (missile == null) continue;
+            if (missile == null)
+                continue;
 
             // Check if we should warn about this missile
             if (!ShouldWarnAboutMissile(missile))
@@ -222,7 +239,8 @@ public class MissileWarning3D : MonoBehaviour
 
     private void CreateWarning(GameObject missile)
     {
-        if (arrowPrefab == null) return;
+        if (arrowPrefab == null)
+            return;
 
         GameObject arrow = Instantiate(arrowPrefab);
         ArrowData data = new ArrowData(arrow);
@@ -233,10 +251,12 @@ public class MissileWarning3D : MonoBehaviour
 
     private void UpdateWarning(GameObject missile)
     {
-        if (!activeWarnings.ContainsKey(missile)) return;
+        if (!activeWarnings.ContainsKey(missile))
+            return;
 
         ArrowData data = activeWarnings[missile];
-        if (data.arrow == null) return;
+        if (data.arrow == null)
+            return;
 
         Vector3 dirToMissile = (missile.transform.position - transform.position).normalized;
         float distance = Vector3.Distance(transform.position, missile.transform.position);
@@ -251,7 +271,8 @@ public class MissileWarning3D : MonoBehaviour
 
     private void RemoveWarning(GameObject missile)
     {
-        if (!activeWarnings.ContainsKey(missile)) return;
+        if (!activeWarnings.ContainsKey(missile))
+            return;
 
         ArrowData data = activeWarnings[missile];
         if (data.arrow != null)
@@ -264,7 +285,8 @@ public class MissileWarning3D : MonoBehaviour
 
     private void UpdateBeeping()
     {
-        if (beepSound == null || audioSource == null) return;
+        if (beepSound == null || audioSource == null)
+            return;
 
         // Find closest missile
         closestMissile = null;
@@ -272,7 +294,8 @@ public class MissileWarning3D : MonoBehaviour
 
         foreach (var kvp in activeWarnings)
         {
-            if (kvp.Key == null) continue;
+            if (kvp.Key == null)
+                continue;
 
             float distance = kvp.Value.lastDistance;
             if (distance < closestDistance)
@@ -318,7 +341,8 @@ public class MissileWarning3D : MonoBehaviour
     {
         foreach (var kvp in activeWarnings)
         {
-            if (kvp.Key == null || kvp.Value.arrow == null) continue;
+            if (kvp.Key == null || kvp.Value.arrow == null)
+                continue;
 
             float distance = kvp.Value.lastDistance;
             GameObject arrow = kvp.Value.arrow;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Util;
 
 public class GameManager : MonoBehaviour
 {

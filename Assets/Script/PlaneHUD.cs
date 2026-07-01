@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -20,8 +20,10 @@ public class PlaneHUD : MonoBehaviour
 
     [Header("Weapon UI")]
     public TextMeshProUGUI ammoText;
+
     //public Image ammoBar;
     public TextMeshProUGUI missileText;
+
     //public Image missileBar;
 
     [Header("Target UI")]
@@ -35,20 +37,25 @@ public class PlaneHUD : MonoBehaviour
     [Header("Lock Indicator (On Target)")]
     [Tooltip("Lock indicator that appears on the target")]
     public GameObject lockIndicator;
+
     //[Tooltip("Progress ring/circle inside lock indicator")]
     //public Image lockProgressRing;
     [Tooltip("Center icon/image for lock indicator")]
     public Image lockCenterIcon;
+
     [Tooltip("Color while locking")]
     public Color lockingColor = Color.yellow;
+
     [Tooltip("Color when locked")]
     public Color lockedColor = Color.green;
 
     [Header("Off-Screen Target Arrow")]
     [Tooltip("Arrow that points to off-screen targets")]
     public GameObject offScreenArrow;
+
     [Tooltip("Distance from screen edge to place arrow")]
     public float edgeOffset = 50f;
+
     [Tooltip("Size of the arrow")]
     public float arrowSize = 40f;
 
@@ -96,11 +103,13 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        if (planeHealth == null) return;
+        if (planeHealth == null)
+            return;
 
         if (healthText != null)
         {
-            healthText.text = $"DMG: {(1f - planeHealth.currentHealth / planeHealth.maxHealth) * 100f:F0}%";
+            healthText.text =
+                $"DMG: {(1f - planeHealth.currentHealth / planeHealth.maxHealth) * 100f:F0}%";
         }
 
         if (healthBar != null)
@@ -119,7 +128,8 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateWeaponUI()
     {
-        if (weaponSystem == null) return;
+        if (weaponSystem == null)
+            return;
 
         if (ammoText != null)
         {
@@ -149,7 +159,8 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateMissileUI()
     {
-        if (missileLauncher == null) return;
+        if (missileLauncher == null)
+            return;
 
         if (missileText != null)
         {
@@ -172,7 +183,8 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateSpecialAbilityUI()
     {
-        if (SpecialAbility == null || SpecialAbilityText == null) return;
+        if (SpecialAbility == null || SpecialAbilityText == null)
+            return;
 
         if (SpecialAbility.IsReady())
         {
@@ -188,7 +200,8 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateTargetUI()
     {
-        if (targetingSystem == null || Camera.main == null) return;
+        if (targetingSystem == null || Camera.main == null)
+            return;
 
         bool hasTarget = targetingSystem.HasTarget();
 
@@ -317,7 +330,8 @@ public class PlaneHUD : MonoBehaviour
 
     private void UpdateTargetInfoText(GameObject target, bool isLocked, float lockProgress)
     {
-        if (targetInfoText == null) return;
+        if (targetInfoText == null)
+            return;
 
         float distance = targetingSystem.GetTargetDistance();
         float angle = targetingSystem.GetTargetAngle();
@@ -334,12 +348,14 @@ public class PlaneHUD : MonoBehaviour
             lockStatus = $"[LOCKING {lockProgress * 100:F0}%]";
         }
 
-        targetInfoText.text = $"TARGET: {targetName}\n{lockStatus}\nDIST: {distance:F0}m\nANGLE: {angle:F1}°";
+        targetInfoText.text =
+            $"TARGET: {targetName}\n{lockStatus}\nDIST: {distance:F0}m\nANGLE: {angle:F1}°";
     }
 
     private void UpdateTargetHealthBar(GameObject target)
     {
-        if (targetHealthBar == null) return;
+        if (targetHealthBar == null)
+            return;
 
         Health targetHealth = target.GetComponent<Health>();
         if (targetHealth != null)
@@ -435,8 +451,10 @@ public class PlaneHUD : MonoBehaviour
             float yEdge = (screenHeight / 2f) - edgeOffset;
 
             // Find which edge we hit first
-            float xTime = Mathf.Abs(direction.x) > 0.01f ? xEdge / Mathf.Abs(direction.x) : float.MaxValue;
-            float yTime = Mathf.Abs(direction.y) > 0.01f ? yEdge / Mathf.Abs(direction.y) : float.MaxValue;
+            float xTime =
+                Mathf.Abs(direction.x) > 0.01f ? xEdge / Mathf.Abs(direction.x) : float.MaxValue;
+            float yTime =
+                Mathf.Abs(direction.y) > 0.01f ? yEdge / Mathf.Abs(direction.y) : float.MaxValue;
 
             float time = Mathf.Min(xTime, yTime);
 
@@ -450,15 +468,19 @@ public class PlaneHUD : MonoBehaviour
     private bool IsPointOnScreen(Vector3 screenPos)
     {
         // Check if point is on screen and in front of camera
-        if (screenPos.z <= 0) return false;
+        if (screenPos.z <= 0)
+            return false;
 
-        return screenPos.x >= 0 && screenPos.x <= Screen.width &&
-               screenPos.y >= 0 && screenPos.y <= Screen.height;
+        return screenPos.x >= 0
+            && screenPos.x <= Screen.width
+            && screenPos.y >= 0
+            && screenPos.y <= Screen.height;
     }
 
     private void PositionUIElement(RectTransform rectTransform, Vector3 screenPos)
     {
-        if (rectTransform == null || canvasRect == null) return;
+        if (rectTransform == null || canvasRect == null)
+            return;
 
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(

@@ -92,7 +92,8 @@ public class InterceptorMissile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (hasExploded) return;
+        if (hasExploded)
+            return;
 
         // Check if target still exists
         if (targetMissile == null)
@@ -103,7 +104,9 @@ public class InterceptorMissile : MonoBehaviour
         }
 
         // Calculate direction to target
-        Vector3 directionToTarget = (targetMissile.transform.position - transform.position).normalized;
+        Vector3 directionToTarget = (
+            targetMissile.transform.position - transform.position
+        ).normalized;
 
         // Rotate toward target
         Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
@@ -117,7 +120,10 @@ public class InterceptorMissile : MonoBehaviour
         rb.linearVelocity = transform.forward * speed;
 
         // Check if close enough to detonate
-        float distanceToTarget = Vector3.Distance(transform.position, targetMissile.transform.position);
+        float distanceToTarget = Vector3.Distance(
+            transform.position,
+            targetMissile.transform.position
+        );
         if (distanceToTarget <= detonationRange)
         {
             Explode();
@@ -126,7 +132,8 @@ public class InterceptorMissile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (hasExploded) return;
+        if (hasExploded)
+            return;
 
         // Don't hit owner
         if (other.gameObject == owner)
@@ -138,13 +145,18 @@ public class InterceptorMissile : MonoBehaviour
 
     private void Explode()
     {
-        if (hasExploded) return;
+        if (hasExploded)
+            return;
         hasExploded = true;
 
         // Spawn explosion effect
         if (explosionPrefab != null)
         {
-            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            GameObject explosion = Instantiate(
+                explosionPrefab,
+                transform.position,
+                Quaternion.identity
+            );
             Destroy(explosion, 5f);
         }
 

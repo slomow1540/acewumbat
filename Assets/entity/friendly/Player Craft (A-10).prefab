@@ -15300,7 +15300,7 @@ MonoBehaviour:
   - {fileID: 6911282465239100686}
   missileDamage: 51
   fireKey: 324
-  lockOnTime: 1.5
+  lockOnTime: 3
   lockProgress: 0
   targetingSystem: {fileID: 76922591308590417}
   maxLockRange: 900

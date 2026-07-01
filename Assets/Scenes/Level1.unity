@@ -3006,6 +3006,14 @@ PrefabInstance:
       propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].messageText
       value: <<barely a sweat dont ya think?>>
       objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[0].actions.Array.data[0].messageDuration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
+      propertyPath: missionTriggers.Array.data[1].actions.Array.data[0].messageDuration
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6131786518784621896, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: m_Name
       value: GameController

@@ -902,9 +902,15 @@ public class GameController : MonoBehaviour
             statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
         }
 
+        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
+        ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
+        valueHolder.Points = valueHolder.Points + PointObtained;
+
         ProgressManager.AddCurrency(
     PointObtained
 );
+
+        
 
         // Ensure buttons hidden before fade
         if (restartButton != null)

@@ -41,7 +41,7 @@ public class HangarManager : MonoBehaviour
     public SlideIn purchaseButton;
     public SlideIn equipButton;
     public SlideIn equippedText;
-    public SlideIn toggleAbility;
+    //public SlideIn toggleAbility;
 
     public Counting currentCR;
 
@@ -297,7 +297,7 @@ public class HangarManager : MonoBehaviour
             return;
         }
 
-        toggleAbility.Show();
+        //toggleAbility.Show();
         equippedText.Show();
     }
 
@@ -399,6 +399,6 @@ public class HangarManager : MonoBehaviour
         purchaseButton?.Hide();
         equipButton?.Hide();
         equippedText?.Hide();
-        toggleAbility?.Hide();
+        //toggleAbility?.Hide();
     }
 }

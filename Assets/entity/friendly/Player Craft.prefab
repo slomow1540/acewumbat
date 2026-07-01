@@ -15027,13 +15027,13 @@ MonoBehaviour:
   - {fileID: 6778934340806187437}
   missileDamage: 51
   fireKey: 324
-  lockOnTime: 2
+  lockOnTime: 1.5
   lockProgress: 0
   targetingSystem: {fileID: 76922591308590417}
   maxLockRange: 1500
   maxLockAngle: 50
-  currentMissiles: 300
-  maxMissiles: 300
+  currentMissiles: 500
+  maxMissiles: 500
   lockingSound: {fileID: 0}
   lockedSound: {fileID: 0}
   launchSound: {fileID: 8300000, guid: 2e69180fc22c30f4091a14f46adade5f, type: 3}

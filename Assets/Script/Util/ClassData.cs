@@ -105,3 +105,9 @@ public class PlaneData
         return "MULTIROLE FIGHTER";
     }
 }
+
+[CreateAssetMenu(fileName = "PlaneDatabase", menuName = "Game/Plane Database")]
+public class PlaneDatabase : ScriptableObject
+{
+    public PlaneData[] planes;
+}

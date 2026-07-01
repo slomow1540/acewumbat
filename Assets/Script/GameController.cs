@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour
 {
     #region Nested Classes
 
+    [Header("Data")]
+    public PlaneDatabase planeDatabase;
+
     [System.Serializable]
     public class EntityRecord
     {
@@ -221,41 +224,30 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         // --- Find GameValues and spawn selected plane ---
-        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
-        if (gameValuesObj != null)
+
+        int selectedIndex = ProgressManager.GetEquippedPlane();
+
+        if (selectedIndex >= 0 && selectedIndex < planeDatabase.planes.Length)
         {
-            int selectedIndex = ProgressManager.GetEquippedPlane();
+            PlaneData data = planeDatabase.planes[selectedIndex];
 
-            if (selectedIndex >= 0 && selectedIndex < SlotManager.AllPlanes.Length)
+            if (data != null && data.playerprefab != null)
             {
-                PlaneData data = SlotManager.AllPlanes[selectedIndex];
+                Vector3 spawnPos =
+                    PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
+                Quaternion spawnRot =
+                    PlayerPosition != null
+                        ? PlayerPosition.transform.rotation
+                        : Quaternion.identity;
 
-                if (data != null && data.prefab != null)
-                {
-                    Vector3 spawnPos =
-                        PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
-                    Quaternion spawnRot =
-                        PlayerPosition != null
-                            ? PlayerPosition.transform.rotation
-                            : Quaternion.identity;
+                GameObject spawnedPlane = Instantiate(data.playerprefab, spawnPos, spawnRot);
 
-                    GameObject spawnedPlane = Instantiate(data.prefab, spawnPos, spawnRot);
+                if (PlayerPosition != null)
+                    Destroy(PlayerPosition);
 
-                    if (PlayerPosition != null)
-                        Destroy(PlayerPosition);
-
-                    FindUIReferencesInPlane(spawnedPlane);
-                    spawnedPlane.SetActive(true);
-                }
+                FindUIReferencesInPlane(spawnedPlane);
+                spawnedPlane.SetActive(true);
             }
-            else
-            {
-                Debug.LogWarning("[GameController] ValueHolder missing or SelectedPlane is null.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[GameController] No GameObject with tag 'GameValues' found.");
         }
 
         // --- Rest of initialization ---

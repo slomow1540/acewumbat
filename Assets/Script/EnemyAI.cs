@@ -8,38 +8,53 @@ public class EnemyAI : MonoBehaviour
     [Header("Target Settings")]
     [Tooltip("Tag to identify targets (e.g., 'Player')")]
     public string targetTag = "Player";
+
     [Tooltip("Current target")]
     public GameObject currentTarget;
+
     [Tooltip("Detection range")]
     public float detectionRange = 1000f;
+
     [Tooltip("How often to check for targets (seconds)")]
     public float targetUpdateRate = 1f;
 
     [Header("Weapon Settings")]
     [Tooltip("Use guns")]
     public bool useGuns = true;
+
     [Tooltip("Use missiles")]
     public bool useMissiles = true;
+
     [Tooltip("Projectile prefab")]
     public GameObject projectilePrefab;
+
     [Tooltip("Missile prefab")]
     public GameObject missilePrefab;
+
     [Tooltip("Fire points")]
     public Transform[] firePoints;
+
     [Tooltip("Gun damage per shot")]
     public float gunDamage = 10f;
+
     [Tooltip("Missile damage")]
     public float missileDamage = 50f;
+
     [Tooltip("Gun fire rate (shots per second)")]
     public float gunFireRate = 5f;
+
     [Tooltip("Missile fire rate (shots per second)")]
     public float missileFireRate = 0.5f;
+
     [Tooltip("Maximum gun range")]
     public float maxGunRange = 800f;
+
     [Tooltip("Maximum missile range")]
     public float maxMissileRange = 1500f;
+
     [Tooltip("Gun firing FOV (degrees)")]
     public float gunFiringFOV = 30f;
+
     [Tooltip("Missile lock FOV (degrees)")]
     public float missileLockFOV = 80f;
 
@@ -47,11 +62,14 @@ public class EnemyAI : MonoBehaviour
     [Tooltip("Accuracy at point-blank range (0-1, 1 = perfect)")]
     [Range(0f, 1f)]
     public float closeRangeAccuracy = 0.9f;
+
     [Tooltip("Accuracy at max range (0-1)")]
     [Range(0f, 1f)]
     public float longRangeAccuracy = 0.3f;
+
     [Tooltip("Distance considered 'close range' for accuracy")]
     public float closeRange = 200f;
+
     [Tooltip("Lead target movement (0 = no lead, 1 = perfect lead)")]
     [Range(0f, 1f)]
     public float leadAccuracy = 0.8f;
@@ -59,6 +77,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Missile Settings")]
     [Tooltip("Lock-on time for missiles (seconds)")]
     public float missileLockTime = 2f;
+
     [Tooltip("Current missile lock progress")]
     [Range(0f, 1f)]
     public float currentLockProgress = 0f;
@@ -69,24 +88,32 @@ public class EnemyAI : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────────────────────
     [Header("Turret Mode")]
-    [Tooltip("Enable turret mode – the AI will physically rotate azimuth / elevation objects to face the target instead of relying only on FOV checks.")]
+    [Tooltip(
+        "Enable turret mode – the AI will physically rotate azimuth / elevation objects to face the target instead of relying only on FOV checks."
+    )]
     public bool isTurret = false;
 
     [System.Serializable]
     public class TurretAxis
     {
-        [Tooltip("The Transform to rotate for this axis (e.g. the horizontal base or vertical barrel mount).")]
+        [Tooltip(
+            "The Transform to rotate for this axis (e.g. the horizontal base or vertical barrel mount)."
+        )]
         public Transform target;
 
         [Tooltip("Which local axis to ROTATE AROUND (the hinge / pivot axis).")]
         public RotationAxis rotationAxis = RotationAxis.Y;
 
-        [Tooltip("Which local axis points DOWN THE BARREL / in the firing direction. " +
-                 "Check Scene view arrows on the object: X = red, Y = green, Z = blue.")]
+        [Tooltip(
+            "Which local axis points DOWN THE BARREL / in the firing direction. "
+                + "Check Scene view arrows on the object: X = red, Y = green, Z = blue."
+        )]
         public RotationAxis forwardAxis = RotationAxis.Z;
 
-        [Tooltip("Flip the forward axis 180°. Use this when the barrel faces the opposite direction " +
-                 "to the arrow you selected above.")]
+        [Tooltip(
+            "Flip the forward axis 180°. Use this when the barrel faces the opposite direction "
+                + "to the arrow you selected above."
+        )]
         public bool invertForward = false;
 
         [Tooltip("Rotation speed in degrees per second.")]
@@ -96,7 +123,12 @@ public class EnemyAI : MonoBehaviour
         public bool inverted = false;
     }
 
-    public enum RotationAxis { X, Y, Z }
+    public enum RotationAxis
+    {
+        X,
+        Y,
+        Z,
+    }
 
     [Tooltip("Azimuth (horizontal / yaw) axis settings.")]
     public TurretAxis azimuth = new TurretAxis();
@@ -116,7 +148,7 @@ public class EnemyAI : MonoBehaviour
     public enum WeaponType
     {
         Gun,
-        Missile
+        Missile,
     }
 
     private void Start()
@@ -193,32 +225,38 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void RotateTurretAxis(TurretAxis axis, Vector3 worldTargetPos)
     {
-        if (axis == null || axis.target == null) return;
+        if (axis == null || axis.target == null)
+            return;
 
         Transform pivot = axis.target;
 
         // Direction to target in the pivot's PARENT local space.
         // For elevation (child of azimuth) this is already in azimuth-rotated space.
-        Vector3 localDir = pivot.parent != null
-            ? pivot.parent.InverseTransformDirection(worldTargetPos - pivot.position)
-            : worldTargetPos - pivot.position;
+        Vector3 localDir =
+            pivot.parent != null
+                ? pivot.parent.InverseTransformDirection(worldTargetPos - pivot.position)
+                : worldTargetPos - pivot.position;
 
-        if (localDir.sqrMagnitude < 0.0001f) return;
+        if (localDir.sqrMagnitude < 0.0001f)
+            return;
 
         Vector3 rotAxisVec = AxisToVector(axis.rotationAxis);
         Vector3 fwdAxisVec = AxisToVector(axis.forwardAxis);
-        if (axis.invertForward) fwdAxisVec = -fwdAxisVec;
+        if (axis.invertForward)
+            fwdAxisVec = -fwdAxisVec;
 
         // Project the target direction onto the plane the pivot can actually rotate in.
         // This isolates the component the pivot is responsible for.
         Vector3 targetOnPlane = Vector3.ProjectOnPlane(localDir, rotAxisVec);
 
-        if (targetOnPlane.sqrMagnitude < 0.0001f) return; // target is directly along hinge — no meaningful angle
+        if (targetOnPlane.sqrMagnitude < 0.0001f)
+            return; // target is directly along hinge — no meaningful angle
 
         // Signed angle from the barrel forward to the projected target, around the hinge.
         float desiredAngle = Vector3.SignedAngle(fwdAxisVec, targetOnPlane, rotAxisVec);
 
-        if (axis.inverted) desiredAngle = -desiredAngle;
+        if (axis.inverted)
+            desiredAngle = -desiredAngle;
 
         // Build a clean single-axis rotation and step toward it
         Quaternion targetRotation = Quaternion.AngleAxis(desiredAngle, rotAxisVec);
@@ -234,9 +272,12 @@ public class EnemyAI : MonoBehaviour
     {
         switch (axis)
         {
-            case RotationAxis.X: return Vector3.right;
-            case RotationAxis.Y: return Vector3.up;
-            default: return Vector3.forward;
+            case RotationAxis.X:
+                return Vector3.right;
+            case RotationAxis.Y:
+                return Vector3.up;
+            default:
+                return Vector3.forward;
         }
     }
 
@@ -271,14 +312,17 @@ public class EnemyAI : MonoBehaviour
 
     private bool CanShootGun()
     {
-        if (currentTarget == null) return false;
+        if (currentTarget == null)
+            return false;
 
         // Check if on cooldown
-        if (Time.time < nextGunFireTime) return false;
+        if (Time.time < nextGunFireTime)
+            return false;
 
         // Check range
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-        if (distance > maxGunRange) return false;
+        if (distance > maxGunRange)
+            return false;
 
         // Check if target is alive
         Health targetHealth = currentTarget.GetComponent<Health>();
@@ -288,13 +332,16 @@ public class EnemyAI : MonoBehaviour
         // Check line of sight and FOV
         if (requireLineOfSight)
         {
-            Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
+            Vector3 directionToTarget = (
+                currentTarget.transform.position - transform.position
+            ).normalized;
 
             // In turret mode use the firepoint's forward (barrel is what's actually aimed).
             // In non-turret mode use the root transform forward.
-            Vector3 aimForward = (isTurret && firePoints != null && firePoints.Length > 0)
-                ? firePoints[currentFirePointIndex % firePoints.Length].forward
-                : transform.forward;
+            Vector3 aimForward =
+                (isTurret && firePoints != null && firePoints.Length > 0)
+                    ? firePoints[currentFirePointIndex % firePoints.Length].forward
+                    : transform.forward;
 
             float angle = Vector3.Angle(aimForward, directionToTarget);
 
@@ -307,14 +354,17 @@ public class EnemyAI : MonoBehaviour
 
     private bool CanShootMissile()
     {
-        if (currentTarget == null) return false;
+        if (currentTarget == null)
+            return false;
 
         // Check if on cooldown
-        if (Time.time < nextMissileFireTime) return false;
+        if (Time.time < nextMissileFireTime)
+            return false;
 
         // Check range
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-        if (distance > maxMissileRange) return false;
+        if (distance > maxMissileRange)
+            return false;
 
         // Check if target is alive
         Health targetHealth = currentTarget.GetComponent<Health>();
@@ -348,11 +398,14 @@ public class EnemyAI : MonoBehaviour
 
         if (requireLineOfSight)
         {
-            Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
+            Vector3 directionToTarget = (
+                currentTarget.transform.position - transform.position
+            ).normalized;
 
-            Vector3 aimForward = (isTurret && firePoints != null && firePoints.Length > 0)
-                ? firePoints[currentFirePointIndex % firePoints.Length].forward
-                : transform.forward;
+            Vector3 aimForward =
+                (isTurret && firePoints != null && firePoints.Length > 0)
+                    ? firePoints[currentFirePointIndex % firePoints.Length].forward
+                    : transform.forward;
 
             float angle = Vector3.Angle(aimForward, directionToTarget);
 
@@ -379,7 +432,8 @@ public class EnemyAI : MonoBehaviour
 
     private void ShootGun()
     {
-        if (currentTarget == null || projectilePrefab == null) return;
+        if (currentTarget == null || projectilePrefab == null)
+            return;
 
         // Update cooldown
         nextGunFireTime = Time.time + (1f / gunFireRate);
@@ -395,7 +449,11 @@ public class EnemyAI : MonoBehaviour
             : CalculateAimDirection(firePoint.position);
 
         // Spawn projectile
-        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(aimDirection));
+        GameObject projectileObj = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            Quaternion.LookRotation(aimDirection)
+        );
 
         // Initialize projectile
         Projectile projectile = projectileObj.GetComponent<Projectile>();
@@ -407,7 +465,8 @@ public class EnemyAI : MonoBehaviour
 
     private void ShootMissile()
     {
-        if (currentTarget == null || missilePrefab == null) return;
+        if (currentTarget == null || missilePrefab == null)
+            return;
 
         // Update cooldown
         nextMissileFireTime = Time.time + (1f / missileFireRate);
@@ -420,7 +479,11 @@ public class EnemyAI : MonoBehaviour
         Vector3 aimDirection = (currentTarget.transform.position - firePoint.position).normalized;
 
         // Spawn missile
-        GameObject missileObj = Instantiate(missilePrefab, firePoint.position, Quaternion.LookRotation(aimDirection));
+        GameObject missileObj = Instantiate(
+            missilePrefab,
+            firePoint.position,
+            Quaternion.LookRotation(aimDirection)
+        );
 
         // Initialize missile
         Missile missile = missileObj.GetComponent<Missile>();
@@ -439,9 +502,10 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private Vector3 ApplySpread(Vector3 baseDirection, Vector3 firePosition)
     {
-        float distance = currentTarget != null
-            ? Vector3.Distance(firePosition, currentTarget.transform.position)
-            : 0f;
+        float distance =
+            currentTarget != null
+                ? Vector3.Distance(firePosition, currentTarget.transform.position)
+                : 0f;
 
         float accuracyValue = CalculateAccuracy(distance);
         float maxSpread = (1f - accuracyValue) * 30f;
@@ -571,18 +635,25 @@ public class EnemyAI : MonoBehaviour
 
     private void DrawTurretAxisGizmo(TurretAxis axis, Color color, string label)
     {
-        if (axis == null || axis.target == null) return;
+        if (axis == null || axis.target == null)
+            return;
 
         Gizmos.color = color;
 
         // Draw a small cross at the pivot
         float size = 5f;
-        Gizmos.DrawLine(axis.target.position - axis.target.right * size,
-                        axis.target.position + axis.target.right * size);
-        Gizmos.DrawLine(axis.target.position - axis.target.up * size,
-                        axis.target.position + axis.target.up * size);
-        Gizmos.DrawLine(axis.target.position - axis.target.forward * size,
-                        axis.target.position + axis.target.forward * size);
+        Gizmos.DrawLine(
+            axis.target.position - axis.target.right * size,
+            axis.target.position + axis.target.right * size
+        );
+        Gizmos.DrawLine(
+            axis.target.position - axis.target.up * size,
+            axis.target.position + axis.target.up * size
+        );
+        Gizmos.DrawLine(
+            axis.target.position - axis.target.forward * size,
+            axis.target.position + axis.target.forward * size
+        );
 
         // Draw forward arrow to show where the pivot is currently pointing
         Gizmos.DrawRay(axis.target.position, axis.target.forward * size * 2f);

@@ -8,16 +8,22 @@ public class Missile : MonoBehaviour
     [Header("Missile Stats")]
     [Tooltip("Damage on impact")]
     public float damage = 50f;
+
     [Tooltip("Initial launch speed")]
     public float launchSpeed = 100f;
+
     [Tooltip("Maximum speed")]
     public float maxSpeed = 300f;
+
     [Tooltip("Acceleration")]
     public float acceleration = 50f;
+
     [Tooltip("Lifetime before self-destruct")]
     public float lifetime = 15f;
+
     [Tooltip("Explosion radius for splash damage")]
     public float explosionRadius = 10f;
+
     [Tooltip("Minimum damage percentage for direct hits (0-1)")]
     [Range(0f, 1f)]
     public float minDirectHitDamage = 0.5f;
@@ -25,40 +31,52 @@ public class Missile : MonoBehaviour
     [Header("APN Guidance Settings")]
     [Tooltip("Navigation gain (higher = more aggressive turning, 3-5 is typical)")]
     public float navigationGain = 4f;
+
     [Tooltip("Turn rate limit (degrees per second)")]
     public float maxTurnRate = 180f;
+
     [Tooltip("How much to lead the target (accounts for target velocity)")]
     public float leadMultiplier = 1f;
+
     [Tooltip("Distance at which missile starts terminal guidance (more aggressive)")]
     public float terminalGuidanceRange = 100f;
+
     [Tooltip("Terminal navigation gain multiplier")]
     public float terminalGainMultiplier = 1.5f;
 
     [Header("Tracking Loss Settings")]
     [Tooltip("Maximum angle off-target before losing lock (degrees)")]
     public float maxTrackingAngle = 90f;
+
     [Tooltip("Maximum distance before losing lock")]
     public float maxTrackingRange = 2000f;
+
     [Tooltip("Time without seeing target before losing lock (seconds)")]
     public float lockLossTime = 3f;
+
     [Tooltip("Minimum speed to maintain tracking")]
     public float minTrackingSpeed = 50f;
 
     [Header("Target & Owner")]
     [Tooltip("Locked target")]
     public GameObject target;
+
     [Tooltip("Who fired this missile")]
     public GameObject owner;
+
     [Tooltip("Does missile currently have valid tracking lock?")]
     public bool hasTarget = false;
 
     [Header("Effects")]
     [Tooltip("Explosion effect prefab")]
     public GameObject explosionPrefab;
+
     [Tooltip("Trail effect")]
     public TrailRenderer trailRenderer;
+
     [Tooltip("Engine particles")]
     public ParticleSystem engineParticles;
+
     [Tooltip("Missile sound (engine/flight)")]
     public AudioSource flightAudio;
 
@@ -158,7 +176,8 @@ public class Missile : MonoBehaviour
 
     private void ApplyAPNGuidance()
     {
-        if (target == null) return;
+        if (target == null)
+            return;
 
         Vector3 targetPosition = target.transform.position;
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
@@ -171,7 +190,8 @@ public class Missile : MonoBehaviour
         float timeToIntercept = distanceToTarget / Mathf.Max(currentSpeed, 1f);
 
         // Lead the target
-        Vector3 predictedPosition = targetPosition + currentTargetVelocity * timeToIntercept * leadMultiplier;
+        Vector3 predictedPosition =
+            targetPosition + currentTargetVelocity * timeToIntercept * leadMultiplier;
 
         // Direction to predicted position
         Vector3 directionToTarget = (predictedPosition - transform.position).normalized;
@@ -191,7 +211,12 @@ public class Missile : MonoBehaviour
 
         // Smoothly rotate towards desired direction with turn rate limit
         float maxTurnRadians = maxTurnRate * Mathf.Deg2Rad * Time.fixedDeltaTime;
-        Vector3 newDirection = Vector3.RotateTowards(currentDirection, desiredDirection, maxTurnRadians * currentNavGain, 0f);
+        Vector3 newDirection = Vector3.RotateTowards(
+            currentDirection,
+            desiredDirection,
+            maxTurnRadians * currentNavGain,
+            0f
+        );
 
         // Accelerate
         currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.fixedDeltaTime, maxSpeed);
@@ -208,7 +233,8 @@ public class Missile : MonoBehaviour
 
     private bool IsTargetAlive()
     {
-        if (target == null) return false;
+        if (target == null)
+            return false;
 
         Health targetHealth = target.GetComponent<Health>();
         if (targetHealth != null)
@@ -221,7 +247,8 @@ public class Missile : MonoBehaviour
 
     private bool CanTrackTarget()
     {
-        if (target == null) return false;
+        if (target == null)
+            return false;
 
         // Check distance
         float distance = Vector3.Distance(transform.position, target.transform.position);
@@ -260,7 +287,8 @@ public class Missile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasHit) return;
+        if (hasHit)
+            return;
 
         // Don't hit the owner
         if (collision.gameObject == owner)
@@ -278,8 +306,8 @@ public class Missile : MonoBehaviour
         hasHit = true;
 
         // Get explosion point
-        Vector3 explosionPoint = collision.contacts.Length > 0 ?
-            collision.contacts[0].point : transform.position;
+        Vector3 explosionPoint =
+            collision.contacts.Length > 0 ? collision.contacts[0].point : transform.position;
 
         // Explode
         Explode(explosionPoint);
@@ -287,7 +315,8 @@ public class Missile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (hasHit) return;
+        if (hasHit)
+            return;
 
         Debug.Log($"Missile collide with target: {other.gameObject.tag} and {owner.tag}");
 
@@ -310,12 +339,18 @@ public class Missile : MonoBehaviour
 
     private void Explode(Vector3 explosionPoint)
     {
-        Debug.Log($"Missile exploding at {explosionPoint} with damage={damage}, radius={explosionRadius}");
+        Debug.Log(
+            $"Missile exploding at {explosionPoint} with damage={damage}, radius={explosionRadius}"
+        );
 
         // Spawn explosion effect
         if (explosionPrefab != null)
         {
-            GameObject explosion = Instantiate(explosionPrefab, explosionPoint, Quaternion.identity);
+            GameObject explosion = Instantiate(
+                explosionPrefab,
+                explosionPoint,
+                Quaternion.identity
+            );
             Destroy(explosion, 5f);
         }
 
@@ -352,7 +387,9 @@ public class Missile : MonoBehaviour
 
                 float actualDamage = damage * damageFalloff;
 
-                Debug.Log($"Target: {hitCollider.gameObject.name} | Distance: {distance:F2}m | Falloff: {damageFalloff:F2} | Damage: {actualDamage:F1}");
+                Debug.Log(
+                    $"Target: {hitCollider.gameObject.name} | Distance: {distance:F2}m | Falloff: {damageFalloff:F2} | Damage: {actualDamage:F1}"
+                );
 
                 if (actualDamage > 0)
                 {
@@ -397,9 +434,12 @@ public class Missile : MonoBehaviour
             Gizmos.DrawLine(transform.position, target.transform.position);
 
             // Show predicted position
-            Vector3 targetVel = (target.transform.position - lastTargetPosition) / Time.fixedDeltaTime;
-            float timeToTarget = Vector3.Distance(transform.position, target.transform.position) / currentSpeed;
-            Vector3 predicted = target.transform.position + targetVel * timeToTarget * leadMultiplier;
+            Vector3 targetVel =
+                (target.transform.position - lastTargetPosition) / Time.fixedDeltaTime;
+            float timeToTarget =
+                Vector3.Distance(transform.position, target.transform.position) / currentSpeed;
+            Vector3 predicted =
+                target.transform.position + targetVel * timeToTarget * leadMultiplier;
 
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(predicted, 2f);
@@ -408,6 +448,9 @@ public class Missile : MonoBehaviour
 
         // Show velocity
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, rb != null ? rb.linearVelocity.normalized * 5f : transform.forward * 5f);
+        Gizmos.DrawRay(
+            transform.position,
+            rb != null ? rb.linearVelocity.normalized * 5f : transform.forward * 5f
+        );
     }
 }

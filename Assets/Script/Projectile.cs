@@ -1,49 +1,70 @@
 using UnityEngine;
+
 public class Projectile : MonoBehaviour
 {
     [Header("Projectile Settings")]
     [Tooltip("Damage dealt on impact")]
     public float damage = 10f;
+
     [Tooltip("Projectile speed")]
     public float speed = 500f;
+
     [Tooltip("Lifetime in seconds before auto-destroy")]
     public float lifetime = 5f;
+
     [Tooltip("Who shot this projectile?")]
     public GameObject owner;
 
     [Header("Physics")]
     [Tooltip("Should this projectile be affected by gravity?")]
     public bool useGravity = false;
+
     [Tooltip("Gravity scale (only if useGravity is true)")]
     public float gravityScale = 1f;
 
     [Header("Effects")]
     [Tooltip("Impact effect prefab")]
     public GameObject impactEffectPrefab;
+
     [Tooltip("Trail effect (optional)")]
     public TrailRenderer trailRenderer;
 
     [Header("Explosive Settings")]
-    [Tooltip("If true, projectile deals splash damage in a radius instead of only direct-hit damage")]
+    [Tooltip(
+        "If true, projectile deals splash damage in a radius instead of only direct-hit damage"
+    )]
     public bool isExplosive = false;
+
     [Tooltip("Explosion radius for splash damage (only used if isExplosive is true)")]
     public float explosionRadius = 5f;
+
     [Tooltip("Minimum damage percentage for direct hits (0-1, only used if isExplosive is true)")]
     [Range(0f, 1f)]
     public float minDirectHitDamage = 0.5f;
-    [Tooltip("Explosion visual effect prefab (only used if isExplosive is true; falls back to impactEffectPrefab if left empty)")]
+
+    [Tooltip(
+        "Explosion visual effect prefab (only used if isExplosive is true; falls back to impactEffectPrefab if left empty)"
+    )]
     public GameObject explosionPrefab;
 
     [Header("Proximity Detonation")]
     [Tooltip("If true, the projectile will explode when a target enters its proximity radius")]
     public bool useProximityDetonation = false;
+
     [Tooltip("Radius within which targets trigger detonation")]
     public float proximityRadius = 3f;
-    [Tooltip("Tags to track for proximity detonation — cached once on spawn (e.g. 'Player', 'Enemy')")]
+
+    [Tooltip(
+        "Tags to track for proximity detonation ï¿½ cached once on spawn (e.g. 'Player', 'Enemy')"
+    )]
     public string[] proximityTargetTags = { "Player" };
+
     [Tooltip("How often (in seconds) to check cached target distances")]
     public float proximityCheckInterval = 0.05f;
-    [Tooltip("Arm delay in seconds — projectile won't proximity-detonate until this time has passed (prevents self-detonation on launch)")]
+
+    [Tooltip(
+        "Arm delay in seconds ï¿½ projectile won't proximity-detonate until this time has passed (prevents self-detonation on launch)"
+    )]
     public float proximityArmDelay = 0.15f;
 
     private Rigidbody rb;
@@ -80,12 +101,15 @@ public class Projectile : MonoBehaviour
             var targets = new System.Collections.Generic.List<Transform>();
             foreach (string tag in proximityTargetTags)
             {
-                if (string.IsNullOrEmpty(tag)) continue;
+                if (string.IsNullOrEmpty(tag))
+                    continue;
                 foreach (GameObject go in GameObject.FindGameObjectsWithTag(tag))
                 {
                     // Skip owner and allies
-                    if (go == owner) continue;
-                    if (go.tag == ownertag) continue;
+                    if (go == owner)
+                        continue;
+                    if (go.tag == ownertag)
+                        continue;
                     targets.Add(go.transform);
                 }
             }
@@ -110,7 +134,8 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        if (!useProximityDetonation || hasHit) return;
+        if (!useProximityDetonation || hasHit)
+            return;
 
         // Count up the arm delay before we start checking proximity
         if (armTimer < proximityArmDelay)
@@ -121,24 +146,30 @@ public class Projectile : MonoBehaviour
 
         // Throttle the distance checks for performance
         proximityTimer += Time.deltaTime;
-        if (proximityTimer < proximityCheckInterval) return;
+        if (proximityTimer < proximityCheckInterval)
+            return;
         proximityTimer = 0f;
 
-        if (cachedProximityTargets == null) return;
+        if (cachedProximityTargets == null)
+            return;
 
         foreach (Transform target in cachedProximityTargets)
         {
             // Target may have been destroyed since spawn
-            if (target == null) continue;
+            if (target == null)
+                continue;
 
             float distance = Vector3.Distance(transform.position, target.position);
-            if (distance > proximityRadius) continue;
+            if (distance > proximityRadius)
+                continue;
 
             // Only detonate if the target still has a Health component
             Health targetHealth = target.GetComponent<Health>();
-            if (targetHealth == null) continue;
+            if (targetHealth == null)
+                continue;
 
-            if (hasHit) return;
+            if (hasHit)
+                return;
             hasHit = true;
 
             if (isExplosive)
@@ -163,7 +194,8 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasHit) return;
+        if (hasHit)
+            return;
         hasHit = true;
 
         // Don't hit the owner or ally
@@ -181,8 +213,10 @@ public class Projectile : MonoBehaviour
         }
 
         // Get impact point for effects
-        Vector3 impactPoint = collision.contacts.Length > 0 ? collision.contacts[0].point : transform.position;
-        Vector3 impactNormal = collision.contacts.Length > 0 ? collision.contacts[0].normal : -transform.forward;
+        Vector3 impactPoint =
+            collision.contacts.Length > 0 ? collision.contacts[0].point : transform.position;
+        Vector3 impactNormal =
+            collision.contacts.Length > 0 ? collision.contacts[0].normal : -transform.forward;
 
         if (isExplosive)
         {

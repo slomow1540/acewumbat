@@ -91,7 +91,8 @@ public class PlaneCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (planeTransform == null) return;
+        if (planeTransform == null)
+            return;
 
         wasLookingAround = isLookingAround;
         isLookingAround = Input.GetKey(lookAroundKey);
@@ -125,7 +126,9 @@ public class PlaneCamera : MonoBehaviour
 
         if (showDebugInfo)
         {
-            Debug.Log($"Orbit Mode: {isLookingAround} | Yaw: {orbitYaw:F1}° | Pitch: {orbitPitch:F1}° | LocalPos: {transform.localPosition}");
+            Debug.Log(
+                $"Orbit Mode: {isLookingAround} | Yaw: {orbitYaw:F1}° | Pitch: {orbitPitch:F1}° | LocalPos: {transform.localPosition}"
+            );
         }
     }
 
@@ -143,8 +146,10 @@ public class PlaneCamera : MonoBehaviour
         orbitYaw += mouseX;
         orbitPitch -= mouseY;
 
-        if (orbitYaw > 180f) orbitYaw -= 360f;
-        if (orbitYaw < -180f) orbitYaw += 360f;
+        if (orbitYaw > 180f)
+            orbitYaw -= 360f;
+        if (orbitYaw < -180f)
+            orbitYaw += 360f;
 
         orbitPitch = Mathf.Clamp(orbitPitch, -maxVerticalOrbit, maxVerticalOrbit);
 
@@ -162,7 +167,8 @@ public class PlaneCamera : MonoBehaviour
         Vector3 planeUp = planeTransform.up;
 
         float horizontalDist = orbitDistance * Mathf.Cos(pitchRad);
-        Vector3 horizontalOffset = (-planeForward * Mathf.Cos(yawRad) + planeRight * Mathf.Sin(yawRad)) * horizontalDist;
+        Vector3 horizontalOffset =
+            (-planeForward * Mathf.Cos(yawRad) + planeRight * Mathf.Sin(yawRad)) * horizontalDist;
         Vector3 verticalOffset = planeUp * (orbitDistance * Mathf.Sin(pitchRad));
 
         targetWorldPosition = planeCenter + horizontalOffset + verticalOffset;
@@ -181,8 +187,10 @@ public class PlaneCamera : MonoBehaviour
         orbitYaw = Mathf.MoveTowards(orbitYaw, 0f, returnDelta * 60f);
         orbitPitch = Mathf.MoveTowards(orbitPitch, 0f, returnDelta * 60f);
 
-        if (Mathf.Abs(orbitYaw) < 0.5f) orbitYaw = 0f;
-        if (Mathf.Abs(orbitPitch) < 0.5f) orbitPitch = 0f;
+        if (Mathf.Abs(orbitYaw) < 0.5f)
+            orbitYaw = 0f;
+        if (Mathf.Abs(orbitPitch) < 0.5f)
+            orbitPitch = 0f;
 
         // Always calculate default position based on current local position target
         targetWorldPosition = planeTransform.TransformPoint(defaultLocalPosition);
@@ -209,12 +217,20 @@ public class PlaneCamera : MonoBehaviour
 
             // Apply tilt based on roll primarily, pitch secondarily
             float rollTilt = Mathf.Clamp(-rollRate * maxGForceTilt, -maxGForceTilt, maxGForceTilt);
-            float pitchTilt = Mathf.Clamp(pitchRate * (maxGForceTilt * 0.5f), -maxGForceTilt * 0.5f, maxGForceTilt * 0.5f);
+            float pitchTilt = Mathf.Clamp(
+                pitchRate * (maxGForceTilt * 0.5f),
+                -maxGForceTilt * 0.5f,
+                maxGForceTilt * 0.5f
+            );
 
             float targetTilt = rollTilt + pitchTilt;
             targetTilt = Mathf.Clamp(targetTilt, -maxGForceTilt, maxGForceTilt);
 
-            currentGForceTilt = Mathf.Lerp(currentGForceTilt, targetTilt, Time.deltaTime * gForceTiltSpeed);
+            currentGForceTilt = Mathf.Lerp(
+                currentGForceTilt,
+                targetTilt,
+                Time.deltaTime * gForceTiltSpeed
+            );
         }
     }
 

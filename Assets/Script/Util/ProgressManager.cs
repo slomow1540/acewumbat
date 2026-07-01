@@ -1,179 +1,175 @@
 using UnityEngine;
 
-namespace Util
+public static class ProgressManager
 {
-    public static class ProgressManager
+    // ======================
+    // LEVEL PROGRESS
+    // ======================
+
+    public static void SaveScore(int levelIndex, int score)
     {
-        // ======================
-        // LEVEL PROGRESS
-        // ======================
+        string key = "score_" + levelIndex;
 
-        public static void SaveScore(int levelIndex, int score)
+        int current = PlayerPrefs.GetInt(key, 0);
+
+        if (score > current)
         {
-            string key = "score_" + levelIndex;
-
-            int current = PlayerPrefs.GetInt(key, 0);
-
-            if (score > current)
-            {
-                PlayerPrefs.SetInt(key, score);
-            }
-
-            PlayerPrefs.Save();
+            PlayerPrefs.SetInt(key, score);
         }
 
-        public static int GetScore(int levelIndex)
+        PlayerPrefs.Save();
+    }
+
+    public static int GetScore(int levelIndex)
+    {
+        return PlayerPrefs.GetInt("score_" + levelIndex, 0);
+    }
+
+    public static void SaveTime(int levelIndex, float time)
+    {
+        string key = "time_" + levelIndex;
+
+        float current = PlayerPrefs.GetFloat(key, Mathf.Infinity);
+
+        if (time < current)
         {
-            return PlayerPrefs.GetInt("score_" + levelIndex, 0);
+            PlayerPrefs.SetFloat(key, time);
         }
 
-        public static void SaveTime(int levelIndex, float time)
-        {
-            string key = "time_" + levelIndex;
+        PlayerPrefs.Save();
+    }
 
-            float current = PlayerPrefs.GetFloat(key, Mathf.Infinity);
+    public static float GetTime(int levelIndex)
+    {
+        return PlayerPrefs.GetFloat("time_" + levelIndex, 0f);
+    }
 
-            if (time < current)
-            {
-                PlayerPrefs.SetFloat(key, time);
-            }
+    // ======================
+    // CURRENCY
+    // ======================
 
-            PlayerPrefs.Save();
-        }
+    const string currencyKey = "player_currency";
 
-        public static float GetTime(int levelIndex)
-        {
-            return PlayerPrefs.GetFloat("time_" + levelIndex, 0f);
-        }
+    public static int GetCurrency()
+    {
+        return PlayerPrefs.GetInt(currencyKey, 0);
+    }
 
-        // ======================
-        // CURRENCY
-        // ======================
+    public static void SetCurrency(int amount)
+    {
+        PlayerPrefs.SetInt(currencyKey, Mathf.Max(0, amount));
 
-        const string currencyKey = "player_currency";
+        PlayerPrefs.Save();
+    }
 
-        public static int GetCurrency()
-        {
-            return PlayerPrefs.GetInt(currencyKey, 0);
-        }
+    public static void AddCurrency(int amount)
+    {
+        int current = GetCurrency();
 
-        public static void SetCurrency(int amount)
-        {
-            PlayerPrefs.SetInt(currencyKey, Mathf.Max(0, amount));
+        current += amount;
 
-            PlayerPrefs.Save();
-        }
+        PlayerPrefs.SetInt(currencyKey, Mathf.Max(0, current));
 
-        public static void AddCurrency(int amount)
-        {
-            int current = GetCurrency();
+        PlayerPrefs.Save();
+    }
 
-            current += amount;
+    public static bool SpendCurrency(int amount)
+    {
+        int current = GetCurrency();
 
-            PlayerPrefs.SetInt(currencyKey, Mathf.Max(0, current));
+        if (current < amount)
+            return false;
 
-            PlayerPrefs.Save();
-        }
+        current -= amount;
 
-        public static bool SpendCurrency(int amount)
-        {
-            int current = GetCurrency();
+        PlayerPrefs.SetInt(currencyKey, current);
 
-            if (current < amount)
-                return false;
+        PlayerPrefs.Save();
 
-            current -= amount;
+        return true;
+    }
 
-            PlayerPrefs.SetInt(currencyKey, current);
+    public static bool HasCurrency(int amount)
+    {
+        return GetCurrency() >= amount;
+    }
 
-            PlayerPrefs.Save();
+    // ======================
+    // PLANE OWNERSHIP
+    // ======================
+    static string GetOwnedKey(int planeIndex)
+    {
+        return "owned_plane_" + planeIndex;
+    }
 
+    public static bool IsOwned(int planeIndex)
+    {
+        return PlayerPrefs.GetInt(GetOwnedKey(planeIndex), 0) == 1;
+    }
+
+    public static void UnlockPlane(int planeIndex)
+    {
+        PlayerPrefs.SetInt(GetOwnedKey(planeIndex), 1);
+        PlayerPrefs.Save();
+    }
+
+    public static bool BuyPlane(int planeIndex, int price)
+    {
+        if (IsOwned(planeIndex))
             return true;
-        }
 
-        public static bool HasCurrency(int amount)
-        {
-            return GetCurrency() >= amount;
-        }
+        bool success = SpendCurrency(price);
 
-        // ======================
-        // PLANE OWNERSHIP
-        // ======================
-        static string GetOwnedKey(int planeIndex)
-        {
-            return "owned_plane_" + planeIndex;
-        }
+        if (!success)
+            return false;
 
-        public static bool IsOwned(int planeIndex)
-        {
-            return PlayerPrefs.GetInt(GetOwnedKey(planeIndex), 0) == 1;
-        }
+        UnlockPlane(planeIndex);
+        return true;
+    }
 
-        public static void UnlockPlane(int planeIndex)
-        {
-            PlayerPrefs.SetInt(GetOwnedKey(planeIndex), 1);
-            PlayerPrefs.Save();
-        }
+    // ======================
+    // EQUIPPED PLANE
+    // ======================
 
-        public static bool BuyPlane(int planeIndex, int price)
-        {
-            if (IsOwned(planeIndex))
-                return true;
+    const string equippedPlaneKey = "equipped_plane";
 
-            bool success = SpendCurrency(price);
+    public static void EquipPlane(int planeIndex)
+    {
+        if (!IsOwned(planeIndex))
+            return;
 
-            if (!success)
-                return false;
+        PlayerPrefs.SetInt(equippedPlaneKey, planeIndex);
+        PlayerPrefs.Save();
+    }
 
-            UnlockPlane(planeIndex);
-            return true;
-        }
+    public static int GetEquippedPlane()
+    {
+        return PlayerPrefs.GetInt(equippedPlaneKey, 0);
+    }
 
-        // ======================
-        // EQUIPPED PLANE
-        // ======================
+    public static bool IsEquipped(int planeIndex)
+    {
+        return GetEquippedPlane() == planeIndex;
+    }
 
-        const string equippedPlaneKey = "equipped_plane";
+    // ======================
+    // FIRST TIME SETUP
+    // ======================
 
-        public static void EquipPlane(int planeIndex)
-        {
-            if (!IsOwned(planeIndex))
-                return;
+    const string initializedKey = "player_initialized";
 
-            PlayerPrefs.SetInt(equippedPlaneKey, planeIndex);
-            PlayerPrefs.Save();
-        }
+    public static void Initialize()
+    {
+        bool initialized = PlayerPrefs.GetInt(initializedKey, 0) == 1;
 
-        public static int GetEquippedPlane()
-        {
-            return PlayerPrefs.GetInt(equippedPlaneKey, 0);
-        }
+        if (initialized)
+            return;
 
-        public static bool IsEquipped(int planeIndex)
-        {
-            return GetEquippedPlane() == planeIndex;
-        }
+        SetCurrency(0);
+        UnlockPlane(0);
+        EquipPlane(0);
 
-
-        // ======================
-        // FIRST TIME SETUP
-        // ======================
-
-        const string initializedKey = "player_initialized";
-
-        public static void Initialize()
-        {
-            bool initialized = PlayerPrefs.GetInt(initializedKey, 0) == 1;
-
-            if (initialized)
-                return;
-
-            SetCurrency(0);
-            UnlockPlane(0);
-            EquipPlane(0);
-
-            PlayerPrefs.SetInt(initializedKey, 1);
-            PlayerPrefs.Save();
-        }
+        PlayerPrefs.SetInt(initializedKey, 1);
+        PlayerPrefs.Save();
     }
 }

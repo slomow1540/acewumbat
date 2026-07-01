@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    const string menuVisitedKey = "menu_visited";
+
     public enum MenuState
     {
         Idle,
@@ -50,12 +52,20 @@ public class UIManager : MonoBehaviour
             CloseQuit,
         };
         menuManager.Init();
+        if (PlayerPrefs.GetInt(menuVisitedKey, 0) == 1)
+        {
+            menuManager.StartMenuImmediate();
+            state = MenuState.Menu;
+        }
     }
 
     void Update()
     {
         if (state == MenuState.Idle && Input.anyKeyDown)
         {
+            PlayerPrefs.SetInt(menuVisitedKey, 1);
+            PlayerPrefs.Save();
+
             menuManager.StartMenu();
             state = MenuState.Menu;
         }
@@ -298,5 +308,10 @@ public class UIManager : MonoBehaviour
 
         if (onCancel != null && Input.GetKeyDown(KeyCode.Escape))
             onCancel.Invoke();
+    }
+
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteKey(menuVisitedKey);
     }
 }

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 /// <summary>
 /// Advanced Health System for all aircraft and entities
@@ -140,7 +140,9 @@ public class Health : MonoBehaviour
         // Sort health effects by threshold for easier management
         if (healthEffects != null && healthEffects.Count > 0)
         {
-            healthEffects.Sort((a, b) => b.hpPercentageThreshold.CompareTo(a.hpPercentageThreshold));
+            healthEffects.Sort(
+                (a, b) => b.hpPercentageThreshold.CompareTo(a.hpPercentageThreshold)
+            );
         }
 
         // Setup multipart system
@@ -162,11 +164,13 @@ public class Health : MonoBehaviour
     /// Setup child parts for multipart objects
     private void SetupChildParts()
     {
-        if (childParts == null || childParts.Count == 0) return;
+        if (childParts == null || childParts.Count == 0)
+            return;
 
         for (int i = 0; i < childParts.Count; i++)
         {
-            if (childParts[i] == null) continue;
+            if (childParts[i] == null)
+                continue;
 
             Health childHealth = childParts[i].GetComponent<Health>();
             if (childHealth != null)
@@ -184,7 +188,8 @@ public class Health : MonoBehaviour
     /// Apply damage duh
     public void TakeDamage(float damage, GameObject attacker = null)
     {
-        if (isInvulnerable || currentHealth <= 0) return;
+        if (isInvulnerable || currentHealth <= 0)
+            return;
 
         float actualDamage = damage * damageMultiplier;
         currentHealth -= actualDamage;
@@ -202,7 +207,8 @@ public class Health : MonoBehaviour
 
     public void Heal(float amount)
     {
-        if (currentHealth <= 0) return;
+        if (currentHealth <= 0)
+            return;
 
         float actualHeal = Mathf.Min(amount, maxHealth - currentHealth);
         currentHealth += actualHeal;
@@ -212,7 +218,8 @@ public class Health : MonoBehaviour
 
     private void CheckHealthEffects()
     {
-        if (healthEffects == null || healthEffects.Count == 0) return;
+        if (healthEffects == null || healthEffects.Count == 0)
+            return;
 
         float currentHealthPercent = GetHealthPercent() * 100f;
 
@@ -229,18 +236,22 @@ public class Health : MonoBehaviour
 
     public void NotifyChildPartDead(float damageMultIncrease)
     {
-        if (!isMultipartObject) return;
+        if (!isMultipartObject)
+            return;
 
         partsDead++;
         damageMultiplier += damageMultIncrease;
 
-        Debug.Log($"{gameObject.name} lost a part! Total parts lost: {partsDead}, New damage multiplier: {damageMultiplier}");
+        Debug.Log(
+            $"{gameObject.name} lost a part! Total parts lost: {partsDead}, New damage multiplier: {damageMultiplier}"
+        );
     }
 
-    /// Notify parent that this child part 
+    /// Notify parent that this child part
     private void NotifyParentOfDeath()
     {
-        if (!isChildPart || parentObject == null) return;
+        if (!isChildPart || parentObject == null)
+            return;
 
         Health parentHealth = parentObject.GetComponent<Health>();
         if (parentHealth != null)
@@ -252,7 +263,8 @@ public class Health : MonoBehaviour
     /// Main death function
     public void Die(GameObject attacker = null)
     {
-        if (isDead) return;
+        if (isDead)
+            return;
         isDead = true;
 
         if (isChildPart)
@@ -289,7 +301,8 @@ public class Health : MonoBehaviour
 
     private void StopDamageEmitters()
     {
-        if (damageEmitters == null || damageEmitters.Count == 0) return;
+        if (damageEmitters == null || damageEmitters.Count == 0)
+            return;
 
         foreach (ParticleSystem emitter in damageEmitters)
         {
@@ -302,11 +315,13 @@ public class Health : MonoBehaviour
 
     private void KillAllChildParts(GameObject attacker)
     {
-        if (childParts == null || childParts.Count == 0) return;
+        if (childParts == null || childParts.Count == 0)
+            return;
 
         foreach (GameObject part in childParts)
         {
-            if (part == null) continue;
+            if (part == null)
+                continue;
 
             Health partHealth = part.GetComponent<Health>();
             if (partHealth != null && partHealth.IsAlive())
@@ -318,7 +333,8 @@ public class Health : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isStationary || isDead) return;
+        if (isStationary || isDead)
+            return;
 
         if (collision.gameObject.layer == LayerMask.NameToLayer(terrainLayerName))
         {
@@ -328,7 +344,8 @@ public class Health : MonoBehaviour
 
     private void DieInstantlyFromTerrain(GameObject attacker = null)
     {
-        if (isDead) return;
+        if (isDead)
+            return;
         isDead = true;
 
         // Cancel any delayed death that may already be scheduled
@@ -434,7 +451,8 @@ public class Health : MonoBehaviour
 
     public int GetTotalParts()
     {
-        if (childParts == null) return 0;
+        if (childParts == null)
+            return 0;
         return childParts.Count;
     }
 

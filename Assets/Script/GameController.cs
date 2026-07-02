@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Util;
 
 /// <summary>
 /// Manages game state, entity tracking, win/lose conditions, mission time, triggers, and music
@@ -919,10 +918,6 @@ public class GameController : MonoBehaviour
             statText.text =
                 $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
         }
-
-        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
-        ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
-        valueHolder.Points = valueHolder.Points + PointObtained;
 
         ProgressManager.AddCurrency(PointObtained);
 

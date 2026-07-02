@@ -154,7 +154,6 @@ namespace Util
             return GetEquippedPlane() == planeIndex;
         }
 
-
         // ======================
         // FIRST TIME SETUP
         // ======================

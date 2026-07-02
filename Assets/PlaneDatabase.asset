@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: PlaneDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::PlaneDatabase
+  planes:
+  - planeName: F5
+    price: 0
+    prefab: {fileID: 919132149155446097, guid: c79c6c1ef1de3c04b87c0eed93fb2884, type: 3}
+    playerprefab: {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+    thrust: 100
+    maneuverability: 75
+    health: 60
+    gunDamage: 10
+    gunFireRate: 50
+    gunAmmoCount: 3000
+    aimAssistRange: 80
+    missileLockTime: 0.2
+    missileRange: 15
+    missileDamage: 51
+    missileManeuverability: 80
+    missileAmmoCount: 500
+  - planeName: A-10
+    price: 350
+    prefab: {fileID: 919132149155446097, guid: dc2947bc1a853b7409b0bad22cc66582, type: 3}
+    playerprefab: {fileID: 8448142032054405415, guid: 552b75ec4897b6b429d6c3664a590250, type: 3}
+    thrust: 60
+    maneuverability: 50
+    health: 100
+    gunDamage: 18
+    gunFireRate: 100
+    gunAmmoCount: 9000
+    aimAssistRange: 7
+    missileLockTime: 0.3
+    missileRange: 9
+    missileDamage: 51
+    missileManeuverability: 80
+    missileAmmoCount: 300

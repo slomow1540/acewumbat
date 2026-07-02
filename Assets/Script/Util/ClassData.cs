@@ -108,3 +108,9 @@ namespace Util
         }
     }
 }
+
+[CreateAssetMenu(fileName = "PlaneDatabase", menuName = "Game/Plane Database")]
+public class PlaneDatabase : ScriptableObject
+{
+    public PlaneData[] planes;
+}

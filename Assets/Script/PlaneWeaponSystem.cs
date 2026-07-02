@@ -5,45 +5,59 @@ public class PlaneWeaponSystem : MonoBehaviour
     [Header("Weapon Settings")]
     [Tooltip("Projectile prefab to spawn")]
     public GameObject projectilePrefab;
+
     [Tooltip("Where projectiles spawn from")]
     public Transform[] firePoints;
+
     [Tooltip("Damage per shot")]
     public float damage = 10f;
+
     [Tooltip("Projectile speed")]
     public float projectileSpeed = 500f;
+
     [Tooltip("Fire rate (shots per second)")]
     public float fireRate = 10f;
+
     [Tooltip("Key to fire weapon")]
     public KeyCode fireKey = KeyCode.Mouse0;
 
     [Header("Ammo (optional)")]
     [Tooltip("Use ammo system?")]
     public bool useAmmo = false;
+
     [Tooltip("Current ammo")]
     public int currentAmmo = 300;
+
     [Tooltip("Maximum ammo")]
     public int maxAmmo = 300;
 
     [Header("Aim Assist")]
     [Tooltip("Enable aim assist")]
     public bool useAimAssist = true;
+
     [Tooltip("Max angle for aim assist to activate (degrees)")]
     public float aimAssistFOV = 15f;
+
     [Tooltip("How strong the aim assist is (0 = none, 1 = full snap)")]
     [Range(0f, 1f)]
     public float aimAssistStrength = 0.5f;
+
     [Tooltip("Max distance for aim assist")]
     public float aimAssistMaxRange = 800f;
+
     [Tooltip("Tag for targetable enemies")]
     public string enemyTag = "Enemy";
+
     [Tooltip("Only assist when targeting (requires TargetingSystem)")]
     public bool onlyAssistLockedTarget = false;
 
     [Header("Effects")]
     [Tooltip("Muzzle flash effect")]
     public GameObject muzzleFlashPrefab;
+
     [Tooltip("Sound effect when firing")]
     public AudioClip fireSound;
+
     //public float SoundVolume = 0.5f;
 
     private float nextFireTime;
@@ -162,7 +176,9 @@ public class PlaneWeaponSystem : MonoBehaviour
                 Rigidbody projectileRb = projectileObj.GetComponent<Rigidbody>();
                 if (projectileRb != null)
                 {
-                    projectileRb.linearVelocity = planeRigidbody.linearVelocity + fireRotation * Vector3.forward * projectileSpeed;
+                    projectileRb.linearVelocity =
+                        planeRigidbody.linearVelocity
+                        + fireRotation * Vector3.forward * projectileSpeed;
                 }
             }
         }
@@ -170,7 +186,11 @@ public class PlaneWeaponSystem : MonoBehaviour
         // Spawn muzzle flash
         if (muzzleFlashPrefab != null)
         {
-            GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
+            GameObject flash = Instantiate(
+                muzzleFlashPrefab,
+                firePoint.position,
+                firePoint.rotation
+            );
             flash.transform.parent = firePoint;
             Destroy(flash, 0.1f);
         }
@@ -203,7 +223,8 @@ public class PlaneWeaponSystem : MonoBehaviour
     /// </summary>
     public float GetAmmoPercent()
     {
-        if (!useAmmo) return 1f;
+        if (!useAmmo)
+            return 1f;
         return (float)currentAmmo / maxAmmo;
     }
 
@@ -258,7 +279,8 @@ public class PlaneWeaponSystem : MonoBehaviour
     /// </summary>
     private bool IsValidAimAssistTarget(GameObject target)
     {
-        if (target == null) return false;
+        if (target == null)
+            return false;
 
         // Check distance
         float distance = Vector3.Distance(transform.position, target.transform.position);
@@ -300,7 +322,11 @@ public class PlaneWeaponSystem : MonoBehaviour
 
         // Blend between current aim and assisted aim
         Vector3 currentDirection = firePoint.forward;
-        Vector3 assistedDirection = Vector3.Slerp(currentDirection, aimDirection, aimAssistStrength);
+        Vector3 assistedDirection = Vector3.Slerp(
+            currentDirection,
+            aimDirection,
+            aimAssistStrength
+        );
 
         return Quaternion.LookRotation(assistedDirection);
     }

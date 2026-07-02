@@ -1,10 +1,9 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using TMPro;
-using Util;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages game state, entity tracking, win/lose conditions, mission time, triggers, and music
@@ -12,6 +11,9 @@ using Util;
 public class GameController : MonoBehaviour
 {
     #region Nested Classes
+
+    [Header("Data")]
+    public PlaneDatabase planeDatabase;
 
     [System.Serializable]
     public class EntityRecord
@@ -51,11 +53,11 @@ public class GameController : MonoBehaviour
 
     public enum TriggerCondition
     {
-        TimeElapsed,        // After X seconds
-        EnemiesKilled,      // After X enemies killed
-        CheckpointReached,  // When checkpoint called
-        PlayerHealthBelow,  // When player HP < X%
-        AllEnemiesDead      // When all enemies defeated
+        TimeElapsed, // After X seconds
+        EnemiesKilled, // After X enemies killed
+        CheckpointReached, // When checkpoint called
+        PlayerHealthBelow, // When player HP < X%
+        AllEnemiesDead, // When all enemies defeated
     }
 
     [System.Serializable]
@@ -66,12 +68,16 @@ public class GameController : MonoBehaviour
         [Header("Spawn Settings")]
         [Tooltip("For SpawnEnemies: prefab to spawn")]
         public GameObject enemyPrefab;
+
         [Tooltip("Spawn position")]
         public Vector3 spawnPosition;
+
         [Tooltip("Spawn rotation")]
         public Vector3 spawnRotation;
+
         [Tooltip("Number to spawn")]
         public int spawnCount = 1;
+
         [Tooltip("Spread radius for multiple spawns")]
         public float spawnSpread = 10f;
 
@@ -82,6 +88,7 @@ public class GameController : MonoBehaviour
         [Header("Message Settings")]
         [Tooltip("For ShowMessage: message text")]
         public string messageText = "Objective Complete!";
+
         [Tooltip("Message duration (seconds)")]
         public float messageDuration = 3f;
 
@@ -96,7 +103,7 @@ public class GameController : MonoBehaviour
         GivePoints,
         ShowMessage,
         PlaySound,
-        ChangeMusic
+        ChangeMusic,
     }
 
     #endregion
@@ -217,38 +224,30 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         // --- Find GameValues and spawn selected plane ---
-        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
-        if (gameValuesObj != null)
+
+        int selectedIndex = ProgressManager.GetEquippedPlane();
+
+        if (selectedIndex >= 0 && selectedIndex < planeDatabase.planes.Length)
         {
-            ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
-            if (valueHolder != null && valueHolder.SelectedPlane != null)
+            PlaneData data = planeDatabase.planes[selectedIndex];
+
+            if (data != null && data.playerprefab != null)
             {
-                // Determine spawn transform from PlayerPosition
-                Vector3 spawnPos = PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
-                Quaternion spawnRot = PlayerPosition != null ? PlayerPosition.transform.rotation : Quaternion.identity;
+                Vector3 spawnPos =
+                    PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
+                Quaternion spawnRot =
+                    PlayerPosition != null
+                        ? PlayerPosition.transform.rotation
+                        : Quaternion.identity;
 
-                // Spawn the selected plane
-                GameObject spawnedPlane = Instantiate(valueHolder.SelectedPlane, spawnPos, spawnRot);
-                Debug.Log($"[GameController] Spawned plane: {spawnedPlane.name}");
+                GameObject spawnedPlane = Instantiate(data.playerprefab, spawnPos, spawnRot);
 
-                // Destroy the PlayerPosition marker
                 if (PlayerPosition != null)
-                {
                     Destroy(PlayerPosition);
-                }
 
-                // Auto-find all UI references inside the spawned plane
                 FindUIReferencesInPlane(spawnedPlane);
                 spawnedPlane.SetActive(true);
             }
-            else
-            {
-                Debug.LogWarning("[GameController] ValueHolder missing or SelectedPlane is null.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[GameController] No GameObject with tag 'GameValues' found.");
         }
 
         // --- Rest of initialization ---
@@ -259,7 +258,11 @@ public class GameController : MonoBehaviour
 
         SetupBackgroundMusic();
 
-        if (musicTracks.Count > 0 && currentMusicIndex >= 0 && currentMusicIndex < musicTracks.Count)
+        if (
+            musicTracks.Count > 0
+            && currentMusicIndex >= 0
+            && currentMusicIndex < musicTracks.Count
+        )
         {
             PlayMusic(currentMusicIndex);
         }
@@ -525,7 +528,8 @@ public class GameController : MonoBehaviour
 
     public float GetMissionTime()
     {
-        if (!trackMissionTime) return 0f;
+        if (!trackMissionTime)
+            return 0f;
 
         if (gameEnded)
         {
@@ -727,8 +731,10 @@ public class GameController : MonoBehaviour
             if (!trigger.isActive || trigger.hasTriggered)
                 continue;
 
-            if (trigger.condition == TriggerCondition.CheckpointReached &&
-                trigger.checkpointID == checkpointID)
+            if (
+                trigger.condition == TriggerCondition.CheckpointReached
+                && trigger.checkpointID == checkpointID
+            )
             {
                 ExecuteTrigger(trigger);
             }
@@ -744,14 +750,15 @@ public class GameController : MonoBehaviour
     /// </summary>
     public void RegisterEntity(Health healthSystem, string entityTag, bool isPlayer)
     {
-        if (healthSystem == null) return;
+        if (healthSystem == null)
+            return;
 
         EntityRecord record = new EntityRecord
         {
             healthSystem = healthSystem,
             gameObject = healthSystem.gameObject,
             tag = entityTag,
-            isPlayer = isPlayer
+            isPlayer = isPlayer,
         };
 
         allEntities.Add(record);
@@ -764,16 +771,24 @@ public class GameController : MonoBehaviour
         else if (entityTag == "Enemy")
         {
             totalEnemies++;
-            Debug.Log($"[GameController] Enemy registered: {healthSystem.gameObject.name} (Total: {totalEnemies})");
+            Debug.Log(
+                $"[GameController] Enemy registered: {healthSystem.gameObject.name} (Total: {totalEnemies})"
+            );
         }
     }
 
     /// <summary>
     /// Called when an entity dies
     /// </summary>
-    public void NotifyEntityDeath(Health healthSystem, string entityTag, bool isPlayer, GameObject attacker = null)
+    public void NotifyEntityDeath(
+        Health healthSystem,
+        string entityTag,
+        bool isPlayer,
+        GameObject attacker = null
+    )
     {
-        if (gameEnded) return;
+        if (gameEnded)
+            return;
 
         if (isPlayer)
         {
@@ -880,10 +895,11 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Shows result UI with sequence: background fade (black) -> result text fade -> stat text fade -> show buttons
     /// </summary>
-    /// 
+    ///
     private IEnumerator ShowResultSequence(bool isVictory)
     {
-        ImprovedPlaneController pc = playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
+        ImprovedPlaneController pc =
+            playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
 
         if (pc != null)
         {
@@ -899,18 +915,11 @@ public class GameController : MonoBehaviour
         if (statText != null)
         {
             string timeString = trackMissionTime ? $"\nTime: {GetFormattedMissionTime()}" : "";
-            statText.text = $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
+            statText.text =
+                $"Enemies: {defeatedEnemies}/{Mathf.Max(1, totalEnemies)}\nPoints: {PointObtained}{timeString}";
         }
 
-        GameObject gameValuesObj = GameObject.FindWithTag("GameValues");
-        ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
-        valueHolder.Points = valueHolder.Points + PointObtained;
-
-        ProgressManager.AddCurrency(
-    PointObtained
-);
-
-        
+        ProgressManager.AddCurrency(PointObtained);
 
         // Ensure buttons hidden before fade
         if (restartButton != null)
@@ -926,7 +935,11 @@ public class GameController : MonoBehaviour
             while (elapsed < fadeDuration)
             {
                 elapsed += Time.deltaTime;
-                col.a = Mathf.Lerp(0f, backgroundTargetAlpha, Mathf.Clamp01(elapsed / fadeDuration));
+                col.a = Mathf.Lerp(
+                    0f,
+                    backgroundTargetAlpha,
+                    Mathf.Clamp01(elapsed / fadeDuration)
+                );
                 resultPanel.color = col;
                 yield return null;
             }
@@ -936,7 +949,9 @@ public class GameController : MonoBehaviour
 
         // Fade in result text
         if (resultTextCanvasGroup != null)
-            yield return StartCoroutine(FadeCanvasGroup(resultTextCanvasGroup, 0f, 1f, fadeDuration));
+            yield return StartCoroutine(
+                FadeCanvasGroup(resultTextCanvasGroup, 0f, 1f, fadeDuration)
+            );
         else if (resultText != null)
             yield return StartCoroutine(FadeTMPAlpha(resultText, 0f, 1f, fadeDuration));
 
@@ -1024,23 +1039,36 @@ public class GameController : MonoBehaviour
             containerRect.anchoredPosition = new Vector2(0, -100);
             containerRect.sizeDelta = new Vector2(600, 150);
 
-            HorizontalLayoutGroup layoutGroup = buttonContainerObj.AddComponent<HorizontalLayoutGroup>();
+            HorizontalLayoutGroup layoutGroup =
+                buttonContainerObj.AddComponent<HorizontalLayoutGroup>();
             layoutGroup.spacing = 20;
             layoutGroup.childForceExpandWidth = true;
             layoutGroup.childForceExpandHeight = true;
 
             // Create restart button
-            restartButton = CreateButton(buttonContainerObj, "RestartButton", "RESTART", RestartGame);
+            restartButton = CreateButton(
+                buttonContainerObj,
+                "RestartButton",
+                "RESTART",
+                RestartGame
+            );
 
             // Create main menu button
-            mainMenuButton = CreateButton(buttonContainerObj, "MainMenuButton", "MAIN MENU", GoToMainMenu);
+            mainMenuButton = CreateButton(
+                buttonContainerObj,
+                "MainMenuButton",
+                "MAIN MENU",
+                GoToMainMenu
+            );
         }
         else
         {
             if (resultPanel != null)
             {
                 Color c = resultPanel.color;
-                c.r = 0f; c.g = 0f; c.b = 0f;
+                c.r = 0f;
+                c.g = 0f;
+                c.b = 0f;
                 c.a = 0f;
                 resultPanel.color = c;
             }
@@ -1075,17 +1103,26 @@ public class GameController : MonoBehaviour
 
         if (resultText != null && resultTextCanvasGroup == null)
         {
-            resultTextCanvasGroup = resultText.GetComponent<CanvasGroup>() ?? resultText.gameObject.AddComponent<CanvasGroup>();
+            resultTextCanvasGroup =
+                resultText.GetComponent<CanvasGroup>()
+                ?? resultText.gameObject.AddComponent<CanvasGroup>();
             resultTextCanvasGroup.alpha = 0f;
         }
         if (statText != null && statTextCanvasGroup == null)
         {
-            statTextCanvasGroup = statText.GetComponent<CanvasGroup>() ?? statText.gameObject.AddComponent<CanvasGroup>();
+            statTextCanvasGroup =
+                statText.GetComponent<CanvasGroup>()
+                ?? statText.gameObject.AddComponent<CanvasGroup>();
             statTextCanvasGroup.alpha = 0f;
         }
     }
 
-    private Button CreateButton(GameObject parent, string name, string label, UnityEngine.Events.UnityAction callback)
+    private Button CreateButton(
+        GameObject parent,
+        string name,
+        string label,
+        UnityEngine.Events.UnityAction callback
+    )
     {
         GameObject buttonObj = new GameObject(name);
         buttonObj.transform.SetParent(parent.transform, false);
@@ -1183,7 +1220,9 @@ public class GameController : MonoBehaviour
 
     public bool IsPlayerAlive()
     {
-        return playerEntity != null && playerEntity.healthSystem != null && playerEntity.healthSystem.IsAlive();
+        return playerEntity != null
+            && playerEntity.healthSystem != null
+            && playerEntity.healthSystem.IsAlive();
     }
 
     public int GetTotalEnemies()
@@ -1203,7 +1242,6 @@ public class GameController : MonoBehaviour
 
     private void DisplayGameOverInfo()
     {
-
         if (resultText != null)
         {
             resultText.text = "Game Over";

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Util;
 
 public class SlotManager : MonoBehaviour
 {

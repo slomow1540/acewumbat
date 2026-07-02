@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Special Ability System for player aircraft.
@@ -24,9 +24,8 @@ public class SpecialAbility : MonoBehaviour
         public float revertTime = 3f;
 
         [Header("Stat Multipliers")]
-        [Tooltip(
-            "Multiplier applied to rollResponsiveness, pitchResponsiveness, yawResponsiveness"
-        )]
+
+        [Tooltip("Multiplier applied to rollResponsiveness, pitchResponsiveness, yawResponsiveness")]
         public float controlResponsivenessMultiplier = 2.5f;
 
         [Tooltip("Multiplier applied to maxAngularVelocity")]
@@ -40,9 +39,7 @@ public class SpecialAbility : MonoBehaviour
         public AudioClip activateSound;
 
         [Header("Visual Effect")]
-        [Tooltip(
-            "GameObject enabled while Manuver is active, disabled when it ends. Starts inactive."
-        )]
+        [Tooltip("GameObject enabled while Manuver is active, disabled when it ends. Starts inactive.")]
         public GameObject effectObject;
     }
 
@@ -69,9 +66,7 @@ public class SpecialAbility : MonoBehaviour
         public AudioClip activateSound;
 
         [Header("Visual Effect")]
-        [Tooltip(
-            "GameObject enabled while Boost is active, disabled when it ends. Starts inactive."
-        )]
+        [Tooltip("GameObject enabled while Boost is active, disabled when it ends. Starts inactive.")]
         public GameObject effectObject;
     }
 
@@ -92,9 +87,7 @@ public class SpecialAbility : MonoBehaviour
         public AudioClip activateSound;
 
         [Header("Visual Effect")]
-        [Tooltip(
-            "GameObject enabled while Regen is active, disabled when it ends. Starts inactive."
-        )]
+        [Tooltip("GameObject enabled while Regen is active, disabled when it ends. Starts inactive.")]
         public GameObject effectObject;
     }
 
@@ -137,14 +130,10 @@ public class SpecialAbility : MonoBehaviour
     public AirburstConfig airburstConfig = new AirburstConfig();
 
     [Header("Audio")]
-    [Tooltip(
-        "Sound played when ability finishes cooling down (ready again) — shared across all abilities"
-    )]
+    [Tooltip("Sound played when ability finishes cooling down (ready again) — shared across all abilities")]
     public AudioClip readySound;
-
     [Range(0f, 1f)]
     public float activateVolume = 0.8f;
-
     [Range(0f, 1f)]
     public float readyVolume = 0.5f;
 
@@ -182,18 +171,12 @@ public class SpecialAbility : MonoBehaviour
     {
         switch (ability.ToLower())
         {
-            case "manuver":
-                return manuverConfig.cooldown;
-            case "regen":
-                return regenConfig.cooldown;
-            case "airburst":
-                return airburstConfig.cooldown;
-            case "boost":
-                return boostConfig.cooldown;
+            case "manuver": return manuverConfig.cooldown;
+            case "regen": return regenConfig.cooldown;
+            case "airburst": return airburstConfig.cooldown;
+            case "boost": return boostConfig.cooldown;
             default:
-                Debug.LogWarning(
-                    $"[SpecialAbility] Unknown ability '{ability}', defaulting cooldown to 30s."
-                );
+                Debug.LogWarning($"[SpecialAbility] Unknown ability '{ability}', defaulting cooldown to 30s.");
                 return 30f;
         }
     }
@@ -204,16 +187,11 @@ public class SpecialAbility : MonoBehaviour
     {
         switch (ability.ToLower())
         {
-            case "manuver":
-                return manuverConfig.activateSound;
-            case "regen":
-                return regenConfig.activateSound;
-            case "airburst":
-                return airburstConfig.activateSound;
-            case "boost":
-                return boostConfig.activateSound;
-            default:
-                return null;
+            case "manuver": return manuverConfig.activateSound;
+            case "regen": return regenConfig.activateSound;
+            case "airburst": return airburstConfig.activateSound;
+            case "boost": return boostConfig.activateSound;
+            default: return null;
         }
     }
 
@@ -241,37 +219,32 @@ public class SpecialAbility : MonoBehaviour
         }
 
         // Ensure all ability effect objects start deactivated
-        if (manuverConfig.effectObject != null)
-            manuverConfig.effectObject.SetActive(false);
-        if (boostConfig.effectObject != null)
-            boostConfig.effectObject.SetActive(false);
-        if (regenConfig.effectObject != null)
-            regenConfig.effectObject.SetActive(false);
+        if (manuverConfig.effectObject != null) manuverConfig.effectObject.SetActive(false);
+        if (boostConfig.effectObject != null) boostConfig.effectObject.SetActive(false);
+        if (regenConfig.effectObject != null) regenConfig.effectObject.SetActive(false);
     }
 
     private void Start()
     {
         // ── Pull ability name from GameValues ──────────────────────────────────
-        // GameObject gameValuesObj = GameObject.FindGameObjectWithTag("GameValues");
-        // if (gameValuesObj != null)
-        // {
-        //     ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
-        //     if (valueHolder != null)
-        //     {
-        //         chosenAbility = valueHolder.SpecialWeaponName;
-        //         Debug.Log($"[SpecialAbility] Ability loaded from ValueHolder: '{chosenAbility}'");
-        //     }
-        //     else
-        //     {
-        //         Debug.LogWarning(
-        //             "[SpecialAbility] GameValues object has no ValueHolder component!"
-        //         );
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.LogWarning("[SpecialAbility] No object with tag 'GameValues' found in scene!");
-        // }
+        GameObject gameValuesObj = GameObject.FindGameObjectWithTag("GameValues");
+        if (gameValuesObj != null)
+        {
+            ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
+            if (valueHolder != null)
+            {
+                chosenAbility = valueHolder.SpecialWeaponName;
+                Debug.Log($"[SpecialAbility] Ability loaded from ValueHolder: '{chosenAbility}'");
+            }
+            else
+            {
+                Debug.LogWarning("[SpecialAbility] GameValues object has no ValueHolder component!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[SpecialAbility] No object with tag 'GameValues' found in scene!");
+        }
 
         maxCooldown = GetCooldownForAbility(chosenAbility);
         currentCooldown = 0f;
@@ -305,9 +278,7 @@ public class SpecialAbility : MonoBehaviour
     {
         if (isOnCooldown)
         {
-            Debug.Log(
-                $"[SpecialAbility] '{chosenAbility}' still on cooldown: {currentCooldown:F1}s remaining."
-            );
+            Debug.Log($"[SpecialAbility] '{chosenAbility}' still on cooldown: {currentCooldown:F1}s remaining.");
             return;
         }
 
@@ -330,22 +301,12 @@ public class SpecialAbility : MonoBehaviour
 
         switch (chosenAbility.ToLower())
         {
-            case "manuver":
-                StartCoroutine(ManuverRoutine());
-                break;
-            case "regen":
-                StartCoroutine(RegenRoutine());
-                break;
-            case "airburst":
-                ActivateAirburst();
-                break;
-            case "boost":
-                StartCoroutine(BoostRoutine());
-                break;
+            case "manuver": StartCoroutine(ManuverRoutine()); break;
+            case "regen": StartCoroutine(RegenRoutine()); break;
+            case "airburst": ActivateAirburst(); break;
+            case "boost": StartCoroutine(BoostRoutine()); break;
             default:
-                Debug.LogWarning(
-                    $"[SpecialAbility] No implementation for ability '{chosenAbility}'."
-                );
+                Debug.LogWarning($"[SpecialAbility] No implementation for ability '{chosenAbility}'.");
                 break;
         }
 
@@ -413,26 +374,10 @@ public class SpecialAbility : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / revertTime; // 0 → 1
 
-            planeController.rollResponsiveness = Mathf.Lerp(
-                orig_rollResponsiveness * controlMult,
-                orig_rollResponsiveness,
-                t
-            );
-            planeController.pitchResponsiveness = Mathf.Lerp(
-                orig_pitchResponsiveness * controlMult,
-                orig_pitchResponsiveness,
-                t
-            );
-            planeController.yawResponsiveness = Mathf.Lerp(
-                orig_yawResponsiveness * controlMult,
-                orig_yawResponsiveness,
-                t
-            );
-            planeController.maxAngularVelocity = Mathf.Lerp(
-                orig_maxAngularVelocity * angVelMult,
-                orig_maxAngularVelocity,
-                t
-            );
+            planeController.rollResponsiveness = Mathf.Lerp(orig_rollResponsiveness * controlMult, orig_rollResponsiveness, t);
+            planeController.pitchResponsiveness = Mathf.Lerp(orig_pitchResponsiveness * controlMult, orig_pitchResponsiveness, t);
+            planeController.yawResponsiveness = Mathf.Lerp(orig_yawResponsiveness * controlMult, orig_yawResponsiveness, t);
+            planeController.maxAngularVelocity = Mathf.Lerp(orig_maxAngularVelocity * angVelMult, orig_maxAngularVelocity, t);
             planeController.maxGForce = Mathf.Lerp(orig_maxGForce * gForceMult, orig_maxGForce, t);
 
             yield return null;
@@ -487,16 +432,8 @@ public class SpecialAbility : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / revertTime;
 
-            planeController.thrustAcceleration = Mathf.Lerp(
-                orig_thrustAcceleration * thrustAccelMult,
-                orig_thrustAcceleration,
-                t
-            );
-            planeController.maxThrust = Mathf.Lerp(
-                orig_maxThrust * maxThrustMult,
-                orig_maxThrust,
-                t
-            );
+            planeController.thrustAcceleration = Mathf.Lerp(orig_thrustAcceleration * thrustAccelMult, orig_thrustAcceleration, t);
+            planeController.maxThrust = Mathf.Lerp(orig_maxThrust * maxThrustMult, orig_maxThrust, t);
 
             yield return null;
         }
@@ -526,9 +463,7 @@ public class SpecialAbility : MonoBehaviour
         if (regenConfig.effectObject != null)
             regenConfig.effectObject.SetActive(true);
 
-        Debug.Log(
-            $"[SpecialAbility] Regen: restoring {regenConfig.totalHP} HP over {regenConfig.duration}s."
-        );
+        Debug.Log($"[SpecialAbility] Regen: restoring {regenConfig.totalHP} HP over {regenConfig.duration}s.");
 
         float elapsed = 0f;
         float duration = Mathf.Max(0.0001f, regenConfig.duration);
@@ -581,9 +516,7 @@ public class SpecialAbility : MonoBehaviour
             Debug.LogWarning("[SpecialAbility] Airburst missile prefab has no Missile component.");
         }
 
-        Debug.Log(
-            $"[SpecialAbility] Airburst fired! Target: {(target != null ? target.name : "none")}"
-        );
+        Debug.Log($"[SpecialAbility] Airburst fired! Target: {(target != null ? target.name : "none")}");
     }
 
     // ── Public helpers ─────────────────────────────────────────────────────────
@@ -592,8 +525,7 @@ public class SpecialAbility : MonoBehaviour
     public bool IsReady() => !isOnCooldown && !abilityActive;
 
     /// <summary>Returns cooldown progress as 0 (ready) → 1 (just used).</summary>
-    public float GetCooldownNormalized() =>
-        maxCooldown > 0f ? Mathf.Clamp01(currentCooldown / maxCooldown) : 0f;
+    public float GetCooldownNormalized() => maxCooldown > 0f ? Mathf.Clamp01(currentCooldown / maxCooldown) : 0f;
 
     /// <summary>Returns true while a timed ability (manuver/boost/regen) is still running.</summary>
     public bool IsAbilityActive() => abilityActive;

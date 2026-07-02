@@ -10,27 +10,22 @@ public class EnemyPlaneAI : MonoBehaviour
     [Header("Target Settings")]
     [Tooltip("Tag to identify targets (e.g., 'Player')")]
     public string targetTag = "Player";
-
     [Tooltip("Current target")]
     public GameObject currentTarget;
 
     [Header("Flight Settings")]
     [Tooltip("Reference to AI input interface")]
     public AIPlaneInput aiInput;
-
     [Tooltip("Preferred cruise speed (percentage 0-100)")]
     public float cruiseSpeed = 60f;
-
     [Tooltip("Combat speed when engaging (percentage 0-100)")]
     public float combatSpeed = 80f;
-
     [Tooltip("Evasion speed (percentage 0-100)")]
     public float evasionSpeed = 100f;
 
     [Header("Combat Behavior")]
     [Tooltip("Current AI behavior mode")]
     public BehaviorMode currentBehavior = BehaviorMode.Chasing;
-
     [Tooltip("Weapon system reference")]
     public EnemyAI weaponSystem;
 
@@ -41,7 +36,6 @@ public class EnemyPlaneAI : MonoBehaviour
     [Header("Chasing Behavior")]
     [Tooltip("Preferred attack range")]
     public float optimalChaseRange = 400f;
-
     [Tooltip("Maximum chase range")]
     public float maxChaseRange = 800f;
 
@@ -52,11 +46,9 @@ public class EnemyPlaneAI : MonoBehaviour
     [Header("Evasion Behavior")]
     [Tooltip("Distance to maintain from threats")]
     public float evasionDistance = 600f;
-
     [Tooltip("How aggressive evasive maneuvers are (0-1)")]
     [Range(0f, 1f)]
     public float evasionAggressiveness = 0.8f;
-
     [Tooltip("Tag for incoming missiles")]
     public string missileTag = "EnemyMissile";
 
@@ -64,42 +56,32 @@ public class EnemyPlaneAI : MonoBehaviour
     [Tooltip("Health percentage to switch to evasion")]
     [Range(0f, 1f)]
     public float evasionHealthThreshold = 0.3f;
-
     [Tooltip("Distance to target before switching behaviors")]
     public float opportunisticSwitchDistance = 1200f;
-
     [Tooltip("Distance for aggressive behavior")]
     public float aggressiveSwitchDistance = 600f;
 
     [Header("Ground Avoidance")]
     [Tooltip("Minimum altitude to maintain (meters)")]
     public float minAltitude = 100f;
-
     [Tooltip("Altitude at which to start pulling up")]
     public float pullUpAltitude = 150f;
-
     [Tooltip("How aggressive the pull-up is")]
     public float pullUpStrength = 2f;
-
     [Tooltip("Layer mask for ground detection")]
     public LayerMask groundLayer;
 
     [Header("Predictive Terrain Avoidance")]
     [Tooltip("Enable forward terrain scanning")]
     public bool enableTerrainScanning = true;
-
     [Tooltip("Base lookahead distance (multiplied by speed)")]
     public float baseLookaheadDistance = 200f;
-
     [Tooltip("Number of forward raycasts")]
     public int scanRayCount = 5;
-
     [Tooltip("Scan spread angle (degrees)")]
     public float scanSpreadAngle = 30f;
-
     [Tooltip("How early to start avoiding (safety margin)")]
     public float avoidanceMargin = 50f;
-
     [Tooltip("Show debug rays in editor")]
     public bool showTerrainDebug = false;
 
@@ -122,10 +104,10 @@ public class EnemyPlaneAI : MonoBehaviour
 
     public enum BehaviorMode
     {
-        Aggressive, // Point directly at target, use both weapons
-        Chasing, // Get behind target, use both weapons
+        Aggressive,    // Point directly at target, use both weapons
+        Chasing,       // Get behind target, use both weapons  
         Opportunistic, // Survive mode, use missile's wider FOV
-        Evading, // Dodge threats
+        Evading        // Dodge threats
     }
 
     private void Awake()
@@ -208,8 +190,7 @@ public class EnemyPlaneAI : MonoBehaviour
 
         foreach (GameObject target in potentialTargets)
         {
-            if (!IsTargetAlive(target))
-                continue;
+            if (!IsTargetAlive(target)) continue;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance < closestDistance)
@@ -224,8 +205,7 @@ public class EnemyPlaneAI : MonoBehaviour
 
     private bool IsTargetAlive(GameObject target)
     {
-        if (target == null)
-            return false;
+        if (target == null) return false;
         Health h = target.GetComponent<Health>();
         return h == null || h.IsAlive();
     }
@@ -293,26 +273,14 @@ public class EnemyPlaneAI : MonoBehaviour
             float angle = 0f;
             if (scanRayCount > 1)
             {
-                angle = Mathf.Lerp(
-                    -scanSpreadAngle,
-                    scanSpreadAngle,
-                    (float)i / (scanRayCount - 1)
-                );
+                angle = Mathf.Lerp(-scanSpreadAngle, scanSpreadAngle, (float)i / (scanRayCount - 1));
             }
 
             // Create scan direction (pitch variation)
             Vector3 scanDir = Quaternion.AngleAxis(angle, transform.right) * transform.forward;
 
             RaycastHit hit;
-            if (
-                Physics.Raycast(
-                    transform.position,
-                    scanDir,
-                    out hit,
-                    lookaheadDistance,
-                    groundLayer
-                )
-            )
+            if (Physics.Raycast(transform.position, scanDir, out hit, lookaheadDistance, groundLayer))
             {
                 float distanceToHit = hit.distance;
 
@@ -322,10 +290,7 @@ public class EnemyPlaneAI : MonoBehaviour
                 // Add safety margin
                 float effectiveThreatDistance = distanceToHit - avoidanceMargin;
 
-                if (
-                    effectiveThreatDistance < lookaheadDistance
-                    && distanceToHit < closestThreatDistance
-                )
+                if (effectiveThreatDistance < lookaheadDistance && distanceToHit < closestThreatDistance)
                 {
                     foundThreat = true;
                     closestThreatDistance = distanceToHit;
@@ -364,9 +329,11 @@ public class EnemyPlaneAI : MonoBehaviour
             terrainAvoidanceDirection = (upBias * 0.7f + horizontalAway * 0.3f).normalized;
 
             // Apply avoidance with urgency-based blending
-            desiredDirection = Vector3
-                .Slerp(desiredDirection, terrainAvoidanceDirection, terrainThreatUrgency)
-                .normalized;
+            desiredDirection = Vector3.Slerp(
+                desiredDirection,
+                terrainAvoidanceDirection,
+                terrainThreatUrgency
+            ).normalized;
 
             // If very urgent, full override
             if (terrainThreatUrgency > 0.7f)
@@ -486,11 +453,7 @@ public class EnemyPlaneAI : MonoBehaviour
         float maxPitchAngle = 45f; // Don't pitch more than 45 degrees up/down
 
         // Get horizontal direction (on XZ plane)
-        Vector3 horizontalDirection = new Vector3(
-            directionToTarget.x,
-            0f,
-            directionToTarget.z
-        ).normalized;
+        Vector3 horizontalDirection = new Vector3(directionToTarget.x, 0f, directionToTarget.z).normalized;
 
         // Calculate current pitch to target
         float pitchAngle = Mathf.Asin(directionToTarget.y) * Mathf.Rad2Deg;
@@ -504,25 +467,19 @@ public class EnemyPlaneAI : MonoBehaviour
         if (horizontalDirection.magnitude > 0.01f)
         {
             // Apply limited pitch to horizontal direction
-            limitedDirection = (
-                horizontalDirection * Mathf.Cos(clampedPitchRad)
-                + Vector3.up * Mathf.Sin(clampedPitchRad)
-            ).normalized;
+            limitedDirection = (horizontalDirection * Mathf.Cos(clampedPitchRad) +
+                               Vector3.up * Mathf.Sin(clampedPitchRad)).normalized;
         }
         else
         {
             // Target directly above/below - spiral climb/dive instead
-            limitedDirection = (
-                transform.forward + Vector3.up * Mathf.Sign(directionToTarget.y) * 0.5f
-            ).normalized;
+            limitedDirection = (transform.forward + Vector3.up * Mathf.Sign(directionToTarget.y) * 0.5f).normalized;
         }
 
         // Blend current direction with desired direction for smooth turns
         // This prevents sudden snapping that causes stalls
         float blendFactor = 0.7f; // How quickly to turn toward target
-        desiredDirection = Vector3
-            .Slerp(transform.forward, limitedDirection, blendFactor)
-            .normalized;
+        desiredDirection = Vector3.Slerp(transform.forward, limitedDirection, blendFactor).normalized;
 
         // Check if we need high-G mode (tight turns)
         float angleToTarget = Vector3.Angle(transform.forward, limitedDirection);
@@ -614,9 +571,7 @@ public class EnemyPlaneAI : MonoBehaviour
         }
 
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-        Vector3 directionToTarget = (
-            currentTarget.transform.position - transform.position
-        ).normalized;
+        Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
 
         // Try to maintain missile range and keep target in wide FOV
         if (distance < optimalMissileRange * 0.7f)
@@ -652,10 +607,7 @@ public class EnemyPlaneAI : MonoBehaviour
             threatDirection = (nearestMissile.transform.position - transform.position).normalized;
             hasThreat = true;
 
-            float missileDistance = Vector3.Distance(
-                transform.position,
-                nearestMissile.transform.position
-            );
+            float missileDistance = Vector3.Distance(transform.position, nearestMissile.transform.position);
 
             // Aggressive evasion when missile is close
             if (missileDistance < 300f)
@@ -711,20 +663,17 @@ public class EnemyPlaneAI : MonoBehaviour
 
     private void ApplyFlightControls()
     {
-        if (aiInput == null)
-            return;
+        if (aiInput == null) return;
 
         // Calculate control inputs to reach desired direction
         Vector3 localDesiredDirection = transform.InverseTransformDirection(desiredDirection);
 
         // Calculate pitch (up/down)
-        float targetPitch =
-            -Mathf.Atan2(localDesiredDirection.y, localDesiredDirection.z) * Mathf.Rad2Deg;
+        float targetPitch = -Mathf.Atan2(localDesiredDirection.y, localDesiredDirection.z) * Mathf.Rad2Deg;
         desiredPitch = Mathf.Clamp(targetPitch / 45f, -1f, 1f);
 
         // Calculate yaw (left/right)
-        float targetYaw =
-            Mathf.Atan2(localDesiredDirection.x, localDesiredDirection.z) * Mathf.Rad2Deg;
+        float targetYaw = Mathf.Atan2(localDesiredDirection.x, localDesiredDirection.z) * Mathf.Rad2Deg;
         desiredYaw = Mathf.Clamp(targetYaw / 45f, -1f, 1f);
 
         // Calculate roll (bank into turns)
@@ -777,11 +726,10 @@ public class EnemyPlaneAI : MonoBehaviour
         // Draw line to target
         if (currentTarget != null)
         {
-            Color behaviorColor =
-                currentBehavior == BehaviorMode.Evading ? Color.red
-                : currentBehavior == BehaviorMode.Aggressive ? Color.magenta
-                : currentBehavior == BehaviorMode.Opportunistic ? Color.yellow
-                : Color.green;
+            Color behaviorColor = currentBehavior == BehaviorMode.Evading ? Color.red :
+                                   currentBehavior == BehaviorMode.Aggressive ? Color.magenta :
+                                   currentBehavior == BehaviorMode.Opportunistic ? Color.yellow :
+                                   Color.green;
             Gizmos.color = behaviorColor;
             Gizmos.DrawLine(transform.position, currentTarget.transform.position);
         }

@@ -11,22 +11,22 @@ public class AIPlaneInput : MonoBehaviour
     [Tooltip("AI-controlled pitch input (-1 to 1)")]
     [Range(-1f, 1f)]
     public float aiPitchInput = 0f;
-
+    
     [Tooltip("AI-controlled roll input (-1 to 1)")]
     [Range(-1f, 1f)]
     public float aiRollInput = 0f;
-
+    
     [Tooltip("AI-controlled yaw input (-1 to 1)")]
     [Range(-1f, 1f)]
     public float aiYawInput = 0f;
-
+    
     [Tooltip("AI-controlled thrust (0-100)")]
     [Range(0f, 100f)]
     public float aiThrustTarget = 50f;
-
+    
     [Tooltip("AI wants to use high-G mode")]
     public bool aiHighGMode = false;
-
+    
     /// <summary>
     /// Set control inputs for the AI (-1 to 1 for each axis)
     /// </summary>
@@ -36,7 +36,7 @@ public class AIPlaneInput : MonoBehaviour
         aiRollInput = Mathf.Clamp(roll, -1f, 1f);
         aiYawInput = Mathf.Clamp(yaw, -1f, 1f);
     }
-
+    
     /// <summary>
     /// Set target thrust (0-100 percentage)
     /// </summary>
@@ -44,7 +44,7 @@ public class AIPlaneInput : MonoBehaviour
     {
         aiThrustTarget = Mathf.Clamp(targetThrust, 0f, 100f);
     }
-
+    
     /// <summary>
     /// Enable/disable high-G mode
     /// </summary>
@@ -52,7 +52,7 @@ public class AIPlaneInput : MonoBehaviour
     {
         aiHighGMode = enabled;
     }
-
+    
     /// <summary>
     /// Get current speed
     /// </summary>

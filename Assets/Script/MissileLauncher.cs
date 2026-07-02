@@ -6,50 +6,39 @@ public class MissileLauncher : MonoBehaviour
     [Header("Missile Settings")]
     [Tooltip("Missile prefab")]
     public GameObject missilePrefab;
-
     [Tooltip("Launch points for missiles")]
     public Transform[] launchPoints;
-
     [Tooltip("Damage per missile")]
     public float missileDamage = 50f;
-
     [Tooltip("Fire key")]
     public KeyCode fireKey = KeyCode.Mouse1;
 
     [Header("Lock-On Settings")]
     [Tooltip("Time required to fully lock onto target (seconds)")]
     public float lockOnTime = 2f;
-
     [Tooltip("Current lock-on progress (0-1)")]
     [Range(0f, 1f)]
     public float lockProgress = 0f;
-
     [Tooltip("Reference to targeting system")]
     public TargetingSystem targetingSystem;
-
     [Tooltip("Maximum lock-on range")]
     public float maxLockRange = 1500f;
-
     [Tooltip("Maximum angle for lock-on (degrees)")]
     public float maxLockAngle = 30f;
 
     [Header("Ammo")]
     [Tooltip("Current missile count")]
     public int currentMissiles = 10;
-
     [Tooltip("Maximum missiles")]
     public int maxMissiles = 10;
 
     [Header("Audio Clips")]
     [Tooltip("Lock-on beeping sound (plays while locking)")]
     public AudioClip lockingSound;
-
     [Tooltip("Locked sound (plays when fully locked)")]
     public AudioClip lockedSound;
-
     [Tooltip("Launch sound")]
     public AudioClip launchSound;
-
     [Tooltip("Lock lost sound")]
     public AudioClip lockLostSound;
 
@@ -77,7 +66,6 @@ public class MissileLauncher : MonoBehaviour
     [Header("Lock Audio Settings")]
     [Tooltip("Beep interval at 0% lock (seconds)")]
     public float slowBeepInterval = 0.5f;
-
     [Tooltip("Beep interval at 100% lock (seconds)")]
     public float fastBeepInterval = 0.1f;
 
@@ -187,8 +175,7 @@ public class MissileLauncher : MonoBehaviour
 
     private bool CanLockOnTarget(GameObject target)
     {
-        if (target == null)
-            return false;
+        if (target == null) return false;
 
         // Check if target is alive
         Health targetHealth = target.GetComponent<Health>();
@@ -323,11 +310,7 @@ public class MissileLauncher : MonoBehaviour
         currentLaunchPointIndex = (currentLaunchPointIndex + 1) % launchPoints.Length;
 
         // Spawn missile
-        GameObject missileObj = Instantiate(
-            missilePrefab,
-            launchPoint.position,
-            launchPoint.rotation
-        );
+        GameObject missileObj = Instantiate(missilePrefab, launchPoint.position, launchPoint.rotation);
 
         // Initialize missile
         Missile missile = missileObj.GetComponent<Missile>();

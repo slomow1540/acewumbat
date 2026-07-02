@@ -1,40 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class TargetingSystem : MonoBehaviour
 {
     [Header("Targeting Settings")]
     [Tooltip("Maximum range for target detection")]
     public float maxTargetRange = 2000f;
-
     [Tooltip("Field of view angle for target detection")]
     [Range(0f, 360f)]
     public float targetingFOV = 60f;
-
     [Tooltip("Tag to identify enemies")]
     public string enemyTag = "Enemy";
-
     [Tooltip("Layer mask for raycasting")]
     public LayerMask targetLayers;
 
     [Header("Target Lock")]
     [Tooltip("Current locked target")]
     public GameObject currentTarget;
-
     [Tooltip("Key to cycle to next target")]
     public KeyCode nextTargetKey = KeyCode.R;
-
     [Tooltip("Key to cycle to previous target")]
     public KeyCode previousTargetKey = KeyCode.T;
-
     [Tooltip("Key to clear target")]
     public KeyCode clearTargetKey = KeyCode.Y;
 
     [Header("Auto-Targeting")]
     [Tooltip("Automatically lock onto nearest target in front")]
     public bool autoTarget = true;
-
     [Tooltip("How often to update auto-target (seconds)")]
     public float autoTargetUpdateRate = 0.5f;
 
@@ -145,15 +138,12 @@ public class TargetingSystem : MonoBehaviour
     /// </summary>
     private bool IsValidTarget(GameObject target)
     {
-        if (target == null)
-            return false;
+        if (target == null) return false;
 
-        if (!IsAliveAndExists(target))
-            return false;
+        if (!IsAliveAndExists(target)) return false;
 
         float distance = Vector3.Distance(transform.position, target.transform.position);
-        if (distance > maxTargetRange)
-            return false;
+        if (distance > maxTargetRange) return false;
 
         return true;
     }
@@ -163,12 +153,10 @@ public class TargetingSystem : MonoBehaviour
     /// </summary>
     private bool IsAliveAndExists(GameObject target)
     {
-        if (target == null)
-            return false;
+        if (target == null) return false;
 
         Health targetHealth = target.GetComponent<Health>();
-        if (targetHealth != null && !targetHealth.IsAlive())
-            return false;
+        if (targetHealth != null && !targetHealth.IsAlive()) return false;
 
         return true;
     }
@@ -188,9 +176,7 @@ public class TargetingSystem : MonoBehaviour
 
         foreach (GameObject target in availableTargets)
         {
-            Vector3 directionToTarget = (
-                target.transform.position - cameraTransform.position
-            ).normalized;
+            Vector3 directionToTarget = (target.transform.position - cameraTransform.position).normalized;
             float angle = Vector3.Angle(cameraTransform.forward, directionToTarget);
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
@@ -234,12 +220,9 @@ public class TargetingSystem : MonoBehaviour
 
     public float GetTargetAngle()
     {
-        if (currentTarget == null)
-            return -1f;
+        if (currentTarget == null) return -1f;
 
-        Vector3 directionToTarget = (
-            currentTarget.transform.position - transform.position
-        ).normalized;
+        Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
         return Vector3.Angle(transform.forward, directionToTarget);
     }
 }

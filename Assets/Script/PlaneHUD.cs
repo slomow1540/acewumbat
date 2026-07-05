@@ -30,6 +30,9 @@ public class PlaneHUD : MonoBehaviour
     public TextMeshProUGUI targetInfoText;
     public GameObject targetIndicator;
     public Image targetHealthBar;
+    public GameObject gunRangeIndicator;
+
+    private RectTransform gunRangeIndicatorRect;
 
     [Header("Misc UI")]
     public TextMeshProUGUI SpecialAbilityText;
@@ -83,6 +86,12 @@ public class PlaneHUD : MonoBehaviour
         if (offScreenArrow != null)
         {
             offScreenArrowRect = offScreenArrow.GetComponent<RectTransform>();
+        }
+
+        if (gunRangeIndicator != null)
+        {
+            gunRangeIndicatorRect = gunRangeIndicator.GetComponent<RectTransform>();
+            gunRangeIndicator.SetActive(false);
         }
 
         // Hide indicators initially
@@ -311,6 +320,22 @@ public class PlaneHUD : MonoBehaviour
                     offScreenArrow.SetActive(false);
                 }
             }
+
+            // === GUN RANGE INDICATOR (target inside aim-assist FOV/range) ===
+            if (gunRangeIndicator != null)
+            {
+                bool inGunRange = weaponSystem != null && weaponSystem.IsTargetInAimAssistRange(target);
+
+                if (inGunRange && isOnScreen)
+                {
+                    gunRangeIndicator.SetActive(true);
+                    PositionUIElement(gunRangeIndicatorRect, screenPos);
+                }
+                else
+                {
+                    gunRangeIndicator.SetActive(false);
+                }
+            }
         }
         else
         {
@@ -325,6 +350,9 @@ public class PlaneHUD : MonoBehaviour
 
             if (offScreenArrow != null)
                 offScreenArrow.SetActive(false);
+
+            if (gunRangeIndicator != null)
+                gunRangeIndicator.SetActive(false);
         }
     }
 

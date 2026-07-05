@@ -274,6 +274,20 @@ public class PlaneWeaponSystem : MonoBehaviour
         currentAimAssistTarget = closestTarget;
     }
 
+    public bool IsTargetInAimAssistRange(GameObject target)
+    {
+        if (target == null || !useAimAssist)
+            return false;
+
+        if (!IsValidAimAssistTarget(target))
+            return false;
+
+        Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+        float angle = Vector3.Angle(transform.forward, directionToTarget);
+
+        return angle <= aimAssistFOV;
+    }
+
     /// <summary>
     /// Check if target is valid for aim assist
     /// </summary>

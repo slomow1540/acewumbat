@@ -1,45 +1,87 @@
-using System.Collections;
 using UnityEngine;
 
 public class ManualManager : MonoBehaviour
 {
     [Header("UI")]
-    public SlideIn[] manuals;
-    public GameObject scroll;
+    public Carousel carousel;
+    public SlideIn[] arrowButtons;
+    public PopOut book;
 
     [Header("Overlay")]
     public Overlay overlay;
-    public float overlayFadeSpeed = 5f;
+
+    [Header("Audio")]
+    public AudioClip slideSound;
+    private AudioManager audioManager;
+
+    bool isOpen;
 
     void Start()
     {
-        for (int i = 0; i < manuals.Length; i++)
+        audioManager = AudioManager.Instance;
+        carousel.Hide();
+        Hide();
+        book.HideInstant();
+    }
+
+    void Update()
+    {
+        if (!isOpen)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            manuals[i].Hide();
+            NextManual();
         }
 
-        Hide();
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            PreviousManual();
+        }
     }
 
     public void Show()
     {
-        overlay.FadeTo(0.7f);
-        scroll.SetActive(true);
+        isOpen = true;
 
-        for (int i = 0; i < manuals.Length; i++)
+        book.Show();
+
+        overlay.FadeTo(0.7f);
+
+        for (int i = 0; i < arrowButtons.Length; i++)
         {
-            manuals[i].Show(i * 0.1f);
+            arrowButtons[i].Show();
         }
+
+        carousel.Show();
+        carousel.GoTo(0);
     }
 
     public void Hide()
     {
+        isOpen = false;
+
         overlay.FadeTo(0f);
 
-        for (int i = manuals.Length - 1; i >= 0; i--)
+        for (int i = 0; i < arrowButtons.Length; i++)
         {
-            manuals[i].Hide(i * 0.1f);
+            arrowButtons[i].Hide();
         }
-        scroll.SetActive(false);
+
+        carousel.Hide();
+
+        book.Hide();
+    }
+
+    public void NextManual()
+    {
+        audioManager.Play(slideSound, AudioChannel.UI);
+        carousel.Next();
+    }
+
+    public void PreviousManual()
+    {
+        audioManager.Play(slideSound, AudioChannel.UI);
+        carousel.Previous();
     }
 }

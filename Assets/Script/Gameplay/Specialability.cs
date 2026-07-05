@@ -251,27 +251,8 @@ public class SpecialAbility : MonoBehaviour
 
     private void Start()
     {
-        // ── Pull ability name from GameValues ──────────────────────────────────
-        GameObject gameValuesObj = GameObject.FindGameObjectWithTag("GameValues");
-        // if (gameValuesObj != null)
-        // {
-        //     ValueHolder valueHolder = gameValuesObj.GetComponent<ValueHolder>();
-        //     if (valueHolder != null)
-        //     {
-        //         chosenAbility = valueHolder.SpecialWeaponName;
-        //         Debug.Log($"[SpecialAbility] Ability loaded from ValueHolder: '{chosenAbility}'");
-        //     }
-        //     else
-        //     {
-        //         Debug.LogWarning(
-        //             "[SpecialAbility] GameValues object has no ValueHolder component!"
-        //         );
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.LogWarning("[SpecialAbility] No object with tag 'GameValues' found in scene!");
-        // }
+        chosenAbility = ProgressManager.GetSelectedAbility();
+        Debug.Log($"[SpecialAbility] Ability loaded from ProgressManager: '{chosenAbility}'");
 
         maxCooldown = GetCooldownForAbility(chosenAbility);
         currentCooldown = 0f;

@@ -75,6 +75,11 @@ public class HangarManager : MonoBehaviour
 
         if (toggleAbilityButton != null)
             abilityText = toggleAbilityButton.GetComponentInChildren<TMP_Text>();
+
+        // Restore saved ability selection
+        string savedAbility = ProgressManager.GetSelectedAbility();
+        int savedIndex = System.Array.IndexOf(abilityNames, savedAbility);
+        SetAbility(savedIndex >= 0 ? savedIndex : 0);
     }
 
     void OnDestroy()
@@ -213,6 +218,23 @@ public class HangarManager : MonoBehaviour
 
         if (currentCR != null)
             currentCR.SetValue(currency);
+    }
+
+    public void OnToggleAbility()
+    {
+        abilityIndex = (abilityIndex + 1) % abilityNames.Length;
+        SetAbility(abilityIndex);
+    }
+
+    void SetAbility(int index)
+    {
+        abilityIndex = index;
+        string abilityNameValue = abilityNames[index];
+
+        if (abilityText != null)
+            abilityText.text = abilityNameValue;
+
+        ProgressManager.SetSelectedAbility(abilityNameValue);
     }
 
     void RefreshButtonState()

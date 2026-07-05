@@ -153,6 +153,23 @@ public static class ProgressManager
     }
 
     // ======================
+    // ABILITY SELECTION
+    // ======================
+    const string selectedAbilityKey = "selected_ability";
+    const string defaultAbility = "Airburst";
+
+    public static void SetSelectedAbility(string abilityName)
+    {
+        PlayerPrefs.SetString(selectedAbilityKey, abilityName);
+        PlayerPrefs.Save();
+    }
+
+    public static string GetSelectedAbility()
+    {
+        return PlayerPrefs.GetString(selectedAbilityKey, defaultAbility);
+    }
+
+    // ======================
     // FIRST TIME SETUP
     // ======================
 
@@ -161,14 +178,13 @@ public static class ProgressManager
     public static void Initialize()
     {
         bool initialized = PlayerPrefs.GetInt(initializedKey, 0) == 1;
-
         if (initialized)
             return;
 
         SetCurrency(0);
         UnlockPlane(0);
         EquipPlane(0);
-
+        SetSelectedAbility(defaultAbility);
         PlayerPrefs.SetInt(initializedKey, 1);
         PlayerPrefs.Save();
     }

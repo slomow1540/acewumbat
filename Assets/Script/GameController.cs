@@ -189,6 +189,8 @@ public class GameController : MonoBehaviour
     [Tooltip("Message display text")]
     private TextMeshProUGUI messageText;
 
+    private bool isPaused = false;
+
     [Header("UI Colors")]
     [Tooltip("Alpha target for the black background (0..1)")]
     [Range(0f, 1f)]
@@ -380,8 +382,12 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        // Update triggers
-        if (!gameEnded)
+        if (!gameEnded && Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (!gameEnded && !isPaused)
         {
             UpdateTriggers();
         }
@@ -1277,6 +1283,114 @@ public class GameController : MonoBehaviour
         {
             mainMenuButton.onClick.RemoveListener(GoToMainMenu);
         }
+    }
+
+    #endregion
+
+    #region Pause System
+
+    public bool IsPaused()
+    {
+        return isPaused;
+    }
+
+    public void TogglePause()
+    {
+        if (isPaused)
+            ResumeGame();
+        else
+            PauseGame();
+    }
+
+    private void PauseGame()
+    {
+        isPaused = true;
+        Time.timeScale = 0f;
+
+        ImprovedPlaneController pc =
+            playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
+        if (pc != null)
+            pc.allowMouseControl = false;
+
+        // Reuse the result screen UI as the pause overlay
+        if (resultPanel != null)
+        {
+            Color c = resultPanel.color;
+            c.a = backgroundTargetAlpha;
+            resultPanel.color = c;
+        }
+
+        if (resultText != null)
+            resultText.text = "PAUSED";
+
+        if (resultTextCanvasGroup != null)
+            resultTextCanvasGroup.alpha = 1f;
+
+        if (statText != null)
+            statText.gameObject.SetActive(false); // no stats needed mid-pause
+
+        // Repurpose restart button as "Resume"
+        if (restartButton != null)
+        {
+            restartButton.gameObject.SetActive(true);
+            restartButton.interactable = true;
+            restartButton.onClick.RemoveListener(RestartGame);
+            restartButton.onClick.AddListener(ResumeGame);
+
+            TextMeshProUGUI label = restartButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null)
+                label.text = "RESUME";
+        }
+
+        // Main menu button already does exactly what we want, no changes needed
+        if (mainMenuButton != null)
+        {
+            mainMenuButton.gameObject.SetActive(true);
+            mainMenuButton.interactable = true;
+        }
+    }
+
+    private void ResumeGame()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
+
+        ImprovedPlaneController pc =
+            playerEntity?.gameObject.GetComponent<ImprovedPlaneController>();
+        if (pc != null)
+            pc.allowMouseControl = true;
+
+        if (resultPanel != null)
+        {
+            Color c = resultPanel.color;
+            c.a = 0f;
+            resultPanel.color = c;
+        }
+
+        if (resultText != null)
+            resultText.text = "";
+
+        if (resultTextCanvasGroup != null)
+            resultTextCanvasGroup.alpha = 0f;
+
+        if (statText != null)
+            statText.gameObject.SetActive(true);
+
+        // Restore restart button to its normal job
+        if (restartButton != null)
+        {
+            restartButton.onClick.RemoveListener(ResumeGame);
+            restartButton.onClick.AddListener(RestartGame);
+
+            TextMeshProUGUI label = restartButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null)
+                label.text = "RESTART";
+
+            restartButton.gameObject.SetActive(false);
+        }
+
+        if (mainMenuButton != null)
+            mainMenuButton.gameObject.SetActive(false);
     }
 
     #endregion

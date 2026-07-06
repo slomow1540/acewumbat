@@ -75,13 +75,13 @@ public class ManualManager : MonoBehaviour
 
     public void NextManual()
     {
-        audioManager.Play(slideSound, AudioChannel.UI);
+        audioManager.Play(slideSound, AudioManager.AudioChannel.UI);
         carousel.Next();
     }
 
     public void PreviousManual()
     {
-        audioManager.Play(slideSound, AudioChannel.UI);
+        audioManager.Play(slideSound, AudioManager.AudioChannel.UI);
         carousel.Previous();
     }
 }

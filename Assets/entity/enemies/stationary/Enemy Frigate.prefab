@@ -10102,6 +10102,10 @@ PrefabInstance:
       value: Enemy Frigate
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b0020f003c653ec4193a01c01eaa7976, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b0020f003c653ec4193a01c01eaa7976, type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}

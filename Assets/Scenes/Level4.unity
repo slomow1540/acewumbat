@@ -6960,7 +6960,7 @@ PrefabInstance:
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: 'musicTracks.Array.data[0]'
       value: 
-      objectReference: {fileID: 8300000, guid: 5f47b4d4edc77064ba579ff5a6e87753, type: 3}
+      objectReference: {fileID: 8300000, guid: b7685eab27e2ca04ea5d9f6498c21b4a, type: 3}
     - target: {fileID: 5309258938040776543, guid: 6d19d0174ec8c97448417fcf74033404, type: 3}
       propertyPath: missionTriggers.Array.size
       value: 4

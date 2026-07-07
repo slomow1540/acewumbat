@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlotManager : MonoBehaviour
 {
     [Header("Data")]
-    public PlaneDatabase planeDatabase;
+    //public PlaneDatabase planeDatabase;
     public PlaneData[] planes;
 
     [Header("Prefab")]
@@ -39,7 +39,7 @@ public class SlotManager : MonoBehaviour
 
     void Awake()
     {
-        planes = planeDatabase.planes;
+        //planes = planeDatabase.planes;
     }
 
     void Start()

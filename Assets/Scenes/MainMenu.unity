@@ -12006,7 +12006,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: -159.06102}
+  m_AnchoredPosition: {x: 8.5, y: -159.0609}
   m_SizeDelta: {x: 1920, y: 1209.0881}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487721513
@@ -34865,7 +34865,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f591ff20990c140edad8492283850008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HangarManager
-  planeDatabase: {fileID: 11400000, guid: b2d77103f8d87e7479fa5f1052cf3f06, type: 2}
   planes:
   - planeName: F5
     price: 0
@@ -34906,8 +34905,8 @@ MonoBehaviour:
     thrust: 100
     maneuverability: 50
     health: 50
-    gunDamage: 12
-    gunFireRate: 30
+    gunDamage: 22
+    gunFireRate: 10
     gunAmmoCount: 1800
     aimAssistRange: 90
     missileLockTime: 0.07
@@ -51123,8 +51122,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638737562}
   m_HandleRect: {fileID: 638737561}
   m_Direction: 2
-  m_Value: 1.0000015
-  m_Size: 0.7368916
+  m_Value: 1.0000007
+  m_Size: 0.7368666
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

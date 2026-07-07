@@ -126,7 +126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d25479ef50b3a8346ad01bb500c9f92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  planeDatabase: {fileID: 11400000, guid: b2d77103f8d87e7479fa5f1052cf3f06, type: 2}
+  planePrefabs:
+  - {fileID: 8448142032054405415, guid: 486f02598303d38499c0a5d1aff69097, type: 3}
+  - {fileID: 8448142032054405415, guid: 552b75ec4897b6b429d6c3664a590250, type: 3}
+  - {fileID: 8448142032054405415, guid: ee9f1db755ba9ce409710a2c58bd1fbe, type: 3}
   victorySound: {fileID: 8300000, guid: b0eca6f94edc27a4a873ba07e3902c05, type: 3}
   defeatSound: {fileID: 8300000, guid: 69765ad69c429004b97dd9fcaa2b0ce6, type: 3}
   musicTracks: []

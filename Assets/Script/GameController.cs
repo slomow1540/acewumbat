@@ -12,8 +12,8 @@ public class GameController : MonoBehaviour
 {
     #region Nested Classes
 
-    [Header("Data")]
-    public PlaneDatabase planeDatabase;
+    // plane data
+    public List<GameObject> planePrefabs = new List<GameObject>();
 
     [System.Serializable]
     public class EntityRecord
@@ -229,11 +229,11 @@ public class GameController : MonoBehaviour
 
         int selectedIndex = ProgressManager.GetEquippedPlane();
 
-        if (selectedIndex >= 0 && selectedIndex < planeDatabase.planes.Length)
+        if (selectedIndex >= 0 && selectedIndex < planePrefabs.Count)
         {
-            PlaneData data = planeDatabase.planes[selectedIndex];
+            GameObject prefab = planePrefabs[selectedIndex];
 
-            if (data != null && data.playerprefab != null)
+            if (prefab != null)
             {
                 Vector3 spawnPos =
                     PlayerPosition != null ? PlayerPosition.transform.position : Vector3.zero;
@@ -242,7 +242,7 @@ public class GameController : MonoBehaviour
                         ? PlayerPosition.transform.rotation
                         : Quaternion.identity;
 
-                GameObject spawnedPlane = Instantiate(data.playerprefab, spawnPos, spawnRot);
+                GameObject spawnedPlane = Instantiate(prefab, spawnPos, spawnRot);
 
                 if (PlayerPosition != null)
                     Destroy(PlayerPosition);

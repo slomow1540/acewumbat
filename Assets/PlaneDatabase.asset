@@ -39,9 +39,25 @@ MonoBehaviour:
     gunDamage: 18
     gunFireRate: 100
     gunAmmoCount: 9000
-    aimAssistRange: 7
+    aimAssistRange: 13.5
     missileLockTime: 0.3
     missileRange: 9
     missileDamage: 51
     missileManeuverability: 80
     missileAmmoCount: 300
+  - planeName: SU57
+    price: 1000
+    prefab: {fileID: 919132149155446097, guid: 1611bf5d85e00b24a8020778fc683a3e, type: 3}
+    playerprefab: {fileID: 8448142032054405415, guid: ee9f1db755ba9ce409710a2c58bd1fbe, type: 3}
+    thrust: 100
+    maneuverability: 50
+    health: 50
+    gunDamage: 22
+    gunFireRate: 10
+    gunAmmoCount: 1800
+    aimAssistRange: 90
+    missileLockTime: 0.07
+    missileRange: 18
+    missileDamage: 51
+    missileManeuverability: 80
+    missileAmmoCount: 900
